@@ -17,6 +17,8 @@
     "supabase:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local > src/infrastructure/supabase/database.types.ts",
     "supabase:demo": "tsx --env-file=.env.local scripts/demo-supabase-catalog.ts",
+    "admin:bootstrap": "tsx --env-file=.env.local scripts/bootstrap-local-admin.ts",
+    "admin:demo": "tsx --env-file=.env.local scripts/demo-admin-access.ts",
     "preview": "vite preview"
   },
   "dependencies": {
