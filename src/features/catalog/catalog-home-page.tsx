@@ -6,10 +6,13 @@ import {
 import { Link } from "react-router";
 import type { Category } from "../../core/entities/category";
 import type { Product } from "../../core/entities/product";
+import type { ShopSettings } from "../../core/entities/shop-settings";
+import { GetShopSettings } from "../../core/use-cases/get-shop-settings";
 import { ListActiveCategories } from "../../core/use-cases/list-active-categories";
 import { ListPublishedProducts } from "../../core/use-cases/list-published-products";
 import { SupabaseCategoryRepository } from "../../infrastructure/repositories/supabase-category-repository";
 import { SupabaseProductCatalogRepository } from "../../infrastructure/repositories/supabase-product-catalog-repository";
+import { SupabaseShopSettingsRepository } from "../../infrastructure/repositories/supabase-shop-settings-repository";
 import { SupabaseProductImageStorage } from "../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../infrastructure/supabase/supabase-client";
 import {
@@ -27,6 +30,11 @@ const productCatalogRepository =
 const categoryRepository =
   new SupabaseCategoryRepository(supabase);
 
+const shopSettingsRepository =
+  new SupabaseShopSettingsRepository(
+    supabase,
+  );
+
 const productImageStorage =
   new SupabaseProductImageStorage(supabase);
 
@@ -38,6 +46,11 @@ const listPublishedProducts =
 const listActiveCategories =
   new ListActiveCategories(
     categoryRepository,
+  );
+
+const getShopSettings =
+  new GetShopSettings(
+    shopSettingsRepository,
   );
 
 const currencyFormatter =
@@ -53,6 +66,9 @@ export function CatalogHomePage() {
 
   const [categories, setCategories] =
     useState<Category[]>([]);
+
+  const [shopSettings, setShopSettings] =
+    useState<ShopSettings | null>(null);
 
   const [searchTerm, setSearchTerm] =
     useState("");
@@ -82,9 +98,11 @@ export function CatalogHomePage() {
         const [
           loadedProducts,
           loadedCategories,
+          loadedSettings,
         ] = await Promise.all([
           listPublishedProducts.execute(),
           listActiveCategories.execute(),
+          getShopSettings.execute(),
         ]);
 
         if (!isActive) {
@@ -93,6 +111,7 @@ export function CatalogHomePage() {
 
         setProducts(loadedProducts);
         setCategories(loadedCategories);
+        setShopSettings(loadedSettings);
       } catch {
         if (isActive) {
           setError(
@@ -129,7 +148,11 @@ export function CatalogHomePage() {
 
   return (
     <div className="catalog-site">
-      <CatalogHeader />
+      <CatalogHeader
+        businessName={
+          shopSettings?.businessName
+        }
+      />
 
       <main>
         <section className="catalog-hero">
@@ -187,7 +210,9 @@ export function CatalogHomePage() {
                 Colección
               </p>
 
-              <h2>Encuentra tu próximo diseño</h2>
+              <h2>
+                Encuentra tu próximo diseño
+              </h2>
             </div>
 
             <p>
@@ -400,7 +425,11 @@ export function CatalogHomePage() {
         </section>
       </main>
 
-      <CatalogFooter />
+      <CatalogFooter
+        businessName={
+          shopSettings?.businessName
+        }
+      />
     </div>
   );
 }

@@ -59,6 +59,23 @@ export function AdminDashboardPage() {
     Ver productos →
   </span>
 </Link>
+<Link
+  className="admin-summary-card admin-summary-card--link"
+  to="/admin/settings"
+>
+  <p>Configuración</p>
+
+  <strong>Datos de la boutique</strong>
+
+  <span>
+    Administra el nombre público y el
+    número de contacto por WhatsApp.
+  </span>
+
+  <span className="admin-summary-card__action">
+    Abrir configuración →
+  </span>
+</Link>
 
         <article className="admin-summary-card">
           <p>Imágenes</p>

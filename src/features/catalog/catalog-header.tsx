@@ -1,6 +1,21 @@
 import { Link } from "react-router";
 
-export function CatalogHeader() {
+interface CatalogBrandProps {
+  businessName?: string;
+}
+
+function resolveBusinessName(
+  businessName: string | undefined,
+): string {
+  return businessName?.trim() || "Boutique";
+}
+
+export function CatalogHeader({
+  businessName,
+}: CatalogBrandProps) {
+  const resolvedName =
+    resolveBusinessName(businessName);
+
   return (
     <header className="catalog-header">
       <div className="catalog-header__content">
@@ -8,8 +23,11 @@ export function CatalogHeader() {
           className="catalog-brand"
           to="/"
         >
-          <span>Boutique</span>
-          <strong>Diseños con identidad</strong>
+          <span>{resolvedName}</span>
+
+          <strong>
+            Diseños con identidad
+          </strong>
         </Link>
 
         <nav
@@ -27,12 +45,17 @@ export function CatalogHeader() {
   );
 }
 
-export function CatalogFooter() {
+export function CatalogFooter({
+  businessName,
+}: CatalogBrandProps) {
+  const resolvedName =
+    resolveBusinessName(businessName);
+
   return (
     <footer className="catalog-footer">
       <div className="catalog-footer__content">
         <div>
-          <strong>Boutique</strong>
+          <strong>{resolvedName}</strong>
 
           <p>
             Diseños seleccionados y prendas

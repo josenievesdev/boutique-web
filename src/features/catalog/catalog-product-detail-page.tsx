@@ -9,12 +9,16 @@ import {
 } from "react-router";
 import type { Category } from "../../core/entities/category";
 import type { Product } from "../../core/entities/product";
+import type { ShopSettings } from "../../core/entities/shop-settings";
+import { GetShopSettings } from "../../core/use-cases/get-shop-settings";
 import { ListActiveCategories } from "../../core/use-cases/list-active-categories";
 import { ListPublishedProducts } from "../../core/use-cases/list-published-products";
 import { SupabaseCategoryRepository } from "../../infrastructure/repositories/supabase-category-repository";
 import { SupabaseProductCatalogRepository } from "../../infrastructure/repositories/supabase-product-catalog-repository";
+import { SupabaseShopSettingsRepository } from "../../infrastructure/repositories/supabase-shop-settings-repository";
 import { SupabaseProductImageStorage } from "../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../infrastructure/supabase/supabase-client";
+import { buildProductWhatsAppUrl } from "../../lib/build-product-whatsapp-url";
 import {
   CatalogFooter,
   CatalogHeader,
@@ -29,6 +33,11 @@ const productCatalogRepository =
 const categoryRepository =
   new SupabaseCategoryRepository(supabase);
 
+const shopSettingsRepository =
+  new SupabaseShopSettingsRepository(
+    supabase,
+  );
+
 const productImageStorage =
   new SupabaseProductImageStorage(supabase);
 
@@ -40,6 +49,11 @@ const listPublishedProducts =
 const listActiveCategories =
   new ListActiveCategories(
     categoryRepository,
+  );
+
+const getShopSettings =
+  new GetShopSettings(
+    shopSettingsRepository,
   );
 
 const currencyFormatter =
@@ -58,6 +72,9 @@ export function CatalogProductDetailPage() {
 
   const [categories, setCategories] =
     useState<Category[]>([]);
+
+  const [shopSettings, setShopSettings] =
+    useState<ShopSettings | null>(null);
 
   const [
     selectedImageId,
@@ -78,6 +95,7 @@ export function CatalogProductDetailPage() {
         setError(
           "No se recibió el producto solicitado.",
         );
+
         setIsLoading(false);
         return;
       }
@@ -86,9 +104,11 @@ export function CatalogProductDetailPage() {
         const [
           loadedProducts,
           loadedCategories,
+          loadedSettings,
         ] = await Promise.all([
           listPublishedProducts.execute(),
           listActiveCategories.execute(),
+          getShopSettings.execute(),
         ]);
 
         if (!isActive) {
@@ -106,6 +126,7 @@ export function CatalogProductDetailPage() {
           ) ?? null;
 
         setCategories(loadedCategories);
+        setShopSettings(loadedSettings);
         setProduct(foundProduct);
 
         if (foundProduct) {
@@ -188,13 +209,21 @@ export function CatalogProductDetailPage() {
   if (isLoading) {
     return (
       <div className="catalog-site">
-        <CatalogHeader />
+        <CatalogHeader
+          businessName={
+            shopSettings?.businessName
+          }
+        />
 
         <main className="catalog-detail-state">
           <p>Cargando producto...</p>
         </main>
 
-        <CatalogFooter />
+        <CatalogFooter
+          businessName={
+            shopSettings?.businessName
+          }
+        />
       </div>
     );
   }
@@ -202,7 +231,11 @@ export function CatalogProductDetailPage() {
   if (error) {
     return (
       <div className="catalog-site">
-        <CatalogHeader />
+        <CatalogHeader
+          businessName={
+            shopSettings?.businessName
+          }
+        />
 
         <main className="catalog-detail-state">
           <p role="alert">{error}</p>
@@ -215,7 +248,11 @@ export function CatalogProductDetailPage() {
           </Link>
         </main>
 
-        <CatalogFooter />
+        <CatalogFooter
+          businessName={
+            shopSettings?.businessName
+          }
+        />
       </div>
     );
   }
@@ -223,7 +260,11 @@ export function CatalogProductDetailPage() {
   if (!productData) {
     return (
       <div className="catalog-site">
-        <CatalogHeader />
+        <CatalogHeader
+          businessName={
+            shopSettings?.businessName
+          }
+        />
 
         <main className="catalog-detail-state">
           <p className="catalog-eyebrow">
@@ -247,7 +288,11 @@ export function CatalogProductDetailPage() {
           </Link>
         </main>
 
-        <CatalogFooter />
+        <CatalogFooter
+          businessName={
+            shopSettings?.businessName
+          }
+        />
       </div>
     );
   }
@@ -259,9 +304,33 @@ export function CatalogProductDetailPage() {
         )
       : null;
 
+  const productPublicUrl =
+    new URL(
+      `/productos/${productData.slug}`,
+      window.location.origin,
+    ).toString();
+
+  const whatsappUrl =
+    shopSettings?.whatsappNumber
+      ? buildProductWhatsAppUrl({
+          phoneNumber:
+            shopSettings.whatsappNumber,
+          productName:
+            productData.name,
+          priceInPesos:
+            productData.priceInPesos,
+          productUrl:
+            productPublicUrl,
+        })
+      : null;
+
   return (
     <div className="catalog-site">
-      <CatalogHeader />
+      <CatalogHeader
+        businessName={
+          shopSettings?.businessName
+        }
+      />
 
       <main className="catalog-product-detail">
         <Link
@@ -405,11 +474,30 @@ export function CatalogProductDetailPage() {
                 ¿Te interesa este diseño?
               </strong>
 
-              <p>
-                En el siguiente bloque conectaremos
-                esta ficha con una solicitud directa
-                por WhatsApp.
-              </p>
+              {whatsappUrl ? (
+                <>
+                  <p>
+                    Consulta disponibilidad,
+                    personalización y tiempo de
+                    elaboración directamente con
+                    la boutique.
+                  </p>
+
+                  <a
+                    className="catalog-whatsapp-action"
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Consultar por WhatsApp
+                  </a>
+                </>
+              ) : (
+                <p>
+                  El contacto por WhatsApp todavía
+                  no ha sido configurado.
+                </p>
+              )}
 
               <Link
                 className="catalog-secondary-action"
@@ -422,7 +510,11 @@ export function CatalogProductDetailPage() {
         </div>
       </main>
 
-      <CatalogFooter />
+      <CatalogFooter
+        businessName={
+          shopSettings?.businessName
+        }
+      />
     </div>
   );
 }

@@ -185,6 +185,30 @@ export type Database = {
           },
         ]
       }
+      shop_settings: {
+        Row: {
+          business_name: string
+          created_at: string
+          id: string
+          updated_at: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          id: string
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
