@@ -21,6 +21,7 @@
     "admin:demo": "tsx --env-file=.env.local scripts/demo-admin-access.ts",
     "repository:demo": "tsx --env-file=.env.local scripts/demo-supabase-product-repository.ts",
     "storage:demo": "tsx --env-file=.env.local scripts/demo-product-image-storage.ts",
+    "images:integration-demo": "tsx --env-file=.env.local scripts/demo-integrated-product-images.ts",
     "preview": "vite preview"
   },
   "dependencies": {

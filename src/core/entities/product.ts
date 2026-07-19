@@ -79,38 +79,102 @@ export class Product {
     return this.props.images.length;
   }
 
-  addImage(image: ProductImage): void {
-    const imageAlreadyExists = this.props.images.some(
-      (currentImage) => currentImage.id === image.id,
+addImage(image: ProductImage): void {
+  const imageAlreadyExists = this.props.images.some(
+    (currentImage) => currentImage.id === image.id,
+  );
+
+  if (imageAlreadyExists) {
+    throw new DomainError(
+      `Ya existe una imagen con el identificador "${image.id}".`,
     );
-
-    if (imageAlreadyExists) {
-      throw new DomainError(
-        `Ya existe una imagen con el identificador "${image.id}".`,
-      );
-    }
-
-    const positionIsUsed = this.props.images.some(
-      (currentImage) => currentImage.position === image.position,
-    );
-
-    if (positionIsUsed) {
-      throw new DomainError(
-        `Ya existe una imagen en la posición ${image.position}.`,
-      );
-    }
-
-    if (image.isCover) {
-      this.removeCurrentCover();
-    }
-
-    this.props.images.push({ ...image });
-    this.props.images.sort((firstImage, secondImage) => {
-      return firstImage.position - secondImage.position;
-    });
-
-    this.touch();
   }
+
+  const positionIsUsed = this.props.images.some(
+    (currentImage) =>
+      currentImage.position === image.position,
+  );
+
+  if (positionIsUsed) {
+    throw new DomainError(
+      `Ya existe una imagen en la posición ${image.position}.`,
+    );
+  }
+
+  if (image.isCover) {
+    this.removeCurrentCover();
+  }
+
+  this.props.images.push({ ...image });
+
+  this.props.images.sort(
+    (firstImage, secondImage) =>
+      firstImage.position - secondImage.position,
+  );
+
+  this.touch();
+}
+
+removeImage(imageId: string): ProductImage {
+  const imageIndex = this.props.images.findIndex(
+    (image) => image.id === imageId,
+  );
+
+  if (imageIndex === -1) {
+    throw new DomainError(
+      `No se encontró la imagen "${imageId}".`,
+    );
+  }
+
+  const [removedImage] = this.props.images.splice(
+    imageIndex,
+    1,
+  );
+
+  if (!removedImage) {
+    throw new DomainError(
+      `No se encontró la imagen "${imageId}".`,
+    );
+  }
+
+  if (
+    removedImage.isCover &&
+    this.props.images.length > 0
+  ) {
+    this.props.images.sort(
+      (firstImage, secondImage) =>
+        firstImage.position -
+        secondImage.position,
+    );
+
+    const firstImage = this.props.images[0];
+
+    if (firstImage) {
+      firstImage.isCover = true;
+    }
+  }
+
+  this.touch();
+
+  return { ...removedImage };
+}
+
+setCoverImage(imageId: string): void {
+  const image = this.props.images.find(
+    (currentImage) =>
+      currentImage.id === imageId,
+  );
+
+  if (!image) {
+    throw new DomainError(
+      `No se encontró la imagen "${imageId}".`,
+    );
+  }
+
+  this.removeCurrentCover();
+  image.isCover = true;
+  this.touch();
+}
 
   publish(): void {
     if (!this.props.categoryId) {

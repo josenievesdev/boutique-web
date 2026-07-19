@@ -148,3 +148,92 @@ describe("Product", () => {
     }).toThrow("Ya existe una imagen en la posición 1.");
   });
 });
+
+it("elimina una imagen del producto", () => {
+  const product = createProduct();
+
+  product.addImage({
+    id: "image-1",
+    path: "products/product-1/front.webp",
+    altText: "Vista frontal",
+    position: 1,
+    isCover: true,
+  });
+
+  const removedImage =
+    product.removeImage("image-1");
+
+  expect(removedImage.id).toBe("image-1");
+  expect(product.imageCount).toBe(0);
+});
+
+it("asigna una nueva portada al eliminar la portada actual", () => {
+  const product = createProduct();
+
+  product.addImage({
+    id: "image-1",
+    path: "products/product-1/front.webp",
+    altText: "Vista frontal",
+    position: 1,
+    isCover: true,
+  });
+
+  product.addImage({
+    id: "image-2",
+    path: "products/product-1/back.webp",
+    altText: "Vista posterior",
+    position: 2,
+    isCover: false,
+  });
+
+  product.removeImage("image-1");
+
+  expect(product.images).toHaveLength(1);
+  expect(product.images[0]?.id).toBe("image-2");
+  expect(product.images[0]?.isCover).toBe(true);
+});
+
+it("permite cambiar la imagen de portada", () => {
+  const product = createProduct();
+
+  product.addImage({
+    id: "image-1",
+    path: "products/product-1/front.webp",
+    altText: "Vista frontal",
+    position: 1,
+    isCover: true,
+  });
+
+  product.addImage({
+    id: "image-2",
+    path: "products/product-1/back.webp",
+    altText: "Vista posterior",
+    position: 2,
+    isCover: false,
+  });
+
+  product.setCoverImage("image-2");
+
+  expect(
+    product.images.find(
+      (image) => image.id === "image-1",
+    )?.isCover,
+  ).toBe(false);
+
+  expect(
+    product.images.find(
+      (image) => image.id === "image-2",
+    )?.isCover,
+  ).toBe(true);
+});
+
+it("rechaza eliminar una imagen inexistente", () => {
+  const product = createProduct();
+
+  expect(() => {
+    product.removeImage("missing-image");
+  }).toThrow(
+    'No se encontró la imagen "missing-image".',
+  );
+});
+
