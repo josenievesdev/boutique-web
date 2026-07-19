@@ -116,6 +116,15 @@ addImage(image: ProductImage): void {
 }
 
 removeImage(imageId: string): ProductImage {
+  if (
+    this.props.status === "published" &&
+    this.props.images.length === 1
+  ) {
+    throw new DomainError(
+      "Un producto publicado debe conservar al menos una imagen.",
+    );
+  }
+
   const imageIndex = this.props.images.findIndex(
     (image) => image.id === imageId,
   );

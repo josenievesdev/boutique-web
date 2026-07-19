@@ -185,57 +185,64 @@ async function main(): Promise<void> {
       );
     }
 
-    const publishedProduct =
-      await publishProduct.execute(product.id);
+const publishedProduct =
+  await publishProduct.execute(product.id);
 
-    console.log("\n3. Producto publicado");
+console.log("\n3. Producto publicado");
 
-    console.table({
-      estado: publishedProduct.status,
-      imagenes: publishedProduct.imageCount,
-    });
+console.table({
+  estado: publishedProduct.status,
+  imagenes: publishedProduct.imageCount,
+});
 
-    const productAfterRemoval =
-      await removeImage.execute(
-        product.id,
-        firstUpload.imageId,
-      );
+const secondUpload = await uploadImage.execute({
+  productId: product.id,
+  extension: "png",
+  contentType: "image/png",
+  data: createTinyPng(),
+  altText: "Segunda imagen temporal",
+  position: 2,
+  isCover: false,
+});
 
-    console.log("\n4. Primera imagen eliminada");
+console.log("\n4. Segunda imagen subida");
 
-    console.table({
-      imagenes: productAfterRemoval.imageCount,
-    });
+console.table({
+  ruta: secondUpload.path,
+  imagenes:
+    secondUpload.product.imageCount,
+});
 
-    const removedResponse = await fetch(
-      firstUpload.publicUrl,
-    );
+const productAfterRemoval =
+  await removeImage.execute(
+    product.id,
+    firstUpload.imageId,
+  );
 
-    if (removedResponse.ok) {
-      throw new Error(
-        "La imagen eliminada continúa disponible.",
-      );
-    }
+const remainingImage =
+  productAfterRemoval.images[0];
 
-    const secondUpload = await uploadImage.execute({
-      productId: product.id,
-      extension: "png",
-      contentType: "image/png",
-      data: createTinyPng(),
-      altText: "Segunda imagen temporal",
-      position: 1,
-      isCover: true,
-    });
+console.log(
+  "\n5. Primera imagen eliminada",
+);
 
-    console.log(
-      "\n5. Segunda imagen subida",
-    );
+console.table({
+  imagenes: productAfterRemoval.imageCount,
+  nuevaPortada:
+    remainingImage?.id ===
+      secondUpload.imageId &&
+    remainingImage.isCover,
+});
 
-    console.table({
-      ruta: secondUpload.path,
-      imagenes:
-        secondUpload.product.imageCount,
-    });
+const removedResponse = await fetch(
+  firstUpload.publicUrl,
+);
+
+if (removedResponse.ok) {
+  throw new Error(
+    "La imagen eliminada continúa disponible.",
+  );
+}
 
     await deleteProduct.execute(product.id);
     productId = null;

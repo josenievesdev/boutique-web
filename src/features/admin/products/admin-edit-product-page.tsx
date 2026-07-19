@@ -21,6 +21,8 @@ import { SupabaseProductRepository } from "../../../infrastructure/repositories/
 import { SystemClock } from "../../../infrastructure/system/system-clock";
 import { supabase } from "../../../infrastructure/supabase/supabase-client";
 import { slugify } from "../../../lib/slugify";
+import { AdminProductImagesSection } from "./admin-product-images-section";
+import { AdminProductStatusActions } from "./admin-product-status-actions";
 
 const productRepository =
   new SupabaseProductRepository(supabase);
@@ -539,6 +541,16 @@ export function AdminEditProductPage() {
           </button>
         </footer>
       </form>
+
+      <AdminProductImagesSection
+        product={product}
+        onProductChange={setProduct}
+      />
+
+      <AdminProductStatusActions
+        product={product}
+        onProductChange={setProduct}
+      />
     </main>
   );
 }

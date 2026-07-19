@@ -147,7 +147,7 @@ describe("Product", () => {
       });
     }).toThrow("Ya existe una imagen en la posición 1.");
   });
-  
+
   it("rechaza una descripción corta vacía", () => {
   expect(() => {
     createProduct({
@@ -165,6 +165,25 @@ it("rechaza una descripción completa vacía", () => {
     });
   }).toThrow(
     "La descripción completa del producto es obligatoria.",
+  );
+});
+it("impide eliminar la última imagen de un producto publicado", () => {
+  const product = createProduct();
+
+  product.addImage({
+    id: "image-1",
+    path: "product-1/cover.webp",
+    altText: "Vista frontal",
+    position: 1,
+    isCover: true,
+  });
+
+  product.publish();
+
+  expect(() => {
+    product.removeImage("image-1");
+  }).toThrow(
+    "Un producto publicado debe conservar al menos una imagen.",
   );
 });
 });
