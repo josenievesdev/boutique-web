@@ -9,6 +9,7 @@
   "lint": "oxlint",
   "test": "vitest",
   "test:run": "vitest run",
+  "core:demo": "tsx scripts/demo-core.ts",
   "preview": "vite preview"
 },
   "dependencies": {
