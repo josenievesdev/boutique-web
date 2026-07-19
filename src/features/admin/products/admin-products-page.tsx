@@ -185,13 +185,12 @@ export function AdminProductsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          disabled
-          title="Disponible en el próximo bloque"
-        >
-          Nuevo producto
-        </button>
+<Link
+  className="admin-primary-link"
+  to="/admin/products/new"
+>
+  Nuevo producto
+</Link>
       </header>
 
       <section className="admin-products__toolbar">
