@@ -257,13 +257,25 @@ setCoverImage(imageId: string): void {
       );
     }
 
-    if (!props.slug.trim()) {
-      throw new DomainError(
-        "El slug del producto es obligatorio.",
-      );
-    }
+if (!props.slug.trim()) {
+  throw new DomainError(
+    "El slug del producto es obligatorio.",
+  );
+}
 
-    this.validatePrice(props.priceInPesos);
+if (!props.shortDescription.trim()) {
+  throw new DomainError(
+    "La descripción corta del producto es obligatoria.",
+  );
+}
+
+if (!props.description.trim()) {
+  throw new DomainError(
+    "La descripción completa del producto es obligatoria.",
+  );
+}
+
+this.validatePrice(props.priceInPesos);
 
     if (
       props.previousPriceInPesos !== null &&

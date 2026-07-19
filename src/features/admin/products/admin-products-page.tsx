@@ -371,13 +371,12 @@ export function AdminProductsPage() {
                 </div>
 
                 <div className="admin-product-row__actions">
-                  <button
-                    type="button"
-                    disabled
-                    title="La edición se implementará en el próximo bloque"
+                  <Link
+                    className="admin-edit-link"
+                    to={`/admin/products/${product.id}/edit`}
                   >
                     Editar
-                  </button>
+                  </Link>
                 </div>
               </article>
             );

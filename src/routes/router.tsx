@@ -7,6 +7,7 @@ import { AdminLoginPage } from "../features/auth/admin-login-page";
 import { ProtectedAdminRoute } from "../features/auth/protected-admin-route";
 import { AdminProductsPage } from "../features/admin/products/admin-products-page";
 import { AdminNewProductPage } from "../features/admin/products/admin-new-product-page";
+import { AdminEditProductPage } from "../features/admin/products/admin-edit-product-page";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
     {
       path: "/admin/products/new",
       element: <AdminNewProductPage />,
+    },
+    {
+      path: "/admin/products/:productId/edit",
+      element: <AdminEditProductPage />,
     }
   ],
 },

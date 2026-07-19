@@ -692,3 +692,42 @@
     justify-content: center;
   }
 }
+.admin-edit-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.admin-edit-heading h1 {
+  margin: 0;
+}
+
+.admin-edit-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #d4cac0;
+  border-radius: 10px;
+  color: #332823;
+  background: transparent;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.admin-edit-link:hover {
+  border-color: #7b4e42;
+  background: #f5eee8;
+}
+
+@media (max-width: 640px) {
+  .admin-edit-link {
+    width: 100%;
+  }
+}

@@ -147,6 +147,26 @@ describe("Product", () => {
       });
     }).toThrow("Ya existe una imagen en la posición 1.");
   });
+  
+  it("rechaza una descripción corta vacía", () => {
+  expect(() => {
+    createProduct({
+      shortDescription: "   ",
+    });
+  }).toThrow(
+    "La descripción corta del producto es obligatoria.",
+  );
+});
+
+it("rechaza una descripción completa vacía", () => {
+  expect(() => {
+    createProduct({
+      description: "   ",
+    });
+  }).toThrow(
+    "La descripción completa del producto es obligatoria.",
+  );
+});
 });
 
 it("elimina una imagen del producto", () => {
