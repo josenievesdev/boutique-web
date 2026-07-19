@@ -19,6 +19,7 @@
     "supabase:demo": "tsx --env-file=.env.local scripts/demo-supabase-catalog.ts",
     "admin:bootstrap": "tsx --env-file=.env.local scripts/bootstrap-local-admin.ts",
     "admin:demo": "tsx --env-file=.env.local scripts/demo-admin-access.ts",
+    "repository:demo": "tsx --env-file=.env.local scripts/demo-supabase-product-repository.ts",
     "preview": "vite preview"
   },
   "dependencies": {
