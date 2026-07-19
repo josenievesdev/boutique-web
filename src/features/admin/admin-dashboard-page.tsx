@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { useAuth } from "../auth/use-auth";
 
 export function AdminDashboardPage() {
@@ -41,14 +42,23 @@ export function AdminDashboardPage() {
       </header>
 
       <section className="admin-dashboard__content">
-        <article className="admin-summary-card">
-          <p>Productos</p>
-          <strong>Próximo bloque</strong>
-          <span>
-            Aquí aparecerán borradores, publicados,
-            ocultos y archivados.
-          </span>
-        </article>
+<Link
+  className="admin-summary-card admin-summary-card--link"
+  to="/admin/products"
+>
+  <p>Productos</p>
+
+  <strong>Gestionar catálogo</strong>
+
+  <span>
+    Consulta borradores, publicaciones,
+    productos ocultos y archivados.
+  </span>
+
+  <span className="admin-summary-card__action">
+    Ver productos →
+  </span>
+</Link>
 
         <article className="admin-summary-card">
           <p>Imágenes</p>

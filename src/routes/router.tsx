@@ -5,6 +5,7 @@ import App from "../App";
 import { AdminDashboardPage } from "../features/admin/admin-dashboard-page";
 import { AdminLoginPage } from "../features/auth/admin-login-page";
 import { ProtectedAdminRoute } from "../features/auth/protected-admin-route";
+import { AdminProductsPage } from "../features/admin/products/admin-products-page";
 
 export const router = createBrowserRouter([
   {
@@ -15,15 +16,19 @@ export const router = createBrowserRouter([
     path: "/admin/login",
     element: <AdminLoginPage />,
   },
-  {
-    element: <ProtectedAdminRoute />,
-    children: [
-      {
-        path: "/admin",
-        element: <AdminDashboardPage />,
-      },
-    ],
-  },
+{
+  element: <ProtectedAdminRoute />,
+  children: [
+    {
+      path: "/admin",
+      element: <AdminDashboardPage />,
+    },
+    {
+      path: "/admin/products",
+      element: <AdminProductsPage />,
+    },
+  ],
+},
   {
     path: "*",
     element: (
