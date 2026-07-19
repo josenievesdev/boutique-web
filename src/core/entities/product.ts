@@ -229,6 +229,17 @@ setCoverImage(imageId: string): void {
     this.touch();
   }
 
+  restoreToDraft(): void {
+  if (this.props.status !== "archived") {
+    throw new DomainError(
+      "Solo un producto archivado puede restaurarse.",
+    );
+  }
+
+  this.props.status = "draft";
+  this.touch();
+}
+
   updatePrice(priceInPesos: number): void {
     this.validatePrice(priceInPesos);
 

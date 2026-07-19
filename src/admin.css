@@ -942,3 +942,66 @@
     grid-template-columns: 1fr;
   }
 }
+
+.admin-product-status-panel__summary {
+  flex: 1;
+}
+
+.admin-product-status-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-action-button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: #332823;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-action-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.admin-action-button--secondary {
+  border: 1px solid #bfb3a8;
+  color: #332823;
+  background: #fff;
+}
+
+.admin-action-button--danger-outline {
+  border: 1px solid #b33a32;
+  color: #962c26;
+  background: #fff;
+}
+
+.admin-action-button--danger {
+  color: #fff;
+  background: #a52d27;
+}
+
+.admin-product-status-progress {
+  margin: 0;
+  color: #6c625d;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .admin-product-status-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-action-button {
+    width: 100%;
+  }
+}

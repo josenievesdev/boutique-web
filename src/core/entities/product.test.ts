@@ -186,6 +186,24 @@ it("impide eliminar la última imagen de un producto publicado", () => {
     "Un producto publicado debe conservar al menos una imagen.",
   );
 });
+it("restaura un producto archivado como borrador", () => {
+  const product = createProduct();
+
+  product.archive();
+  product.restoreToDraft();
+
+  expect(product.status).toBe("draft");
+});
+
+it("rechaza restaurar un producto que no está archivado", () => {
+  const product = createProduct();
+
+  expect(() => {
+    product.restoreToDraft();
+  }).toThrow(
+    "Solo un producto archivado puede restaurarse.",
+  );
+});
 });
 
 it("elimina una imagen del producto", () => {
