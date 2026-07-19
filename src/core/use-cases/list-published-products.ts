@@ -1,14 +1,18 @@
 import type { Product } from "../entities/product";
-import type { ProductRepository } from "../repositories/product-repository";
+import type { ProductCatalogRepository } from "../repositories/product-catalog-repository";
 
 export class ListPublishedProducts {
-  private readonly productRepository: ProductRepository;
+  private readonly productCatalogRepository:
+    ProductCatalogRepository;
 
-  constructor(productRepository: ProductRepository) {
-    this.productRepository = productRepository;
+  constructor(
+    productCatalogRepository: ProductCatalogRepository,
+  ) {
+    this.productCatalogRepository =
+      productCatalogRepository;
   }
 
   async execute(): Promise<Product[]> {
-    return this.productRepository.listPublished();
+    return this.productCatalogRepository.listPublished();
   }
 }

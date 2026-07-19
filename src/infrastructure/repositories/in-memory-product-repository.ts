@@ -1,10 +1,11 @@
 import type { Product } from "../../core/entities/product";
 import { ConflictError } from "../../core/errors/conflict-error";
 import { NotFoundError } from "../../core/errors/not-found-error";
+import type { ProductCatalogRepository } from "../../core/repositories/product-catalog-repository";
 import type { ProductRepository } from "../../core/repositories/product-repository";
 
 export class InMemoryProductRepository
-  implements ProductRepository
+  implements ProductRepository, ProductCatalogRepository
 {
   private readonly products = new Map<string, Product>();
 
@@ -78,6 +79,18 @@ export class InMemoryProductRepository
       (product) => product.status === "published",
     );
   }
+
+  async findPublishedBySlug(
+  slug: string,
+): Promise<Product | null> {
+  const product = await this.findBySlug(slug);
+
+  if (!product || product.status !== "published") {
+    return null;
+  }
+
+  return product;
+}
 
   async deletePermanently(id: string): Promise<void> {
     const productExists = this.products.has(id);

@@ -4,19 +4,21 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "tsc -b && vite build",
-  "lint": "oxlint",
-  "test": "vitest",
-  "test:run": "vitest run",
-  "core:demo": "tsx scripts/demo-core.ts",
-  "supabase:init": "supabase init",
-  "supabase:start": "supabase start",
-  "supabase:stop": "supabase stop",
-  "supabase:status": "supabase status",
-  "supabase:reset": "supabase db reset",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "core:demo": "tsx scripts/demo-core.ts",
+    "supabase:init": "supabase init",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local > src/infrastructure/supabase/database.types.ts",
+    "supabase:demo": "tsx --env-file=.env.local scripts/demo-supabase-catalog.ts",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.7",
     "react": "^19.2.7",
@@ -24,7 +26,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "^24.13.2",
+    "@types/node": "^24.13.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
