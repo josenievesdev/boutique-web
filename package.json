@@ -10,6 +10,11 @@
   "test": "vitest",
   "test:run": "vitest run",
   "core:demo": "tsx scripts/demo-core.ts",
+  "supabase:init": "supabase init",
+  "supabase:start": "supabase start",
+  "supabase:stop": "supabase stop",
+  "supabase:status": "supabase status",
+  "supabase:reset": "supabase db reset",
   "preview": "vite preview"
 },
   "dependencies": {
