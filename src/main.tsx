@@ -1,4 +1,7 @@
-import { StrictMode } from "react";
+import {
+  StrictMode,
+  Suspense,
+} from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router/dom";
 import "./index.css";
@@ -14,7 +17,20 @@ createRoot(
 <StrictMode>
   <CartProvider>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <Suspense
+        fallback={
+          <main
+            className="route-loading"
+            aria-live="polite"
+          >
+            <div className="route-loading__indicator" />
+
+            <p>Cargando contenido...</p>
+          </main>
+        }
+      >
+        <RouterProvider router={router} />
+      </Suspense>
     </AuthProvider>
   </CartProvider>
 </StrictMode>,

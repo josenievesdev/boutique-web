@@ -59,3 +59,47 @@ img {
 #root {
   min-height: 100vh;
 }
+
+.route-loading {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  padding: 24px;
+  color: #756a63;
+  background: #f7f3ee;
+  text-align: center;
+}
+
+.route-loading p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.route-loading__indicator {
+  width: 42px;
+  height: 42px;
+  border: 3px solid
+    rgba(139, 90, 77, 0.2);
+  border-top-color: #8b5a4d;
+  border-radius: 50%;
+  animation:
+    route-loading-spin
+    700ms linear infinite;
+}
+
+@keyframes route-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (
+  prefers-reduced-motion: reduce
+) {
+  .route-loading__indicator {
+    animation-duration: 1400ms;
+  }
+}

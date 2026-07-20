@@ -1,76 +1,85 @@
-import {
-  createBrowserRouter,
-} from "react-router";
-import App from "../App";
-import { AdminDashboardPage } from "../features/admin/admin-dashboard-page";
-import { AdminLoginPage } from "../features/auth/admin-login-page";
+import { createBrowserRouter } from "react-router";
 import { ProtectedAdminRoute } from "../features/auth/protected-admin-route";
-import { AdminProductsPage } from "../features/admin/products/admin-products-page";
-import { AdminNewProductPage } from "../features/admin/products/admin-new-product-page";
-import { AdminEditProductPage } from "../features/admin/products/admin-edit-product-page";
-import { CatalogProductDetailPage } from "../features/catalog/catalog-product-detail-page";
-import { CartPage } from "../features/cart/cart-page";
-import { AdminSettingsPage } from "../features/admin/admin-settings-page";
-import { AdminCategoriesPage } from "../features/admin/categories/admin-categories-page";
+import {
+  AdminCategoriesPage,
+  AdminDashboardPage,
+  AdminEditProductPage,
+  AdminLoginPage,
+  AdminNewProductPage,
+  AdminProductsPage,
+  AdminSettingsPage,
+  App,
+  CartPage,
+  CatalogProductDetailPage,
+} from "./lazy-route-components";
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-{
-  path: "/productos/:slug",
-  element: <CatalogProductDetailPage />,
-},
-{
-  path: "/solicitud",
-  element: <CartPage />,
-},
-  {
-    path: "/admin/login",
-    element: <AdminLoginPage />,
-  },
-{
-  element: <ProtectedAdminRoute />,
-  children: [
+export const router =
+  createBrowserRouter([
     {
-      path: "/admin",
-      element: <AdminDashboardPage />,
+      path: "/",
+      element: <App />,
     },
     {
-      path: "/admin/products",
-      element: <AdminProductsPage />,
+      path: "/productos/:slug",
+      element:
+        <CatalogProductDetailPage />,
     },
     {
-      path: "/admin/products/new",
-      element: <AdminNewProductPage />,
+      path: "/solicitud",
+      element: <CartPage />,
     },
     {
-      path: "/admin/products/:productId/edit",
-      element: <AdminEditProductPage />,
+      path: "/admin/login",
+      element: <AdminLoginPage />,
     },
     {
-      path: "/admin/settings",
-      element: <AdminSettingsPage />,
+      element: <ProtectedAdminRoute />,
+      children: [
+        {
+          path: "/admin",
+          element:
+            <AdminDashboardPage />,
+        },
+        {
+          path: "/admin/products",
+          element:
+            <AdminProductsPage />,
+        },
+        {
+          path: "/admin/products/new",
+          element:
+            <AdminNewProductPage />,
+        },
+        {
+          path:
+            "/admin/products/:productId/edit",
+          element:
+            <AdminEditProductPage />,
+        },
+        {
+          path: "/admin/settings",
+          element:
+            <AdminSettingsPage />,
+        },
+        {
+          path: "/admin/categories",
+          element:
+            <AdminCategoriesPage />,
+        },
+      ],
     },
     {
-      path: "/admin/categories",
-      element: <AdminCategoriesPage />,
-    },
-  ],
-},
-  {
-    path: "*",
-    element: (
-      <main className="admin-status">
-        <section className="admin-status__card">
-          <p className="admin-eyebrow">
-            Error 404
-          </p>
+      path: "*",
+      element: (
+        <main className="admin-status">
+          <section className="admin-status__card">
+            <p className="admin-eyebrow">
+              Error 404
+            </p>
 
-          <h1>Página no encontrada</h1>
-        </section>
-      </main>
-    ),
-  },
-]);
+            <h1>Página no encontrada</h1>
+          </section>
+        </main>
+      ),
+    },
+  ]);
