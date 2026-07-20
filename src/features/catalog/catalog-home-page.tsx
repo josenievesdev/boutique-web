@@ -252,22 +252,18 @@ export function CatalogHomePage() {
                   </span>
                   <span className="catalog-showcase__caption">
                     <span>
-                      <small>{index === 0 ? "Pieza destacada" : "A continuación"}</small>
+                      <small>{index === 0 ? "Pieza destacada" : "Otra pieza"}</small>
                       <strong>{product.name}</strong>
                     </span>
                     <b>{currencyFormatter.format(product.priceInPesos)}</b>
-                  </span>
-                  <span className="catalog-showcase__number" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
                   </span>
                 </Link>
               );
             })}
 
-            {showcaseProducts.length < 2 ? (
-              <div className="catalog-showcase__note" aria-hidden="true">
-                <span>Edición cuidada</span>
-                <strong>Diseños para descubrir con calma.</strong>
+            {showcaseProducts.length === 0 ? (
+              <div className="catalog-showcase__empty" aria-hidden="true">
+                <span>Colección en preparación</span>
               </div>
             ) : null}
           </div>
@@ -330,7 +326,7 @@ export function CatalogHomePage() {
                 4,
               )}`}
             >
-              {visibleProducts.map((product, index) => {
+              {visibleProducts.map((product) => {
                 const productData = product.toObject();
                 const coverImage =
                   productData.images.find((image) => image.isCover) ??
@@ -345,7 +341,6 @@ export function CatalogHomePage() {
                     product={productData}
                     imageUrl={imageUrl}
                     imageAlt={coverImage?.altText || productData.name}
-                    position={index}
                   />
                 );
               })}

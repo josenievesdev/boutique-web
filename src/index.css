@@ -2,26 +2,26 @@
   color-scheme: light;
 
   /* Color: backgrounds and surfaces */
-  --color-background: #f1ede7;
-  --color-background-subtle: #f8f6f2;
-  --color-surface: #f8f6f2;
-  --color-surface-raised: #fdfcf9;
-  --color-surface-muted: #e8e3dc;
-  --color-surface-overlay: rgba(248, 246, 242, 0.9);
+  --color-background: #fcfaf7;
+  --color-background-subtle: #f7f3ee;
+  --color-surface: #f7f3ee;
+  --color-surface-raised: #fffefd;
+  --color-surface-muted: #f3e5e3;
+  --color-surface-overlay: rgba(252, 250, 247, 0.94);
 
   /* Color: content and brand */
-  --color-text: #282828;
-  --color-text-secondary: #706c67;
-  --color-text-inverse: #fdfcf9;
-  --color-primary: #331b0f;
-  --color-primary-hover: #241108;
-  --color-primary-soft: #e5d9c5;
-  --color-accent: #d7a39a;
+  --color-text: #292525;
+  --color-text-secondary: #746e6b;
+  --color-text-inverse: #fcfaf7;
+  --color-primary: #402014;
+  --color-primary-hover: #2f160e;
+  --color-primary-soft: #e9dfcf;
+  --color-accent: #e5cac7;
 
   /* Color: borders and interaction */
-  --color-border: rgba(40, 40, 40, 0.14);
-  --color-border-strong: rgba(40, 40, 40, 0.28);
-  --color-focus-ring: rgba(51, 27, 15, 0.24);
+  --color-border: rgba(41, 37, 37, 0.13);
+  --color-border-strong: rgba(41, 37, 37, 0.26);
+  --color-focus-ring: rgba(64, 32, 20, 0.2);
 
   /* Color: states */
   --color-success: #49634f;
@@ -35,11 +35,11 @@
   --color-danger-border: #c7a5a0;
 
   /* Color: reusable pastels */
-  --color-pastel-sage: #cfd8cc;
-  --color-pastel-blush: #e8d6d2;
-  --color-pastel-rose: #d7a39a;
-  --color-pastel-mist: #d9e2e6;
-  --color-pastel-sand: #e5d9c5;
+  --color-pastel-sage: #d5ded2;
+  --color-pastel-blush: #f3e5e3;
+  --color-pastel-rose: #e5cac7;
+  --color-pastel-mist: #dce5e8;
+  --color-pastel-sand: #e9dfcf;
 
   /* Spacing */
   --space-1: 4px;
@@ -57,10 +57,10 @@
 
   /* Shape */
   --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 14px;
-  --radius-xl: 14px;
-  --radius-2xl: 14px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+  --radius-2xl: 12px;
   --radius-pill: 999px;
   --radius-circle: 50%;
 
@@ -115,7 +115,7 @@ html {
 }
 
 body {
-  min-width: 320px;
+  min-width: 0;
   min-height: 100vh;
   margin: 0;
   overflow-x: hidden;
