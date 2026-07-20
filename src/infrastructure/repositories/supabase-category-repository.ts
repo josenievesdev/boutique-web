@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Category } from "../../core/entities/category";
-import type { AdminCategoryRepository } from "../../core/repositories/admin-category-repository";
+import type { CategoryManagementRepository } from "../../core/repositories/category-management-repository";
 import type { Database } from "../supabase/database.types";
 
 type CategoryRow =
@@ -37,7 +37,7 @@ function mapCategory(
 }
 
 export class SupabaseCategoryRepository
-  implements AdminCategoryRepository
+  implements CategoryManagementRepository
 {
   private readonly client:
     SupabaseClient<Database>;
@@ -95,6 +95,29 @@ export class SupabaseCategoryRepository
     return data.map(mapCategory);
   }
 
+  async findById(
+    categoryId: string,
+  ): Promise<Category | null> {
+    const {
+      data,
+      error,
+    } = await this.client
+      .from("categories")
+      .select(categorySelection)
+      .eq("id", categoryId)
+      .maybeSingle();
+
+    if (error) {
+      throw new Error(
+        `No fue posible consultar la categoría: ${error.message}`,
+      );
+    }
+
+    return data
+      ? mapCategory(data)
+      : null;
+  }
+
   async findBySlug(
     slug: string,
   ): Promise<Category | null> {
@@ -142,5 +165,52 @@ export class SupabaseCategoryRepository
         `No fue posible crear la categoría: ${error.message}`,
       );
     }
+  }
+
+  async update(
+    category: Category,
+  ): Promise<void> {
+    const { error } = await this.client
+      .from("categories")
+      .update({
+        name: category.name,
+        slug: category.slug,
+        description:
+          category.description,
+        active: category.active,
+        position: category.position,
+        updated_at:
+          category.updatedAt.toISOString(),
+      })
+      .eq("id", category.id);
+
+    if (error) {
+      throw new Error(
+        `No fue posible actualizar la categoría: ${error.message}`,
+      );
+    }
+  }
+
+  async countProducts(
+    categoryId: string,
+  ): Promise<number> {
+    const {
+      count,
+      error,
+    } = await this.client
+      .from("products")
+      .select("id", {
+        count: "exact",
+        head: true,
+      })
+      .eq("category_id", categoryId);
+
+    if (error) {
+      throw new Error(
+        `No fue posible consultar los productos de la categoría: ${error.message}`,
+      );
+    }
+
+    return count ?? 0;
   }
 }
