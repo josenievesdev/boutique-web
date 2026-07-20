@@ -18,7 +18,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
   background: var(--color-surface);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .admin-eyebrow {
@@ -184,7 +184,7 @@
 
 .admin-summary-card--link:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .admin-summary-card__action {
@@ -406,8 +406,8 @@
 }
 
 .admin-status-badge--hidden {
-  color: #57515e;
-  background: #ece9ef;
+  color: var(--color-text-secondary);
+  background: var(--color-background-subtle);
 }
 
 .admin-status-badge--out_of_stock {
@@ -416,8 +416,8 @@
 }
 
 .admin-status-badge--archived {
-  color: #5f5f5f;
-  background: #e9e9e9;
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
 }
 
 .admin-product-row__actions button {
@@ -837,6 +837,12 @@
   color: var(--color-danger);
 }
 
+.admin-image-card__actions
+  .admin-image-card__delete:hover:not(:disabled) {
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-soft);
+}
+
 .admin-images-empty {
   padding: 38px 20px;
   border: 1px dashed var(--color-border-strong);
@@ -994,8 +1000,20 @@
 }
 
 .admin-action-button--danger {
+  border: 1px solid var(--color-danger-border);
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.admin-action-button--danger-outline:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.admin-action-button--danger:hover:not(:disabled) {
+  border-color: var(--color-danger-hover);
   color: var(--color-text-inverse);
-  background: var(--color-danger);
+  background: var(--color-danger-hover);
 }
 
 .admin-product-status-progress {
@@ -1148,8 +1166,8 @@
 .admin-category-status {
   padding: 6px 9px;
   border-radius: var(--radius-pill);
-  color: #686868;
-  background: #ececec;
+  color: var(--color-text-secondary);
+  background: var(--color-background-subtle);
   font-size: 0.72rem;
   font-weight: 800;
 }
@@ -1213,7 +1231,7 @@
   border: 1px solid var(--color-border-strong);
   border-radius: 22px;
   background: var(--color-surface);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .admin-category-editor__header {
@@ -1363,4 +1381,120 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* Shared action treatments */
+.admin-form button,
+.admin-status button,
+.admin-dashboard button,
+.admin-products__header button,
+.admin-products__state button,
+.admin-primary-link,
+.admin-product-form__actions button,
+.admin-image-upload__fields > button,
+.admin-product-status-panel > button,
+.admin-action-button,
+.admin-category-form > button,
+.admin-category-editor__save {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+  box-shadow: none;
+  font-family: var(--font-family-sans);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.admin-form button:hover:not(:disabled),
+.admin-status button:hover:not(:disabled),
+.admin-dashboard button:hover:not(:disabled),
+.admin-products__header button:hover:not(:disabled),
+.admin-products__state button:hover:not(:disabled),
+.admin-primary-link:hover,
+.admin-product-form__actions button:hover:not(:disabled),
+.admin-image-upload__fields > button:hover:not(:disabled),
+.admin-product-status-panel > button:hover:not(:disabled),
+.admin-action-button:hover:not(:disabled),
+.admin-category-form > button:hover:not(:disabled),
+.admin-category-editor__save:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.admin-secondary-link,
+.admin-action-button--secondary,
+.admin-category-editor__cancel {
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-primary);
+  background: var(--color-surface-raised);
+  box-shadow: none;
+  font-family: var(--font-family-sans);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.admin-secondary-link:hover,
+.admin-action-button--secondary:hover:not(:disabled),
+.admin-category-editor__cancel:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.admin-edit-link,
+.admin-product-row__actions button,
+.admin-image-card__actions button,
+.admin-category-editor__header > button {
+  color: var(--color-primary);
+  background: var(--color-surface-raised);
+}
+
+.admin-edit-link:hover,
+.admin-product-row__actions button:hover:not(:disabled),
+.admin-image-card__actions button:hover:not(:disabled),
+.admin-category-editor__header > button:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.admin-action-button--danger-outline,
+.admin-action-button--danger {
+  border-color: var(--color-danger-border);
+  color: var(--color-danger);
+}
+
+.admin-action-button--danger-outline {
+  background: var(--color-surface-raised);
+}
+
+.admin-action-button--danger {
+  background: var(--color-danger-soft);
+}
+
+.admin-action-button--danger-outline:hover:not(:disabled) {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.admin-action-button--danger:hover:not(:disabled) {
+  border-color: var(--color-danger-hover);
+  color: var(--color-text-inverse);
+  background: var(--color-danger-hover);
+}
+
+.admin-image-card__actions
+  .admin-image-card__delete {
+  color: var(--color-danger);
+}
+
+.admin-image-card__actions
+  .admin-image-card__delete:hover:not(:disabled) {
+  border-color: var(--color-danger-border);
+  color: var(--color-danger-hover);
+  background: var(--color-danger-soft);
 }

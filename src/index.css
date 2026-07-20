@@ -2,37 +2,37 @@
   color-scheme: light;
 
   /* Color: backgrounds and surfaces */
-  --color-background: #f7f3ee;
-  --color-background-subtle: #f1e8e2;
-  --color-surface: #fffdf9;
+  --color-background: #f6f1ec;
+  --color-background-subtle: #eee4e1;
+  --color-surface: #fffcf8;
   --color-surface-raised: #fff;
-  --color-surface-muted: #eee7df;
-  --color-surface-overlay: rgba(255, 253, 249, 0.92);
+  --color-surface-muted: #e9dfda;
+  --color-surface-overlay: rgba(255, 252, 248, 0.94);
 
   /* Color: content and brand */
-  --color-text: #241f1c;
-  --color-text-secondary: #756a63;
+  --color-text: #21191c;
+  --color-text-secondary: #71656a;
   --color-text-inverse: #fff;
-  --color-primary: #8b4f62;
-  --color-primary-hover: #6a263d;
-  --color-primary-soft: #f1e5e8;
-  --color-accent: #b1843f;
+  --color-primary: #762743;
+  --color-primary-hover: #59182f;
+  --color-primary-soft: #f2e1e7;
+  --color-accent: #b99055;
 
   /* Color: borders and interaction */
-  --color-border: #ded4cd;
-  --color-border-strong: #cdbfb5;
-  --color-focus-ring: rgba(139, 79, 98, 0.22);
+  --color-border: #ddd0ca;
+  --color-border-strong: #c8b7af;
+  --color-focus-ring: rgba(118, 39, 67, 0.28);
 
   /* Color: states */
-  --color-success: #315f46;
-  --color-success-soft: #e4f2e8;
-  --color-success-border: #87a991;
-  --color-warning: #8a641d;
-  --color-warning-soft: #fff2cf;
-  --color-danger: #a1493d;
-  --color-danger-hover: #84372f;
-  --color-danger-soft: #fbe8e3;
-  --color-danger-border: #c8958c;
+  --color-success: #2f674d;
+  --color-success-soft: #e2f0e7;
+  --color-success-border: #86aa94;
+  --color-warning: #8d6526;
+  --color-warning-soft: #f8edd6;
+  --color-danger: #a64a43;
+  --color-danger-hover: #84352f;
+  --color-danger-soft: #f8e5e2;
+  --color-danger-border: #c99088;
 
   /* Spacing */
   --space-1: 4px;
@@ -58,9 +58,9 @@
   --radius-circle: 50%;
 
   /* Elevation */
-  --shadow-sm: 0 12px 30px rgba(52, 41, 35, 0.08);
-  --shadow-md: 0 18px 45px rgba(52, 41, 35, 0.1);
-  --shadow-lg: 0 24px 60px rgba(52, 41, 35, 0.12);
+  --shadow-sm: 0 2px 8px rgba(33, 25, 28, 0.05);
+  --shadow-md: 0 7px 20px rgba(33, 25, 28, 0.07);
+  --shadow-lg: 0 14px 32px rgba(33, 25, 28, 0.08);
 
   /* Content widths */
   --content-width-wide: 1180px;
@@ -156,12 +156,42 @@ button:not(:disabled) {
 input,
 select,
 textarea {
-  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+select,
+textarea {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   background-color: var(--color-surface-raised);
 }
 
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+select {
+  min-height: 46px;
+  padding-inline: 14px;
+}
+
 textarea {
+  padding: 12px 14px;
   resize: vertical;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--color-primary);
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+  background-color: var(--color-background-subtle);
 }
 
 ::placeholder {
@@ -171,8 +201,13 @@ textarea {
 
 a {
   color: inherit;
+  text-decoration-color: var(--color-border-strong);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
 }
 
 img {
