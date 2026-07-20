@@ -9,6 +9,7 @@ import { AdminProductsPage } from "../features/admin/products/admin-products-pag
 import { AdminNewProductPage } from "../features/admin/products/admin-new-product-page";
 import { AdminEditProductPage } from "../features/admin/products/admin-edit-product-page";
 import { CatalogProductDetailPage } from "../features/catalog/catalog-product-detail-page";
+import { CartPage } from "../features/cart/cart-page";
 import { AdminSettingsPage } from "../features/admin/admin-settings-page";
 
 export const router = createBrowserRouter([
@@ -16,10 +17,14 @@ export const router = createBrowserRouter([
     path: "/",
     element: <App />,
   },
-  {
-    path: "/productos/:slug",
-    element: <CatalogProductDetailPage />,
-  },
+{
+  path: "/productos/:slug",
+  element: <CatalogProductDetailPage />,
+},
+{
+  path: "/solicitud",
+  element: <CartPage />,
+},
   {
     path: "/admin/login",
     element: <AdminLoginPage />,

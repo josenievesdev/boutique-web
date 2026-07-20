@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useCart } from "../cart/use-cart";
 
 interface CatalogBrandProps {
   businessName?: string;
@@ -15,6 +16,8 @@ export function CatalogHeader({
 }: CatalogBrandProps) {
   const resolvedName =
     resolveBusinessName(businessName);
+
+  const { totalItems } = useCart();
 
   return (
     <header className="catalog-header">
@@ -36,9 +39,21 @@ export function CatalogHeader({
         >
           <Link to="/">Catálogo</Link>
 
-          <a href="/#coleccion">
+          <a
+            className="catalog-navigation__collection"
+            href="/#coleccion"
+          >
             Colección
           </a>
+
+          <Link
+            className="catalog-cart-link"
+            to="/solicitud"
+          >
+            Mi solicitud
+
+            <span>{totalItems}</span>
+          </Link>
         </nav>
       </div>
     </header>

@@ -19,6 +19,7 @@ import { SupabaseShopSettingsRepository } from "../../infrastructure/repositorie
 import { SupabaseProductImageStorage } from "../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../infrastructure/supabase/supabase-client";
 import { buildProductWhatsAppUrl } from "../../lib/build-product-whatsapp-url";
+import { useCart } from "../cart/use-cart";
 import {
   CatalogFooter,
   CatalogHeader,
@@ -66,6 +67,14 @@ const currencyFormatter =
 export function CatalogProductDetailPage() {
   const { slug } =
     useParams<{ slug: string }>();
+
+  const {
+    items: cartItems,
+    addItem,
+  } = useCart();
+
+  const [cartMessage, setCartMessage] =
+    useState<string | null>(null);
 
   const [product, setProduct] =
     useState<Product | null>(null);
@@ -310,19 +319,61 @@ export function CatalogProductDetailPage() {
       window.location.origin,
     ).toString();
 
-  const whatsappUrl =
-    shopSettings?.whatsappNumber
-      ? buildProductWhatsAppUrl({
-          phoneNumber:
-            shopSettings.whatsappNumber,
-          productName:
-            productData.name,
-          priceInPesos:
-            productData.priceInPesos,
-          productUrl:
-            productPublicUrl,
-        })
-      : null;
+const whatsappUrl =
+  shopSettings?.whatsappNumber
+    ? buildProductWhatsAppUrl({
+        phoneNumber:
+          shopSettings.whatsappNumber,
+        productName:
+          productData.name,
+        priceInPesos:
+          productData.priceInPesos,
+        productUrl:
+          productPublicUrl,
+      })
+    : null;
+
+const cartQuantity =
+  cartItems.find(
+    (item) =>
+      item.productId === productData.id,
+  )?.quantity ?? 0;
+
+function handleAddToCart(): void {
+  const currentProductData =
+    productData;
+
+  if (!currentProductData) {
+    return;
+  }
+
+  const coverImage =
+    currentProductData.images.find(
+      (image) => image.isCover,
+    ) ??
+    currentProductData.images[0] ??
+    null;
+
+  addItem({
+    productId:
+      currentProductData.id,
+    slug:
+      currentProductData.slug,
+    name:
+      currentProductData.name,
+    priceInPesos:
+      currentProductData.priceInPesos,
+    imagePath:
+      coverImage?.path ?? null,
+    imageAltText:
+      coverImage?.altText ||
+      currentProductData.name,
+  });
+
+  setCartMessage(
+    "El producto se agregó a tu solicitud.",
+  );
+}
 
   return (
     <div className="catalog-site">
@@ -469,43 +520,62 @@ export function CatalogProductDetailPage() {
               </div>
             </dl>
 
-            <aside className="catalog-detail-contact">
-              <strong>
-                ¿Te interesa este diseño?
-              </strong>
+<aside className="catalog-detail-contact">
+  <strong>
+    ¿Te interesa este diseño?
+  </strong>
 
-              {whatsappUrl ? (
-                <>
-                  <p>
-                    Consulta disponibilidad,
-                    personalización y tiempo de
-                    elaboración directamente con
-                    la boutique.
-                  </p>
+  <p>
+    Agrégalo a tu solicitud para
+    consultar varios productos en un
+    solo mensaje.
+  </p>
 
-                  <a
-                    className="catalog-whatsapp-action"
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Consultar por WhatsApp
-                  </a>
-                </>
-              ) : (
-                <p>
-                  El contacto por WhatsApp todavía
-                  no ha sido configurado.
-                </p>
-              )}
+  <button
+    className="catalog-request-add-button"
+    type="button"
+    onClick={handleAddToCart}
+  >
+    Agregar a mi solicitud
+  </button>
 
-              <Link
-                className="catalog-secondary-action"
-                to="/"
-              >
-                Seguir explorando
-              </Link>
-            </aside>
+  {cartQuantity > 0 ? (
+    <p
+      className="catalog-request-message"
+      role="status"
+    >
+      Cantidad seleccionada:{" "}
+      <strong>{cartQuantity}</strong>
+    </p>
+  ) : null}
+
+  {cartMessage ? (
+    <p
+      className="catalog-request-message"
+      role="status"
+    >
+      {cartMessage}
+    </p>
+  ) : null}
+
+  <Link
+    className="catalog-secondary-action"
+    to="/solicitud"
+  >
+    Ver mi solicitud
+  </Link>
+
+  {whatsappUrl ? (
+    <a
+      className="catalog-whatsapp-secondary"
+      href={whatsappUrl}
+      target="_blank"
+      rel="noreferrer"
+    >
+      Consultar solo este producto
+    </a>
+  ) : null}
+</aside>
           </section>
         </div>
       </main>

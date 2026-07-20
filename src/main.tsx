@@ -5,14 +5,17 @@ import "./index.css";
 import "./catalog.css";
 import "./admin.css";
 import { AuthProvider } from "./features/auth/auth-provider";
+import { CartProvider } from "./features/cart/cart-provider";
 import { router } from "./routes/router";
 
 createRoot(
   document.getElementById("root")!,
 ).render(
-  <StrictMode>
+<StrictMode>
+  <CartProvider>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </StrictMode>,
+  </CartProvider>
+</StrictMode>,
 );
