@@ -1,7 +1,4 @@
-import {
-  Link,
-  NavLink,
-} from "react-router";
+import { Link, NavLink } from "react-router";
 import { useCart } from "../cart/use-cart";
 
 interface CatalogBrandProps {
@@ -48,10 +45,7 @@ export function CatalogHeader({
           to="/"
         >
           <span>{resolvedName}</span>
-
-          <strong>
-            Diseños con identidad
-          </strong>
+          <strong>Diseños con identidad</strong>
         </Link>
 
         <nav
@@ -65,7 +59,7 @@ export function CatalogHeader({
             end
             to="/"
           >
-            Catálogo
+            Descubrir
           </NavLink>
 
           <a
@@ -81,7 +75,7 @@ export function CatalogHeader({
             }
             to="/solicitud"
           >
-            <span>Mi solicitud</span>
+            <span>Solicitud</span>
 
             <span
               className={cartCountClass}
@@ -112,8 +106,8 @@ export function CatalogFooter({
           <strong>{resolvedName}</strong>
 
           <p>
-            Diseños seleccionados y prendas
-            confeccionadas con dedicación.
+            Prendas elegidas con intención y
+            confeccionadas con atención al detalle.
           </p>
         </div>
 
@@ -123,14 +117,14 @@ export function CatalogFooter({
         >
           <span>Explorar</span>
 
-          <Link to="/">Catálogo</Link>
+          <Link to="/">Descubrir</Link>
 
           <a href="/#coleccion">
             Colección
           </a>
 
           <Link to="/solicitud">
-            Mi solicitud
+            Solicitud
           </Link>
         </nav>
 

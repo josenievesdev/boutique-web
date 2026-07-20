@@ -1,12 +1,5 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  Link,
-  useParams,
-} from "react-router";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useParams } from "react-router";
 import type { Category } from "../../core/entities/category";
 import type { Product } from "../../core/entities/product";
 import type { ShopSettings } from "../../core/entities/shop-settings";
@@ -20,118 +13,65 @@ import { SupabaseProductImageStorage } from "../../infrastructure/storage/supaba
 import { supabase } from "../../infrastructure/supabase/supabase-client";
 import { buildProductWhatsAppUrl } from "../../lib/build-product-whatsapp-url";
 import { useCart } from "../cart/use-cart";
-import {
-  CatalogFooter,
-  CatalogHeader,
-} from "./catalog-header";
 import { CatalogProductImage } from "./catalog-product-image";
+import { CatalogPublicState } from "./catalog-public-state";
+import { PublicPageShell } from "./public-page-shell";
 
-const productCatalogRepository =
-  new SupabaseProductCatalogRepository(
-    supabase,
-  );
+const productCatalogRepository = new SupabaseProductCatalogRepository(
+  supabase,
+);
+const categoryRepository = new SupabaseCategoryRepository(supabase);
+const shopSettingsRepository = new SupabaseShopSettingsRepository(supabase);
+const productImageStorage = new SupabaseProductImageStorage(supabase);
+const listPublishedProducts = new ListPublishedProducts(
+  productCatalogRepository,
+);
+const listActiveCategories = new ListActiveCategories(categoryRepository);
+const getShopSettings = new GetShopSettings(shopSettingsRepository);
 
-const categoryRepository =
-  new SupabaseCategoryRepository(supabase);
-
-const shopSettingsRepository =
-  new SupabaseShopSettingsRepository(
-    supabase,
-  );
-
-const productImageStorage =
-  new SupabaseProductImageStorage(supabase);
-
-const listPublishedProducts =
-  new ListPublishedProducts(
-    productCatalogRepository,
-  );
-
-const listActiveCategories =
-  new ListActiveCategories(
-    categoryRepository,
-  );
-
-const getShopSettings =
-  new GetShopSettings(
-    shopSettingsRepository,
-  );
-
-const currencyFormatter =
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  });
+const currencyFormatter = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+  maximumFractionDigits: 0,
+});
 
 export function CatalogProductDetailPage() {
-  const { slug } =
-    useParams<{ slug: string }>();
-
-  const {
-    items: cartItems,
-    addItem,
-  } = useCart();
-
-  const [cartMessage, setCartMessage] =
-    useState<string | null>(null);
-
-  const [product, setProduct] =
-    useState<Product | null>(null);
-
-  const [categories, setCategories] =
-    useState<Category[]>([]);
-
-  const [shopSettings, setShopSettings] =
-    useState<ShopSettings | null>(null);
-
-  const [
-    selectedImageId,
-    setSelectedImageId,
-  ] = useState<string | null>(null);
-
-  const [isLoading, setIsLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState<string | null>(null);
+  const { slug } = useParams<{ slug: string }>();
+  const { items: cartItems, addItem } = useCart();
+  const [cartMessage, setCartMessage] = useState<string | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [shopSettings, setShopSettings] = useState<ShopSettings | null>(null);
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
 
     async function loadProduct(): Promise<void> {
       if (!slug) {
-        setError(
-          "No se recibió el producto solicitado.",
-        );
-
+        setError("No se recibió el producto solicitado.");
         setIsLoading(false);
         return;
       }
 
       try {
-        const [
-          loadedProducts,
-          loadedCategories,
-          loadedSettings,
-        ] = await Promise.all([
-          listPublishedProducts.execute(),
-          listActiveCategories.execute(),
-          getShopSettings.execute(),
-        ]);
+        const [loadedProducts, loadedCategories, loadedSettings] =
+          await Promise.all([
+            listPublishedProducts.execute(),
+            listActiveCategories.execute(),
+            getShopSettings.execute(),
+          ]);
 
         if (!isActive) {
           return;
         }
 
-        const normalizedSlug =
-          slug.trim().toLowerCase();
-
+        const normalizedSlug = slug.trim().toLowerCase();
         const foundProduct =
           loadedProducts.find(
-            (currentProduct) =>
-              currentProduct.slug ===
-              normalizedSlug,
+            (currentProduct) => currentProduct.slug === normalizedSlug,
           ) ?? null;
 
         setCategories(loadedCategories);
@@ -139,24 +79,16 @@ export function CatalogProductDetailPage() {
         setProduct(foundProduct);
 
         if (foundProduct) {
-          const productData =
-            foundProduct.toObject();
-
+          const productData = foundProduct.toObject();
           const coverImage =
-            productData.images.find(
-              (image) => image.isCover,
-            ) ??
+            productData.images.find((image) => image.isCover) ??
             productData.images[0];
 
-          setSelectedImageId(
-            coverImage?.id ?? null,
-          );
+          setSelectedImageId(coverImage?.id ?? null);
         }
       } catch {
         if (isActive) {
-          setError(
-            "No fue posible cargar el producto.",
-          );
+          setError("No fue posible cargar el producto.");
         }
       } finally {
         if (isActive) {
@@ -172,10 +104,7 @@ export function CatalogProductDetailPage() {
     };
   }, [slug]);
 
-  const productData = useMemo(
-    () => product?.toObject() ?? null,
-    [product],
-  );
+  const productData = useMemo(() => product?.toObject() ?? null, [product]);
 
   const selectedImage = useMemo(() => {
     if (!productData) {
@@ -183,20 +112,12 @@ export function CatalogProductDetailPage() {
     }
 
     return (
-      productData.images.find(
-        (image) =>
-          image.id === selectedImageId,
-      ) ??
-      productData.images.find(
-        (image) => image.isCover,
-      ) ??
+      productData.images.find((image) => image.id === selectedImageId) ??
+      productData.images.find((image) => image.isCover) ??
       productData.images[0] ??
       null
     );
-  }, [
-    productData,
-    selectedImageId,
-  ]);
+  }, [productData, selectedImageId]);
 
   const category = useMemo(() => {
     if (!productData?.categoryId) {
@@ -205,263 +126,181 @@ export function CatalogProductDetailPage() {
 
     return (
       categories.find(
-        (currentCategory) =>
-          currentCategory.id ===
-          productData.categoryId,
+        (currentCategory) => currentCategory.id === productData.categoryId,
       ) ?? null
     );
-  }, [
-    categories,
-    productData,
-  ]);
+  }, [categories, productData]);
 
   if (isLoading) {
     return (
-      <div className="catalog-site">
-        <CatalogHeader
-          businessName={
-            shopSettings?.businessName
-          }
-        />
-
+      <PublicPageShell businessName={shopSettings?.businessName}>
         <main className="catalog-detail-state">
-          <p>Cargando producto...</p>
+          <CatalogPublicState eyebrow="Cargando" tone="mist">
+            <p>Preparando los detalles de la pieza…</p>
+          </CatalogPublicState>
         </main>
-
-        <CatalogFooter
-          businessName={
-            shopSettings?.businessName
-          }
-        />
-      </div>
+      </PublicPageShell>
     );
   }
 
   if (error) {
     return (
-      <div className="catalog-site">
-        <CatalogHeader
-          businessName={
-            shopSettings?.businessName
-          }
-        />
-
+      <PublicPageShell businessName={shopSettings?.businessName}>
         <main className="catalog-detail-state">
-          <p role="alert">{error}</p>
-
-          <Link
-            className="catalog-primary-action"
-            to="/"
+          <CatalogPublicState
+            eyebrow="No disponible"
+            title="No pudimos abrir esta pieza"
+            tone="error"
           >
-            Volver al catálogo
-          </Link>
+            <p role="alert">{error}</p>
+            <Link className="catalog-primary-action" to="/">
+              Volver a la colección
+            </Link>
+          </CatalogPublicState>
         </main>
-
-        <CatalogFooter
-          businessName={
-            shopSettings?.businessName
-          }
-        />
-      </div>
+      </PublicPageShell>
     );
   }
 
   if (!productData) {
     return (
-      <div className="catalog-site">
-        <CatalogHeader
-          businessName={
-            shopSettings?.businessName
-          }
-        />
-
+      <PublicPageShell businessName={shopSettings?.businessName}>
         <main className="catalog-detail-state">
-          <p className="catalog-eyebrow">
-            Producto no encontrado
-          </p>
-
-          <h1>
-            Este diseño no está disponible
-          </h1>
-
-          <p>
-            Puede haber sido retirado, ocultado o
-            todavía no estar publicado.
-          </p>
-
-          <Link
-            className="catalog-primary-action"
-            to="/"
+          <CatalogPublicState
+            eyebrow="Producto no encontrado"
+            title="Este diseño no está disponible"
           >
-            Explorar catálogo
-          </Link>
+            <p>Puede haber sido retirado, ocultado o aún no estar publicado.</p>
+            <Link className="catalog-primary-action" to="/">
+              Explorar la colección
+            </Link>
+          </CatalogPublicState>
         </main>
-
-        <CatalogFooter
-          businessName={
-            shopSettings?.businessName
-          }
-        />
-      </div>
+      </PublicPageShell>
     );
   }
 
-  const selectedImageUrl =
-    selectedImage
-      ? productImageStorage.getPublicUrl(
-          selectedImage.path,
-        )
-      : null;
-
-  const productPublicUrl =
-    new URL(
-      `/productos/${productData.slug}`,
-      window.location.origin,
-    ).toString();
-
-const whatsappUrl =
-  shopSettings?.whatsappNumber
+  const selectedImageUrl = selectedImage
+    ? productImageStorage.getPublicUrl(selectedImage.path)
+    : null;
+  const selectedImagePosition = Math.max(
+    productData.images.findIndex((image) => image.id === selectedImage?.id) + 1,
+    1,
+  );
+  const productPublicUrl = new URL(
+    `/productos/${productData.slug}`,
+    window.location.origin,
+  ).toString();
+  const whatsappUrl = shopSettings?.whatsappNumber
     ? buildProductWhatsAppUrl({
-        phoneNumber:
-          shopSettings.whatsappNumber,
-        productName:
-          productData.name,
-        priceInPesos:
-          productData.priceInPesos,
-        productUrl:
-          productPublicUrl,
+        phoneNumber: shopSettings.whatsappNumber,
+        productName: productData.name,
+        priceInPesos: productData.priceInPesos,
+        productUrl: productPublicUrl,
       })
     : null;
+  const cartQuantity =
+    cartItems.find((item) => item.productId === productData.id)?.quantity ?? 0;
 
-const cartQuantity =
-  cartItems.find(
-    (item) =>
-      item.productId === productData.id,
-  )?.quantity ?? 0;
+  function handleAddToCart(): void {
+    if (!productData) {
+      return;
+    }
 
-function handleAddToCart(): void {
-  const currentProductData =
-    productData;
+    const coverImage =
+      productData.images.find((image) => image.isCover) ??
+      productData.images[0] ??
+      null;
 
-  if (!currentProductData) {
-    return;
+    addItem({
+      productId: productData.id,
+      slug: productData.slug,
+      name: productData.name,
+      priceInPesos: productData.priceInPesos,
+      imagePath: coverImage?.path ?? null,
+      imageAltText: coverImage?.altText || productData.name,
+    });
+    setCartMessage("La pieza se agregó a tu solicitud.");
   }
 
-  const coverImage =
-    currentProductData.images.find(
-      (image) => image.isCover,
-    ) ??
-    currentProductData.images[0] ??
-    null;
-
-  addItem({
-    productId:
-      currentProductData.id,
-    slug:
-      currentProductData.slug,
-    name:
-      currentProductData.name,
-    priceInPesos:
-      currentProductData.priceInPesos,
-    imagePath:
-      coverImage?.path ?? null,
-    imageAltText:
-      coverImage?.altText ||
-      currentProductData.name,
-  });
-
-  setCartMessage(
-    "El producto se agregó a tu solicitud.",
-  );
-}
-
   return (
-    <div className="catalog-site">
-      <CatalogHeader
-        businessName={
-          shopSettings?.businessName
-        }
-      />
-
+    <PublicPageShell businessName={shopSettings?.businessName}>
       <main className="catalog-product-detail">
-        <Link
-          className="catalog-detail-back"
-          to="/"
-        >
-          ← Volver al catálogo
-        </Link>
+        <nav className="catalog-detail-back" aria-label="Ruta de navegación">
+          <Link to="/">Colección</Link>
+          <span aria-hidden="true">/</span>
+          <span>{category?.name ?? "Pieza"}</span>
+        </nav>
 
         <div className="catalog-product-detail__layout">
-          <section className="catalog-product-gallery">
-            <div className="catalog-product-gallery__main">
-              <CatalogProductImage
-                source={selectedImageUrl}
-                alt={
-                  selectedImage?.altText ||
-                  productData.name
-                }
-              />
-            </div>
-
+          <section
+            className={`catalog-product-gallery${
+              productData.images.length > 1
+                ? " catalog-product-gallery--multiple"
+                : ""
+            }`}
+            aria-label={`Galería de ${productData.name}`}
+          >
             {productData.images.length > 1 ? (
               <div className="catalog-product-gallery__thumbnails">
-                {productData.images.map(
-                  (image) => (
-                    <button
-                      className={
-                        image.id ===
-                        selectedImage?.id
-                          ? "catalog-thumbnail catalog-thumbnail--active"
-                          : "catalog-thumbnail"
-                      }
-                      key={image.id}
-                      type="button"
-                      aria-label={`Mostrar ${image.altText}`}
-                      aria-pressed={
-                        image.id ===
-                        selectedImage?.id
-                      }
-                      onClick={() => {
-                        setSelectedImageId(
-                          image.id,
-                        );
-                      }}
-                    >
-                      <CatalogProductImage
-                        source={productImageStorage.getPublicUrl(
-                          image.path,
-                        )}
-                        alt={image.altText}
-                      />
-                    </button>
-                  ),
-                )}
+                {productData.images.map((image, index) => (
+                  <button
+                    className={
+                      image.id === selectedImage?.id
+                        ? "catalog-thumbnail catalog-thumbnail--active"
+                        : "catalog-thumbnail"
+                    }
+                    key={image.id}
+                    type="button"
+                    aria-label={`Mostrar imagen ${index + 1}: ${image.altText}`}
+                    aria-pressed={image.id === selectedImage?.id}
+                    onClick={() => {
+                      setSelectedImageId(image.id);
+                    }}
+                  >
+                    <CatalogProductImage
+                      source={productImageStorage.getPublicUrl(image.path)}
+                      alt=""
+                    />
+                  </button>
+                ))}
               </div>
             ) : null}
+
+            <figure className="catalog-product-gallery__main">
+              <CatalogProductImage
+                source={selectedImageUrl}
+                alt={selectedImage?.altText || productData.name}
+              />
+              {productData.images.length > 1 ? (
+                <figcaption>
+                  {String(selectedImagePosition).padStart(2, "0")} / {" "}
+                  {String(productData.images.length).padStart(2, "0")}
+                </figcaption>
+              ) : null}
+            </figure>
           </section>
 
           <section className="catalog-product-information">
             <p className="catalog-eyebrow">
-              {category?.name ??
-                "Diseño de boutique"}
+              {category?.name ?? "Diseño de boutique"}
             </p>
 
-            <h1>{productData.name}</h1>
+            <div className="catalog-product-information__heading">
+              <h1>{productData.name}</h1>
 
-            <div className="catalog-detail-price">
-              <strong>
-                {currencyFormatter.format(
-                  productData.priceInPesos,
-                )}
-              </strong>
-
-              {productData.previousPriceInPesos ? (
-                <del>
-                  {currencyFormatter.format(
-                    productData.previousPriceInPesos,
-                  )}
-                </del>
-              ) : null}
+              <div className="catalog-detail-price">
+                <strong>
+                  {currencyFormatter.format(productData.priceInPesos)}
+                </strong>
+                {productData.previousPriceInPesos ? (
+                  <del>
+                    {currencyFormatter.format(
+                      productData.previousPriceInPesos,
+                    )}
+                  </del>
+                ) : null}
+              </div>
             </div>
 
             <p className="catalog-detail-summary">
@@ -469,122 +308,86 @@ function handleAddToCart(): void {
             </p>
 
             <div className="catalog-detail-tags">
-              {productData.featured ? (
-                <span>Diseño destacado</span>
-              ) : null}
-
-              {productData.customizable ? (
-                <span>Personalizable</span>
-              ) : null}
-
-              {productData.madeToOrder ? (
-                <span>Sobre pedido</span>
-              ) : null}
+              {productData.featured ? <span>Selección</span> : null}
+              {productData.customizable ? <span>Personalizable</span> : null}
+              {productData.madeToOrder ? <span>Sobre pedido</span> : null}
             </div>
 
-            <div className="catalog-detail-description">
-              <h2>Detalles del producto</h2>
+            <aside className="catalog-detail-contact">
+              <div>
+                <span>Consulta esta pieza</span>
+                <p>
+                  Agrégala a tu selección o pregunta directamente por WhatsApp.
+                </p>
+              </div>
 
+              <button
+                className="catalog-request-add-button"
+                type="button"
+                onClick={handleAddToCart}
+              >
+                Agregar a mi solicitud <span aria-hidden="true">+</span>
+              </button>
+
+              {cartQuantity > 0 ? (
+                <p className="catalog-request-message" role="status">
+                  Cantidad seleccionada: <strong>{cartQuantity}</strong>
+                </p>
+              ) : null}
+
+              {cartMessage ? (
+                <p className="catalog-request-message" role="status">
+                  {cartMessage}
+                </p>
+              ) : null}
+
+              <div className="catalog-detail-contact__links">
+                <Link className="catalog-secondary-action" to="/solicitud">
+                  Ver mi solicitud <span aria-hidden="true">→</span>
+                </Link>
+
+                {whatsappUrl ? (
+                  <a
+                    className="catalog-whatsapp-secondary"
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Consultar solo esta pieza <span aria-hidden="true">↗</span>
+                  </a>
+                ) : null}
+              </div>
+            </aside>
+
+            <section className="catalog-detail-description">
+              <h2>Sobre la pieza</h2>
               <p>{productData.description}</p>
-            </div>
+            </section>
 
             <dl className="catalog-detail-facts">
               <div>
                 <dt>Disponibilidad</dt>
-
                 <dd>Disponible</dd>
               </div>
 
               {productData.preparationDays ? (
                 <div>
-                  <dt>
-                    Tiempo estimado de elaboración
-                  </dt>
-
+                  <dt>Tiempo estimado de elaboración</dt>
                   <dd>
-                    {
-                      productData.preparationDays
-                    }{" "}
-                    {productData.preparationDays ===
-                    1
-                      ? "día"
-                      : "días"}
+                    {productData.preparationDays} {" "}
+                    {productData.preparationDays === 1 ? "día" : "días"}
                   </dd>
                 </div>
               ) : null}
 
               <div>
-                <dt>Referencia</dt>
-
-                <dd>{productData.slug}</dd>
+                <dt>Personalización</dt>
+                <dd>{productData.customizable ? "Disponible" : "No disponible"}</dd>
               </div>
             </dl>
-
-<aside className="catalog-detail-contact">
-  <strong>
-    ¿Te interesa este diseño?
-  </strong>
-
-  <p>
-    Agrégalo a tu solicitud para
-    consultar varios productos en un
-    solo mensaje.
-  </p>
-
-  <button
-    className="catalog-request-add-button"
-    type="button"
-    onClick={handleAddToCart}
-  >
-    Agregar a mi solicitud
-  </button>
-
-  {cartQuantity > 0 ? (
-    <p
-      className="catalog-request-message"
-      role="status"
-    >
-      Cantidad seleccionada:{" "}
-      <strong>{cartQuantity}</strong>
-    </p>
-  ) : null}
-
-  {cartMessage ? (
-    <p
-      className="catalog-request-message"
-      role="status"
-    >
-      {cartMessage}
-    </p>
-  ) : null}
-
-  <Link
-    className="catalog-secondary-action"
-    to="/solicitud"
-  >
-    Ver mi solicitud
-  </Link>
-
-  {whatsappUrl ? (
-    <a
-      className="catalog-whatsapp-secondary"
-      href={whatsappUrl}
-      target="_blank"
-      rel="noreferrer"
-    >
-      Consultar solo este producto
-    </a>
-  ) : null}
-</aside>
           </section>
         </div>
       </main>
-
-      <CatalogFooter
-        businessName={
-          shopSettings?.businessName
-        }
-      />
-    </div>
+    </PublicPageShell>
   );
 }

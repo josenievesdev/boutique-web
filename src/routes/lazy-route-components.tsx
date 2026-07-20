@@ -117,3 +117,15 @@ export const AdminCategoriesPage = lazy(
     };
   },
 );
+
+export const CatalogNotFoundPage = lazy(
+  async () => {
+    const module = await import(
+      "../features/catalog/catalog-not-found-page"
+    );
+
+    return {
+      default: module.CatalogNotFoundPage,
+    };
+  },
+);

@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import type { Category } from "../../core/entities/category";
 import type { Product } from "../../core/entities/product";
@@ -15,77 +11,41 @@ import { SupabaseProductCatalogRepository } from "../../infrastructure/repositor
 import { SupabaseShopSettingsRepository } from "../../infrastructure/repositories/supabase-shop-settings-repository";
 import { SupabaseProductImageStorage } from "../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../infrastructure/supabase/supabase-client";
-import {
-  CatalogFooter,
-  CatalogHeader,
-} from "./catalog-header";
+import { CatalogProductCard } from "./catalog-product-card";
 import { CatalogProductImage } from "./catalog-product-image";
+import { CatalogPublicState } from "./catalog-public-state";
 import { filterCatalogProducts } from "./filter-catalog-products";
+import { PublicPageShell } from "./public-page-shell";
 
-const productCatalogRepository =
-  new SupabaseProductCatalogRepository(
-    supabase,
-  );
+const productCatalogRepository = new SupabaseProductCatalogRepository(
+  supabase,
+);
+const categoryRepository = new SupabaseCategoryRepository(supabase);
+const shopSettingsRepository = new SupabaseShopSettingsRepository(supabase);
+const productImageStorage = new SupabaseProductImageStorage(supabase);
+const listPublishedProducts = new ListPublishedProducts(
+  productCatalogRepository,
+);
+const listActiveCategories = new ListActiveCategories(categoryRepository);
+const getShopSettings = new GetShopSettings(shopSettingsRepository);
 
-const categoryRepository =
-  new SupabaseCategoryRepository(supabase);
-
-const shopSettingsRepository =
-  new SupabaseShopSettingsRepository(
-    supabase,
-  );
-
-const productImageStorage =
-  new SupabaseProductImageStorage(supabase);
-
-const listPublishedProducts =
-  new ListPublishedProducts(
-    productCatalogRepository,
-  );
-
-const listActiveCategories =
-  new ListActiveCategories(
-    categoryRepository,
-  );
-
-const getShopSettings =
-  new GetShopSettings(
-    shopSettingsRepository,
-  );
-
-const currencyFormatter =
-  new Intl.NumberFormat("es-CO", {
-    style: "currency",
-    currency: "COP",
-    maximumFractionDigits: 0,
-  });
+const currencyFormatter = new Intl.NumberFormat("es-CO", {
+  style: "currency",
+  currency: "COP",
+  maximumFractionDigits: 0,
+});
 
 export function CatalogHomePage() {
-  const [products, setProducts] =
-    useState<Product[]>([]);
-
-  const [categories, setCategories] =
-    useState<Category[]>([]);
-
-  const [shopSettings, setShopSettings] =
-    useState<ShopSettings | null>(null);
-
-  const [searchTerm, setSearchTerm] =
-    useState("");
-
-  const [
-    selectedCategoryId,
-    setSelectedCategoryId,
-  ] = useState<string | null>(null);
-
-  const [isLoading, setIsLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState<string | null>(null);
-
-  const [reloadCounter, setReloadCounter] =
-    useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [shopSettings, setShopSettings] = useState<ShopSettings | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | null
+  >(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [reloadCounter, setReloadCounter] = useState(0);
 
   useEffect(() => {
     let isActive = true;
@@ -95,15 +55,12 @@ export function CatalogHomePage() {
       setError(null);
 
       try {
-        const [
-          loadedProducts,
-          loadedCategories,
-          loadedSettings,
-        ] = await Promise.all([
-          listPublishedProducts.execute(),
-          listActiveCategories.execute(),
-          getShopSettings.execute(),
-        ]);
+        const [loadedProducts, loadedCategories, loadedSettings] =
+          await Promise.all([
+            listPublishedProducts.execute(),
+            listActiveCategories.execute(),
+            getShopSettings.execute(),
+          ]);
 
         if (!isActive) {
           return;
@@ -114,9 +71,7 @@ export function CatalogHomePage() {
         setShopSettings(loadedSettings);
       } catch {
         if (isActive) {
-          setError(
-            "No fue posible cargar el catálogo.",
-          );
+          setError("No fue posible cargar el catálogo.");
         }
       } finally {
         if (isActive) {
@@ -136,30 +91,17 @@ export function CatalogHomePage() {
     () =>
       filterCatalogProducts(products, {
         searchTerm,
-        categoryId:
-          selectedCategoryId,
+        categoryId: selectedCategoryId,
       }),
-    [
-      products,
-      searchTerm,
-      selectedCategoryId,
-    ],
+    [products, searchTerm, selectedCategoryId],
   );
 
-  const collageProducts = useMemo(() => {
-    const productData = products.map(
-      (product) => product.toObject(),
-    );
-
+  const showcaseProducts = useMemo(() => {
+    const productData = products.map((product) => product.toObject());
     const orderedProducts = [
-      ...productData.filter(
-        (product) => product.featured,
-      ),
-      ...productData.filter(
-        (product) => !product.featured,
-      ),
+      ...productData.filter((product) => product.featured),
+      ...productData.filter((product) => !product.featured),
     ];
-
     const productIds = new Set<string>();
 
     return orderedProducts
@@ -171,66 +113,79 @@ export function CatalogHomePage() {
         productIds.add(product.id);
         return true;
       })
-      .slice(0, 3);
+      .slice(0, 2);
   }, [products]);
 
   const resultSummary = isLoading
-    ? "Cargando colección..."
+    ? "Preparando la colección…"
     : error
-      ? "Catálogo no disponible"
+      ? "Colección no disponible"
       : `${visibleProducts.length} ${
           visibleProducts.length === 1
-            ? "producto encontrado"
-            : "productos encontrados"
+            ? "pieza encontrada"
+            : "piezas encontradas"
         }`;
 
+  function clearFilters(): void {
+    setSearchTerm("");
+    setSelectedCategoryId(null);
+  }
+
   return (
-    <div className="catalog-site">
-      <CatalogHeader
-        businessName={
-          shopSettings?.businessName
-        }
-      />
-
+    <PublicPageShell businessName={shopSettings?.businessName}>
       <main>
-        <section className="catalog-hero">
+        <section className="catalog-hero" aria-labelledby="catalog-hero-title">
           <div className="catalog-hero__content">
-            <p className="catalog-eyebrow">
-              Diseño y confección
-            </p>
+            <p className="catalog-eyebrow">Colección actual · Boutique</p>
 
-            <h1>
-              Prendas pensadas para sentirse
-              verdaderamente tuyas.
+            <h1 id="catalog-hero-title">
+              Una forma más personal de elegir lo que vistes.
             </h1>
 
             <p className="catalog-hero__description">
-              Explora piezas seleccionadas,
-              diseños personalizables y prendas
-              elaboradas con atención a cada
-              detalle.
+              Descubre prendas seleccionadas, diseños personalizables y piezas
+              confeccionadas con atención a cada detalle.
             </p>
 
-            <div className="catalog-discovery">
-              <label className="catalog-search">
-                <span>Buscar en la colección</span>
+            <a className="catalog-hero__collection-link" href="#coleccion">
+              Explorar la colección <span aria-hidden="true">↓</span>
+            </a>
 
+            <div className="catalog-discovery">
+              <div className="catalog-discovery__heading">
+                <span>Descubrir</span>
+                <small aria-live="polite" role="status">
+                  {resultSummary}
+                </small>
+              </div>
+
+              <label className="catalog-search">
+                <span className="catalog-visually-hidden">
+                  Buscar en la colección
+                </span>
+                <span className="catalog-search__icon" aria-hidden="true" />
                 <input
                   type="search"
                   value={searchTerm}
-                  placeholder="Vestido, blusa, diseño..."
+                  placeholder="Busca por nombre o descripción"
                   onChange={(event) => {
-                    setSearchTerm(
-                      event.target.value,
-                    );
+                    setSearchTerm(event.target.value);
                   }}
                 />
+                {searchTerm ? (
+                  <button
+                    type="button"
+                    aria-label="Limpiar búsqueda"
+                    onClick={() => {
+                      setSearchTerm("");
+                    }}
+                  >
+                    Limpiar
+                  </button>
+                ) : null}
               </label>
 
-              <div
-                className="catalog-categories"
-                aria-label="Filtrar por categoría"
-              >
+              <div className="catalog-categories" aria-label="Filtrar por categoría">
                 <button
                   className={
                     selectedCategoryId === null
@@ -238,134 +193,81 @@ export function CatalogHomePage() {
                       : "catalog-category-button"
                   }
                   type="button"
+                  aria-pressed={selectedCategoryId === null}
                   onClick={() => {
                     setSelectedCategoryId(null);
                   }}
                 >
-                  Todos
+                  Todo
                 </button>
 
                 {categories.map((category) => (
                   <button
                     className={
-                      selectedCategoryId ===
-                      category.id
+                      selectedCategoryId === category.id
                         ? "catalog-category-button catalog-category-button--active"
                         : "catalog-category-button"
                     }
                     key={category.id}
                     type="button"
+                    aria-pressed={selectedCategoryId === category.id}
                     onClick={() => {
-                      setSelectedCategoryId(
-                        category.id,
-                      );
+                      setSelectedCategoryId(category.id);
                     }}
                   >
                     {category.name}
                   </button>
                 ))}
               </div>
-
-              <div className="catalog-discovery__meta">
-                <span
-                  aria-live="polite"
-                  role="status"
-                >
-                  {resultSummary}
-                </span>
-
-                <a href="#coleccion">
-                  Ver las piezas
-                  <span aria-hidden="true">→</span>
-                </a>
-              </div>
             </div>
           </div>
 
           <div
-            className={`catalog-collage catalog-collage--${collageProducts.length}`}
+            className={`catalog-showcase catalog-showcase--${showcaseProducts.length}`}
             role="group"
             aria-label={
-              collageProducts.length > 0
-                ? "Selección editorial de productos"
+              showcaseProducts.length > 0
+                ? "Selección de la colección"
                 : "La colección estará disponible próximamente"
             }
           >
-            {collageProducts.map(
-              (productData, index) => {
-                const coverImage =
-                  productData.images.find(
-                    (image) => image.isCover,
-                  ) ?? productData.images[0];
+            {showcaseProducts.map((product, index) => {
+              const coverImage =
+                product.images.find((image) => image.isCover) ??
+                product.images[0];
+              const imageUrl = coverImage
+                ? productImageStorage.getPublicUrl(coverImage.path)
+                : null;
 
-                const imageUrl = coverImage
-                  ? productImageStorage.getPublicUrl(
-                      coverImage.path,
-                    )
-                  : null;
-
-                return (
-                  <Link
-                    className={`catalog-collage__product catalog-collage__product--${index + 1}`}
-                    key={productData.id}
-                    to={`/productos/${productData.slug}`}
-                  >
-                    <span className="catalog-collage__media">
-                      <CatalogProductImage
-                        source={imageUrl}
-                        alt=""
-                      />
+              return (
+                <Link
+                  className={`catalog-showcase__product catalog-showcase__product--${
+                    index + 1
+                  }`}
+                  key={product.id}
+                  to={`/productos/${product.slug}`}
+                >
+                  <span className="catalog-showcase__media">
+                    <CatalogProductImage source={imageUrl} alt="" />
+                  </span>
+                  <span className="catalog-showcase__caption">
+                    <span>
+                      <small>{index === 0 ? "Pieza destacada" : "A continuación"}</small>
+                      <strong>{product.name}</strong>
                     </span>
+                    <b>{currencyFormatter.format(product.priceInPesos)}</b>
+                  </span>
+                  <span className="catalog-showcase__number" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </Link>
+              );
+            })}
 
-                    <span className="catalog-collage__caption">
-                      <strong>
-                        {productData.name}
-                      </strong>
-
-                      <small>
-                        {currencyFormatter.format(
-                          productData.priceInPesos,
-                        )}
-                      </small>
-                    </span>
-                  </Link>
-                );
-              },
-            )}
-
-            {collageProducts.length === 2 ? (
-              <div className="catalog-collage__panel catalog-collage__panel--note">
-                <span>Hecho para ti</span>
-                <strong>
-                  Piezas personalizables
-                </strong>
-              </div>
-            ) : null}
-
-            {collageProducts.length === 1 ? (
-              <>
-                <div className="catalog-collage__panel catalog-collage__panel--note">
-                  <span>Edición cuidada</span>
-                  <strong>
-                    Confección sobre pedido
-                  </strong>
-                </div>
-
-                <div
-                  className="catalog-collage__panel catalog-collage__panel--accent"
-                  aria-hidden="true"
-                />
-              </>
-            ) : null}
-
-            {collageProducts.length === 0 ? (
-              <div
-                className="catalog-collage__fallback"
-                aria-hidden="true"
-              >
-                <span />
-                <span />
-                <strong>Diseños únicos</strong>
+            {showcaseProducts.length < 2 ? (
+              <div className="catalog-showcase__note" aria-hidden="true">
+                <span>Edición cuidada</span>
+                <strong>Diseños para descubrir con calma.</strong>
               </div>
             ) : null}
           </div>
@@ -378,171 +280,79 @@ export function CatalogHomePage() {
         >
           <header className="catalog-collection__header">
             <div>
-              <span aria-hidden="true" />
-              <h2 id="catalog-collection-title">
-                Colección
-              </h2>
+              <p className="catalog-eyebrow">Edición disponible</p>
+              <h2 id="catalog-collection-title">La colección</h2>
             </div>
 
-            {!isLoading && !error ? (
-              <p>
-                {visibleProducts.length}{" "}
-                {visibleProducts.length === 1
-                  ? "pieza"
-                  : "piezas"}
-              </p>
-            ) : null}
+            {!isLoading && !error ? <p>{resultSummary}</p> : null}
           </header>
 
           {isLoading ? (
-            <section
-              className="catalog-state catalog-state--loading"
-              aria-live="polite"
-            >
-              <span>Actualizando</span>
-              <p>Cargando colección...</p>
-            </section>
+            <CatalogPublicState eyebrow="Actualizando" tone="mist">
+              <p>Cargando las piezas disponibles…</p>
+            </CatalogPublicState>
           ) : null}
 
           {!isLoading && error ? (
-            <section className="catalog-state catalog-state--error">
-              <span>No disponible</span>
+            <CatalogPublicState
+              eyebrow="No disponible"
+              title="La colección no pudo cargarse"
+              tone="error"
+            >
               <p role="alert">{error}</p>
-
               <button
                 type="button"
                 onClick={() => {
-                  setReloadCounter(
-                    (current) =>
-                      current + 1,
-                  );
+                  setReloadCounter((current) => current + 1);
                 }}
               >
                 Intentar nuevamente
               </button>
-            </section>
+            </CatalogPublicState>
           ) : null}
 
-          {!isLoading &&
-          !error &&
-          visibleProducts.length === 0 ? (
-            <section className="catalog-state catalog-state--empty">
-              <span>Sin coincidencias</span>
-              <p>
-                No encontramos productos con esos
-                filtros.
-              </p>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchTerm("");
-                  setSelectedCategoryId(null);
-                }}
-              >
+          {!isLoading && !error && visibleProducts.length === 0 ? (
+            <CatalogPublicState
+              eyebrow="Sin coincidencias"
+              title="Probemos otra búsqueda"
+            >
+              <p>No encontramos piezas con los filtros seleccionados.</p>
+              <button type="button" onClick={clearFilters}>
                 Limpiar filtros
               </button>
-            </section>
+            </CatalogPublicState>
           ) : null}
 
-          {!isLoading &&
-          !error &&
-          visibleProducts.length > 0 ? (
-            <div className="catalog-product-grid">
-              {visibleProducts.map(
-                (product) => {
-                  const productData =
-                    product.toObject();
+          {!isLoading && !error && visibleProducts.length > 0 ? (
+            <div
+              className={`catalog-product-grid catalog-product-grid--${Math.min(
+                visibleProducts.length,
+                4,
+              )}`}
+            >
+              {visibleProducts.map((product, index) => {
+                const productData = product.toObject();
+                const coverImage =
+                  productData.images.find((image) => image.isCover) ??
+                  productData.images[0];
+                const imageUrl = coverImage
+                  ? productImageStorage.getPublicUrl(coverImage.path)
+                  : null;
 
-                  const coverImage =
-                    productData.images.find(
-                      (image) =>
-                        image.isCover,
-                    ) ??
-                    productData.images[0];
-
-                  const imageUrl = coverImage
-                    ? productImageStorage.getPublicUrl(
-                        coverImage.path,
-                      )
-                    : null;
-
-                  return (
-                    <Link
-                      className="catalog-product-card"
-                      key={productData.id}
-                      to={`/productos/${productData.slug}`}
-                    >
-                      <div className="catalog-product-card__media">
-                        <CatalogProductImage
-                          source={imageUrl}
-                          alt={
-                            coverImage?.altText ||
-                            productData.name
-                          }
-                        />
-
-                        {productData.featured ? (
-                          <span className="catalog-product-card__featured">
-                            Destacado
-                          </span>
-                        ) : null}
-                      </div>
-
-                      <div className="catalog-product-card__body">
-                        <div className="catalog-product-card__heading">
-                          <h3>
-                            {productData.name}
-                          </h3>
-
-                          <strong>
-                            {currencyFormatter.format(
-                              productData.priceInPesos,
-                            )}
-                          </strong>
-                        </div>
-
-                        <p>
-                          {
-                            productData.shortDescription
-                          }
-                        </p>
-
-                        <div className="catalog-product-card__tags">
-                          {productData.madeToOrder ? (
-                            <span className="catalog-product-card__tag catalog-product-card__tag--order">
-                              Sobre pedido
-                            </span>
-                          ) : null}
-
-                          {productData.customizable ? (
-                            <span className="catalog-product-card__tag catalog-product-card__tag--customizable">
-                              Personalizable
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <span className="catalog-product-card__action">
-                          <span>Ver producto</span>
-                          <span aria-hidden="true">
-                            →
-                          </span>
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                },
-              )}
+                return (
+                  <CatalogProductCard
+                    key={productData.id}
+                    product={productData}
+                    imageUrl={imageUrl}
+                    imageAlt={coverImage?.altText || productData.name}
+                    position={index}
+                  />
+                );
+              })}
             </div>
           ) : null}
         </section>
       </main>
-
-      <CatalogFooter
-        businessName={
-          shopSettings?.businessName
-        }
-      />
-    </div>
+    </PublicPageShell>
   );
 }

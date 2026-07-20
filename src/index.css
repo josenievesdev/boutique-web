@@ -3,25 +3,25 @@
 
   /* Color: backgrounds and surfaces */
   --color-background: #f1ede7;
-  --color-background-subtle: #f7f5f2;
-  --color-surface: #fbfaf8;
-  --color-surface-raised: #fff;
-  --color-surface-muted: #ebe7e2;
-  --color-surface-overlay: rgba(251, 250, 248, 0.96);
+  --color-background-subtle: #f8f6f2;
+  --color-surface: #f8f6f2;
+  --color-surface-raised: #fdfcf9;
+  --color-surface-muted: #e8e3dc;
+  --color-surface-overlay: rgba(248, 246, 242, 0.9);
 
   /* Color: content and brand */
   --color-text: #282828;
-  --color-text-secondary: #72706d;
-  --color-text-inverse: #fff;
-  --color-primary: #282828;
-  --color-primary-hover: #111;
-  --color-primary-soft: #e9e6e2;
-  --color-accent: #a89d8c;
+  --color-text-secondary: #706c67;
+  --color-text-inverse: #fdfcf9;
+  --color-primary: #331b0f;
+  --color-primary-hover: #241108;
+  --color-primary-soft: #e5d9c5;
+  --color-accent: #d7a39a;
 
   /* Color: borders and interaction */
-  --color-border: #dcd7d1;
-  --color-border-strong: #c7c1ba;
-  --color-focus-ring: rgba(40, 40, 40, 0.18);
+  --color-border: rgba(40, 40, 40, 0.14);
+  --color-border-strong: rgba(40, 40, 40, 0.28);
+  --color-focus-ring: rgba(51, 27, 15, 0.24);
 
   /* Color: states */
   --color-success: #49634f;
@@ -35,10 +35,11 @@
   --color-danger-border: #c7a5a0;
 
   /* Color: reusable pastels */
-  --color-pastel-sage: #d9e1d5;
-  --color-pastel-blush: #e8d9d7;
-  --color-pastel-mist: #dce3e7;
-  --color-pastel-sand: #e8dfcf;
+  --color-pastel-sage: #cfd8cc;
+  --color-pastel-blush: #e8d6d2;
+  --color-pastel-rose: #d7a39a;
+  --color-pastel-mist: #d9e2e6;
+  --color-pastel-sand: #e5d9c5;
 
   /* Spacing */
   --space-1: 4px;
@@ -57,9 +58,9 @@
   /* Shape */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
+  --radius-lg: 14px;
+  --radius-xl: 14px;
+  --radius-2xl: 14px;
   --radius-pill: 999px;
   --radius-circle: 50%;
 
@@ -69,16 +70,16 @@
   --shadow-lg: 0 10px 24px rgba(40, 40, 40, 0.06);
 
   /* Content widths */
-  --content-width-wide: 1180px;
-  --content-width-standard: 1100px;
+  --content-width-wide: 1440px;
+  --content-width-standard: 1240px;
   --content-width-form: 900px;
   --content-width-prose: 620px;
   --content-width-narrow: 460px;
 
   /* Motion */
-  --transition-fast: 150ms ease;
-  --transition-base: 180ms ease;
-  --transition-slow: 300ms ease;
+  --transition-fast: 160ms ease;
+  --transition-base: 220ms ease;
+  --transition-slow: 280ms ease;
 
   /* Layers */
   --z-base: 0;
@@ -88,9 +89,10 @@
   --z-modal: 1000;
 
   /* Typography */
-  --font-family-editorial: Georgia, "Times New Roman", serif;
+  --font-family-editorial:
+    "Newsreader", Georgia, "Times New Roman", serif;
   --font-family-sans:
-    ui-sans-serif, system-ui, -apple-system,
+    "Manrope", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   color: var(--color-text);
@@ -116,6 +118,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
   color: var(--color-text);
   background: var(--color-background);
   font-family: var(--font-family-sans);
@@ -153,6 +156,11 @@ a {
 
 button {
   border: 0;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button:not(:disabled) {
@@ -257,13 +265,13 @@ img {
 .route-loading p {
   margin: 0;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .route-loading__indicator {
   width: 42px;
   height: 42px;
-  border: 3px solid var(--color-primary-soft);
+  border: 2px solid var(--color-primary-soft);
   border-top-color: var(--color-primary);
   border-radius: var(--radius-circle);
   animation:

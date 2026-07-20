@@ -10,6 +10,7 @@ import {
   AdminSettingsPage,
   App,
   CartPage,
+  CatalogNotFoundPage,
   CatalogProductDetailPage,
 } from "./lazy-route-components";
 
@@ -70,16 +71,6 @@ export const router =
     },
     {
       path: "*",
-      element: (
-        <main className="admin-status">
-          <section className="admin-status__card">
-            <p className="admin-eyebrow">
-              Error 404
-            </p>
-
-            <h1>Página no encontrada</h1>
-          </section>
-        </main>
-      ),
+      element: <CatalogNotFoundPage />,
     },
   ]);
