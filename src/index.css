@@ -2,37 +2,43 @@
   color-scheme: light;
 
   /* Color: backgrounds and surfaces */
-  --color-background: #f6f1ec;
-  --color-background-subtle: #eee4e1;
-  --color-surface: #fffcf8;
+  --color-background: #f1ede7;
+  --color-background-subtle: #f7f5f2;
+  --color-surface: #fbfaf8;
   --color-surface-raised: #fff;
-  --color-surface-muted: #e9dfda;
-  --color-surface-overlay: rgba(255, 252, 248, 0.94);
+  --color-surface-muted: #ebe7e2;
+  --color-surface-overlay: rgba(251, 250, 248, 0.96);
 
   /* Color: content and brand */
-  --color-text: #21191c;
-  --color-text-secondary: #71656a;
+  --color-text: #282828;
+  --color-text-secondary: #72706d;
   --color-text-inverse: #fff;
-  --color-primary: #762743;
-  --color-primary-hover: #59182f;
-  --color-primary-soft: #f2e1e7;
-  --color-accent: #b99055;
+  --color-primary: #282828;
+  --color-primary-hover: #111;
+  --color-primary-soft: #e9e6e2;
+  --color-accent: #a89d8c;
 
   /* Color: borders and interaction */
-  --color-border: #ddd0ca;
-  --color-border-strong: #c8b7af;
-  --color-focus-ring: rgba(118, 39, 67, 0.28);
+  --color-border: #dcd7d1;
+  --color-border-strong: #c7c1ba;
+  --color-focus-ring: rgba(40, 40, 40, 0.18);
 
   /* Color: states */
-  --color-success: #2f674d;
-  --color-success-soft: #e2f0e7;
-  --color-success-border: #86aa94;
-  --color-warning: #8d6526;
-  --color-warning-soft: #f8edd6;
-  --color-danger: #a64a43;
-  --color-danger-hover: #84352f;
-  --color-danger-soft: #f8e5e2;
-  --color-danger-border: #c99088;
+  --color-success: #49634f;
+  --color-success-soft: #d9e1d5;
+  --color-success-border: #a9b9a7;
+  --color-warning: #75664b;
+  --color-warning-soft: #e8dfcf;
+  --color-danger: #8a4e48;
+  --color-danger-hover: #6f3934;
+  --color-danger-soft: #e6d4cf;
+  --color-danger-border: #c7a5a0;
+
+  /* Color: reusable pastels */
+  --color-pastel-sage: #d9e1d5;
+  --color-pastel-blush: #e8d9d7;
+  --color-pastel-mist: #dce3e7;
+  --color-pastel-sand: #e8dfcf;
 
   /* Spacing */
   --space-1: 4px;
@@ -58,9 +64,9 @@
   --radius-circle: 50%;
 
   /* Elevation */
-  --shadow-sm: 0 2px 8px rgba(33, 25, 28, 0.05);
-  --shadow-md: 0 7px 20px rgba(33, 25, 28, 0.07);
-  --shadow-lg: 0 14px 32px rgba(33, 25, 28, 0.08);
+  --shadow-sm: 0 1px 2px rgba(40, 40, 40, 0.04);
+  --shadow-md: 0 4px 12px rgba(40, 40, 40, 0.05);
+  --shadow-lg: 0 10px 24px rgba(40, 40, 40, 0.06);
 
   /* Content widths */
   --content-width-wide: 1180px;
