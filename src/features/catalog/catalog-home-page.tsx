@@ -146,30 +146,43 @@ export function CatalogHomePage() {
     ],
   );
 
-  const heroProduct = useMemo(
-    () =>
-      products.find(
-        (product) =>
-          product.toObject().featured,
-      ) ??
-      products[0] ??
-      null,
-    [products],
-  );
+  const collageProducts = useMemo(() => {
+    const productData = products.map(
+      (product) => product.toObject(),
+    );
 
-  const heroProductData =
-    heroProduct?.toObject() ?? null;
+    const orderedProducts = [
+      ...productData.filter(
+        (product) => product.featured,
+      ),
+      ...productData.filter(
+        (product) => !product.featured,
+      ),
+    ];
 
-  const heroCoverImage =
-    heroProductData?.images.find(
-      (image) => image.isCover,
-    ) ?? heroProductData?.images[0];
+    const productIds = new Set<string>();
 
-  const heroImageUrl = heroCoverImage
-    ? productImageStorage.getPublicUrl(
-        heroCoverImage.path,
-      )
-    : null;
+    return orderedProducts
+      .filter((product) => {
+        if (productIds.has(product.id)) {
+          return false;
+        }
+
+        productIds.add(product.id);
+        return true;
+      })
+      .slice(0, 3);
+  }, [products]);
+
+  const resultSummary = isLoading
+    ? "Cargando colección..."
+    : error
+      ? "Catálogo no disponible"
+      : `${visibleProducts.length} ${
+          visibleProducts.length === 1
+            ? "producto encontrado"
+            : "productos encontrados"
+        }`;
 
   return (
     <div className="catalog-site">
@@ -198,75 +211,163 @@ export function CatalogHomePage() {
               detalle.
             </p>
 
-            <div className="catalog-hero__actions">
-              <a
-                className="catalog-primary-action"
-                href="#coleccion"
+            <div className="catalog-discovery">
+              <label className="catalog-search">
+                <span>Buscar en la colección</span>
+
+                <input
+                  type="search"
+                  value={searchTerm}
+                  placeholder="Vestido, blusa, diseño..."
+                  onChange={(event) => {
+                    setSearchTerm(
+                      event.target.value,
+                    );
+                  }}
+                />
+              </label>
+
+              <div
+                className="catalog-categories"
+                aria-label="Filtrar por categoría"
               >
-                Ver colección
-              </a>
-
-              {heroProductData ? (
-                <Link
-                  className="catalog-secondary-action"
-                  to={`/productos/${heroProductData.slug}`}
+                <button
+                  className={
+                    selectedCategoryId === null
+                      ? "catalog-category-button catalog-category-button--active"
+                      : "catalog-category-button"
+                  }
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategoryId(null);
+                  }}
                 >
-                  Descubrir {heroProductData.name}
-                </Link>
-              ) : null}
+                  Todos
+                </button>
 
-              <span className="catalog-hero__count">
-                {products.length}{" "}
-                {products.length === 1
-                  ? "diseño disponible"
-                  : "diseños disponibles"}
-              </span>
+                {categories.map((category) => (
+                  <button
+                    className={
+                      selectedCategoryId ===
+                      category.id
+                        ? "catalog-category-button catalog-category-button--active"
+                        : "catalog-category-button"
+                    }
+                    key={category.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategoryId(
+                        category.id,
+                      );
+                    }}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+
+              <div className="catalog-discovery__meta">
+                <span
+                  aria-live="polite"
+                  role="status"
+                >
+                  {resultSummary}
+                </span>
+
+                <a href="#coleccion">
+                  Ver las piezas
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
-
-            <ul className="catalog-hero__features">
-              <li>Diseños personalizables</li>
-              <li>Confección sobre pedido</li>
-              <li>
-                Consulta directa por WhatsApp
-              </li>
-            </ul>
           </div>
 
-          <div className="catalog-hero__visual">
-            {heroProductData ? (
-              <figure className="catalog-hero__product">
-                <div className="catalog-hero__image">
-                  <CatalogProductImage
-                    source={heroImageUrl}
-                    alt={
-                      heroCoverImage?.altText ||
-                      heroProductData.name
-                    }
-                  />
+          <div
+            className={`catalog-collage catalog-collage--${collageProducts.length}`}
+            role="group"
+            aria-label={
+              collageProducts.length > 0
+                ? "Selección editorial de productos"
+                : "La colección estará disponible próximamente"
+            }
+          >
+            {collageProducts.map(
+              (productData, index) => {
+                const coverImage =
+                  productData.images.find(
+                    (image) => image.isCover,
+                  ) ?? productData.images[0];
+
+                const imageUrl = coverImage
+                  ? productImageStorage.getPublicUrl(
+                      coverImage.path,
+                    )
+                  : null;
+
+                return (
+                  <Link
+                    className={`catalog-collage__product catalog-collage__product--${index + 1}`}
+                    key={productData.id}
+                    to={`/productos/${productData.slug}`}
+                  >
+                    <span className="catalog-collage__media">
+                      <CatalogProductImage
+                        source={imageUrl}
+                        alt=""
+                      />
+                    </span>
+
+                    <span className="catalog-collage__caption">
+                      <strong>
+                        {productData.name}
+                      </strong>
+
+                      <small>
+                        {currencyFormatter.format(
+                          productData.priceInPesos,
+                        )}
+                      </small>
+                    </span>
+                  </Link>
+                );
+              },
+            )}
+
+            {collageProducts.length === 2 ? (
+              <div className="catalog-collage__panel catalog-collage__panel--note">
+                <span>Hecho para ti</span>
+                <strong>
+                  Piezas personalizables
+                </strong>
+              </div>
+            ) : null}
+
+            {collageProducts.length === 1 ? (
+              <>
+                <div className="catalog-collage__panel catalog-collage__panel--note">
+                  <span>Edición cuidada</span>
+                  <strong>
+                    Confección sobre pedido
+                  </strong>
                 </div>
 
-                <figcaption>
-                  <span>Pieza seleccionada</span>
+                <div
+                  className="catalog-collage__panel catalog-collage__panel--accent"
+                  aria-hidden="true"
+                />
+              </>
+            ) : null}
 
-                  <strong>
-                    {heroProductData.name}
-                  </strong>
-
-                  <small>
-                    {currencyFormatter.format(
-                      heroProductData.priceInPesos,
-                    )}
-                  </small>
-                </figcaption>
-              </figure>
-            ) : (
+            {collageProducts.length === 0 ? (
               <div
-                className="catalog-hero__shape"
+                className="catalog-collage__fallback"
                 aria-hidden="true"
               >
-                <span>Diseños únicos</span>
+                <span />
+                <span />
+                <strong>Diseños únicos</strong>
               </div>
-            )}
+            ) : null}
           </div>
         </section>
 
@@ -275,94 +376,23 @@ export function CatalogHomePage() {
           id="coleccion"
           aria-labelledby="catalog-collection-title"
         >
-          <header className="catalog-section-heading">
-            <div className="catalog-section-heading__intro">
-              <p className="catalog-section-index">
-                <span>01</span>
-                <span>Colección</span>
-              </p>
-
+          <header className="catalog-collection__header">
+            <div>
+              <span aria-hidden="true" />
               <h2 id="catalog-collection-title">
-                Encuentra tu próximo diseño
+                Colección
               </h2>
             </div>
 
-            <p>
-              Consulta las piezas publicadas y
-              abre cada producto para conocer sus
-              detalles.
-            </p>
-          </header>
-
-          <div className="catalog-toolbar">
-            <label className="catalog-search">
-              <span>Buscar en la colección</span>
-
-              <input
-                type="search"
-                value={searchTerm}
-                placeholder="Vestido, blusa, diseño..."
-                onChange={(event) => {
-                  setSearchTerm(
-                    event.target.value,
-                  );
-                }}
-              />
-            </label>
-
-            <div
-              className="catalog-categories"
-              aria-label="Filtrar por categoría"
-            >
-              <button
-                className={
-                  selectedCategoryId === null
-                    ? "catalog-category-button catalog-category-button--active"
-                    : "catalog-category-button"
-                }
-                type="button"
-                onClick={() => {
-                  setSelectedCategoryId(null);
-                }}
-              >
-                Todos
-              </button>
-
-              {categories.map((category) => (
-                <button
-                  className={
-                    selectedCategoryId ===
-                    category.id
-                      ? "catalog-category-button catalog-category-button--active"
-                      : "catalog-category-button"
-                  }
-                  key={category.id}
-                  type="button"
-                  onClick={() => {
-                    setSelectedCategoryId(
-                      category.id,
-                    );
-                  }}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {!isLoading && !error ? (
-            <div className="catalog-results-heading">
-              <strong>
-                {visibleProducts.length}
-              </strong>
-
-              <span>
+            {!isLoading && !error ? (
+              <p>
+                {visibleProducts.length}{" "}
                 {visibleProducts.length === 1
-                  ? "producto encontrado"
-                  : "productos encontrados"}
-              </span>
-            </div>
-          ) : null}
+                  ? "pieza"
+                  : "piezas"}
+              </p>
+            ) : null}
+          </header>
 
           {isLoading ? (
             <section
