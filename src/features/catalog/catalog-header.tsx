@@ -1,4 +1,7 @@
-import { Link } from "react-router";
+import {
+  Link,
+  NavLink,
+} from "react-router";
 import { useCart } from "../cart/use-cart";
 
 interface CatalogBrandProps {
@@ -11,6 +14,14 @@ function resolveBusinessName(
   return businessName?.trim() || "Boutique";
 }
 
+function resolveNavigationClass(
+  isActive: boolean,
+): string {
+  return isActive
+    ? "catalog-navigation__link catalog-navigation__link--active"
+    : "catalog-navigation__link";
+}
+
 export function CatalogHeader({
   businessName,
 }: CatalogBrandProps) {
@@ -18,6 +29,16 @@ export function CatalogHeader({
     resolveBusinessName(businessName);
 
   const { totalItems } = useCart();
+
+  const cartCountClass =
+    totalItems > 0
+      ? "catalog-cart-count catalog-cart-count--active"
+      : "catalog-cart-count";
+
+  const cartLinkClass =
+    totalItems > 0
+      ? " catalog-cart-link--populated"
+      : "";
 
   return (
     <header className="catalog-header">
@@ -37,23 +58,38 @@ export function CatalogHeader({
           className="catalog-navigation"
           aria-label="Navegación principal"
         >
-          <Link to="/">Catálogo</Link>
+          <NavLink
+            className={({ isActive }) =>
+              resolveNavigationClass(isActive)
+            }
+            end
+            to="/"
+          >
+            Catálogo
+          </NavLink>
 
           <a
-            className="catalog-navigation__collection"
+            className="catalog-navigation__link catalog-navigation__collection"
             href="/#coleccion"
           >
             Colección
           </a>
 
-          <Link
-            className="catalog-cart-link"
+          <NavLink
+            className={({ isActive }) =>
+              `${resolveNavigationClass(isActive)} catalog-cart-link${cartLinkClass}`
+            }
             to="/solicitud"
           >
-            Mi solicitud
+            <span>Mi solicitud</span>
 
-            <span>{totalItems}</span>
-          </Link>
+            <span
+              className={cartCountClass}
+              aria-label={`${totalItems} productos en la solicitud`}
+            >
+              {totalItems}
+            </span>
+          </NavLink>
         </nav>
       </div>
     </header>
@@ -66,10 +102,13 @@ export function CatalogFooter({
   const resolvedName =
     resolveBusinessName(businessName);
 
+  const currentYear =
+    new Date().getFullYear();
+
   return (
     <footer className="catalog-footer">
       <div className="catalog-footer__content">
-        <div>
+        <div className="catalog-footer__brand">
           <strong>{resolvedName}</strong>
 
           <p>
@@ -78,9 +117,32 @@ export function CatalogFooter({
           </p>
         </div>
 
-        <Link to="/admin">
-          Acceso administrativo
-        </Link>
+        <nav
+          className="catalog-footer__navigation"
+          aria-label="Navegación del pie de página"
+        >
+          <span>Explorar</span>
+
+          <Link to="/">Catálogo</Link>
+
+          <a href="/#coleccion">
+            Colección
+          </a>
+
+          <Link to="/solicitud">
+            Mi solicitud
+          </Link>
+        </nav>
+
+        <div className="catalog-footer__meta">
+          <span>
+            © {currentYear} {resolvedName}
+          </span>
+
+          <Link to="/admin">
+            Acceso administrativo
+          </Link>
+        </div>
       </div>
     </footer>
   );

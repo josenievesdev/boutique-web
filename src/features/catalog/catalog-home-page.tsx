@@ -146,6 +146,31 @@ export function CatalogHomePage() {
     ],
   );
 
+  const heroProduct = useMemo(
+    () =>
+      products.find(
+        (product) =>
+          product.toObject().featured,
+      ) ??
+      products[0] ??
+      null,
+    [products],
+  );
+
+  const heroProductData =
+    heroProduct?.toObject() ?? null;
+
+  const heroCoverImage =
+    heroProductData?.images.find(
+      (image) => image.isCover,
+    ) ?? heroProductData?.images[0];
+
+  const heroImageUrl = heroCoverImage
+    ? productImageStorage.getPublicUrl(
+        heroCoverImage.path,
+      )
+    : null;
+
   return (
     <div className="catalog-site">
       <CatalogHeader
@@ -181,36 +206,83 @@ export function CatalogHomePage() {
                 Ver colección
               </a>
 
-              <span>
+              {heroProductData ? (
+                <Link
+                  className="catalog-secondary-action"
+                  to={`/productos/${heroProductData.slug}`}
+                >
+                  Descubrir {heroProductData.name}
+                </Link>
+              ) : null}
+
+              <span className="catalog-hero__count">
                 {products.length}{" "}
                 {products.length === 1
                   ? "diseño disponible"
                   : "diseños disponibles"}
               </span>
             </div>
+
+            <ul className="catalog-hero__features">
+              <li>Diseños personalizables</li>
+              <li>Confección sobre pedido</li>
+              <li>
+                Consulta directa por WhatsApp
+              </li>
+            </ul>
           </div>
 
-          <div
-            className="catalog-hero__visual"
-            aria-hidden="true"
-          >
-            <div className="catalog-hero__shape">
-              <span>Diseños únicos</span>
-            </div>
+          <div className="catalog-hero__visual">
+            {heroProductData ? (
+              <figure className="catalog-hero__product">
+                <div className="catalog-hero__image">
+                  <CatalogProductImage
+                    source={heroImageUrl}
+                    alt={
+                      heroCoverImage?.altText ||
+                      heroProductData.name
+                    }
+                  />
+                </div>
+
+                <figcaption>
+                  <span>Pieza seleccionada</span>
+
+                  <strong>
+                    {heroProductData.name}
+                  </strong>
+
+                  <small>
+                    {currencyFormatter.format(
+                      heroProductData.priceInPesos,
+                    )}
+                  </small>
+                </figcaption>
+              </figure>
+            ) : (
+              <div
+                className="catalog-hero__shape"
+                aria-hidden="true"
+              >
+                <span>Diseños únicos</span>
+              </div>
+            )}
           </div>
         </section>
 
         <section
           className="catalog-collection"
           id="coleccion"
+          aria-labelledby="catalog-collection-title"
         >
           <header className="catalog-section-heading">
-            <div>
-              <p className="catalog-eyebrow">
-                Colección
+            <div className="catalog-section-heading__intro">
+              <p className="catalog-section-index">
+                <span>01</span>
+                <span>Colección</span>
               </p>
 
-              <h2>
+              <h2 id="catalog-collection-title">
                 Encuentra tu próximo diseño
               </h2>
             </div>
@@ -224,7 +296,7 @@ export function CatalogHomePage() {
 
           <div className="catalog-toolbar">
             <label className="catalog-search">
-              <span>Buscar</span>
+              <span>Buscar en la colección</span>
 
               <input
                 type="search"
@@ -278,26 +350,33 @@ export function CatalogHomePage() {
             </div>
           </div>
 
-          <div className="catalog-results-heading">
-            <strong>
-              {visibleProducts.length}
-            </strong>
+          {!isLoading && !error ? (
+            <div className="catalog-results-heading">
+              <strong>
+                {visibleProducts.length}
+              </strong>
 
-            <span>
-              {visibleProducts.length === 1
-                ? "producto encontrado"
-                : "productos encontrados"}
-            </span>
-          </div>
+              <span>
+                {visibleProducts.length === 1
+                  ? "producto encontrado"
+                  : "productos encontrados"}
+              </span>
+            </div>
+          ) : null}
 
           {isLoading ? (
-            <section className="catalog-state">
+            <section
+              className="catalog-state catalog-state--loading"
+              aria-live="polite"
+            >
+              <span>Actualizando</span>
               <p>Cargando colección...</p>
             </section>
           ) : null}
 
           {!isLoading && error ? (
-            <section className="catalog-state">
+            <section className="catalog-state catalog-state--error">
+              <span>No disponible</span>
               <p role="alert">{error}</p>
 
               <button
@@ -317,7 +396,8 @@ export function CatalogHomePage() {
           {!isLoading &&
           !error &&
           visibleProducts.length === 0 ? (
-            <section className="catalog-state">
+            <section className="catalog-state catalog-state--empty">
+              <span>Sin coincidencias</span>
               <p>
                 No encontramos productos con esos
                 filtros.
@@ -400,20 +480,23 @@ export function CatalogHomePage() {
 
                         <div className="catalog-product-card__tags">
                           {productData.madeToOrder ? (
-                            <span>
+                            <span className="catalog-product-card__tag catalog-product-card__tag--order">
                               Sobre pedido
                             </span>
                           ) : null}
 
                           {productData.customizable ? (
-                            <span>
+                            <span className="catalog-product-card__tag catalog-product-card__tag--customizable">
                               Personalizable
                             </span>
                           ) : null}
                         </div>
 
                         <span className="catalog-product-card__action">
-                          Ver producto →
+                          <span>Ver producto</span>
+                          <span aria-hidden="true">
+                            →
+                          </span>
                         </span>
                       </div>
                     </Link>
