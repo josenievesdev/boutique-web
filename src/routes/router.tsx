@@ -11,6 +11,7 @@ import { AdminEditProductPage } from "../features/admin/products/admin-edit-prod
 import { CatalogProductDetailPage } from "../features/catalog/catalog-product-detail-page";
 import { CartPage } from "../features/cart/cart-page";
 import { AdminSettingsPage } from "../features/admin/admin-settings-page";
+import { AdminCategoriesPage } from "../features/admin/categories/admin-categories-page";
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
     {
       path: "/admin/settings",
       element: <AdminSettingsPage />,
+    },
+    {
+      path: "/admin/categories",
+      element: <AdminCategoriesPage />,
     },
   ],
 },

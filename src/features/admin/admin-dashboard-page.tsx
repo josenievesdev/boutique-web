@@ -42,47 +42,68 @@ export function AdminDashboardPage() {
       </header>
 
       <section className="admin-dashboard__content">
-<Link
-  className="admin-summary-card admin-summary-card--link"
-  to="/admin/products"
->
-  <p>Productos</p>
+        <Link
+          className="admin-summary-card admin-summary-card--link"
+          to="/admin/products"
+        >
+          <p>Productos</p>
 
-  <strong>Gestionar catálogo</strong>
+          <strong>Gestionar catálogo</strong>
 
-  <span>
-    Consulta borradores, publicaciones,
-    productos ocultos y archivados.
-  </span>
+          <span>
+            Consulta borradores, publicaciones,
+            productos ocultos y archivados.
+          </span>
 
-  <span className="admin-summary-card__action">
-    Ver productos →
-  </span>
-</Link>
-<Link
-  className="admin-summary-card admin-summary-card--link"
-  to="/admin/settings"
->
-  <p>Configuración</p>
+          <span className="admin-summary-card__action">
+            Ver productos →
+          </span>
+        </Link>
 
-  <strong>Datos de la boutique</strong>
+        <Link
+          className="admin-summary-card admin-summary-card--link"
+          to="/admin/categories"
+        >
+          <p>Categorías</p>
 
-  <span>
-    Administra el nombre público y el
-    número de contacto por WhatsApp.
-  </span>
+          <strong>Organizar catálogo</strong>
 
-  <span className="admin-summary-card__action">
-    Abrir configuración →
-  </span>
-</Link>
+          <span>
+            Crea y ordena las categorías utilizadas
+            para clasificar los productos.
+          </span>
+
+          <span className="admin-summary-card__action">
+            Gestionar categorías →
+          </span>
+        </Link>
+
+        <Link
+          className="admin-summary-card admin-summary-card--link"
+          to="/admin/settings"
+        >
+          <p>Configuración</p>
+
+          <strong>Datos de la boutique</strong>
+
+          <span>
+            Administra el nombre público y el
+            número de contacto por WhatsApp.
+          </span>
+
+          <span className="admin-summary-card__action">
+            Abrir configuración →
+          </span>
+        </Link>
 
         <article className="admin-summary-card">
           <p>Imágenes</p>
+
           <strong>Storage conectado</strong>
+
           <span>
-            La carga y eliminación ya funcionan en
-            Supabase Storage.
+            La carga y eliminación funcionan desde
+            la administración de cada producto.
           </span>
         </article>
       </section>
