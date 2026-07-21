@@ -4,6 +4,7 @@ import {
 } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router/dom";
+import "./tailwind.css";
 import "./index.css";
 import "./catalog.css";
 import "./admin.css";
