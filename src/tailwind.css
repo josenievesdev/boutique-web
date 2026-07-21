@@ -2,3 +2,82 @@
 
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
+
+@theme inline {
+  --color-boutique-canvas: var(--color-background);
+  --color-boutique-canvas-subtle: var(--color-background-subtle);
+  --color-boutique-surface: var(--color-surface);
+  --color-boutique-surface-raised: var(--color-surface-raised);
+  --color-boutique-surface-muted: var(--color-surface-muted);
+  --color-boutique-overlay: var(--color-surface-overlay);
+  --color-boutique-ink: var(--color-text);
+  --color-boutique-muted: var(--color-text-secondary);
+  --color-boutique-inverse: var(--color-text-inverse);
+  --color-boutique-brand: var(--color-primary);
+  --color-boutique-brand-hover: var(--color-primary-hover);
+  --color-boutique-brand-soft: var(--color-primary-soft);
+  --color-boutique-accent: var(--color-accent);
+  --color-boutique-line: var(--color-border);
+  --color-boutique-line-strong: var(--color-border-strong);
+  --color-boutique-focus: var(--color-focus-ring);
+  --color-boutique-success: var(--color-success);
+  --color-boutique-success-soft: var(--color-success-soft);
+  --color-boutique-success-line: var(--color-success-border);
+  --color-boutique-warning: var(--color-warning);
+  --color-boutique-warning-soft: var(--color-warning-soft);
+  --color-boutique-danger: var(--color-danger);
+  --color-boutique-danger-hover: var(--color-danger-hover);
+  --color-boutique-danger-soft: var(--color-danger-soft);
+  --color-boutique-danger-line: var(--color-danger-border);
+  --color-boutique-sage: var(--color-pastel-sage);
+  --color-boutique-blush: var(--color-pastel-blush);
+  --color-boutique-rose: var(--color-pastel-rose);
+  --color-boutique-mist: var(--color-pastel-mist);
+  --color-boutique-sand: var(--color-pastel-sand);
+
+  --font-boutique-display: var(--font-family-editorial);
+  --font-boutique-sans: var(--font-family-sans);
+
+  --text-boutique-display: clamp(2.9rem, 4vw, 3.85rem);
+  --text-boutique-display--line-height: 0.98;
+  --text-boutique-display--letter-spacing: -0.042em;
+  --text-boutique-display--font-weight: 400;
+  --text-boutique-headline: clamp(2.2rem, 3vw, 2.8rem);
+  --text-boutique-headline--line-height: 1;
+  --text-boutique-headline--letter-spacing: -0.035em;
+  --text-boutique-headline--font-weight: 400;
+  --text-boutique-title: 1.34rem;
+  --text-boutique-title--line-height: 1.08;
+  --text-boutique-title--letter-spacing: -0.02em;
+  --text-boutique-title--font-weight: 500;
+  --text-boutique-body: 1rem;
+  --text-boutique-body--line-height: 1.5;
+  --text-boutique-body--font-weight: 400;
+  --text-boutique-navigation: 0.68rem;
+  --text-boutique-navigation--letter-spacing: 0.075em;
+  --text-boutique-navigation--font-weight: 600;
+  --text-boutique-button: 0.74rem;
+  --text-boutique-button--letter-spacing: 0.02em;
+  --text-boutique-button--font-weight: 600;
+  --text-boutique-price: 0.72rem;
+  --text-boutique-price--font-weight: 600;
+  --text-boutique-label: 0.65rem;
+  --text-boutique-label--letter-spacing: 0.11em;
+  --text-boutique-label--font-weight: 600;
+
+  --radius-boutique-control: var(--radius-sm);
+  --radius-boutique-card: var(--radius-md);
+  --radius-boutique-panel: var(--radius-lg);
+  --radius-boutique-pill: var(--radius-pill);
+  --radius-boutique-circle: var(--radius-circle);
+
+  --shadow-boutique-sm: var(--shadow-sm);
+  --shadow-boutique-md: var(--shadow-md);
+  --shadow-boutique-lg: var(--shadow-lg);
+
+  --container-boutique-narrow: var(--content-width-narrow);
+  --container-boutique-prose: var(--content-width-prose);
+  --container-boutique-form: var(--content-width-form);
+  --container-boutique-standard: var(--content-width-standard);
+  --container-boutique-wide: var(--content-width-wide);
+}
