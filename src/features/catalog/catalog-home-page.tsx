@@ -36,11 +36,11 @@ const currencyFormatter = new Intl.NumberFormat("es-CO", {
 });
 
 const heroClass =
-  "mx-auto grid w-[calc(100%_-_48px)] max-w-boutique-standard grid-cols-[minmax(360px,0.94fr)_minmax(480px,1.06fr)] items-center gap-[clamp(42px,6vw,88px)] pt-[42px] pb-[46px] " +
-  "max-[1024.01px]:grid-cols-[minmax(330px,0.94fr)_minmax(390px,1.06fr)] max-[1024.01px]:gap-[34px] " +
-  "max-[820.01px]:grid-cols-[minmax(0,0.94fr)_minmax(300px,1.06fr)] max-[820.01px]:gap-[25px] max-[820.01px]:pt-8 max-[820.01px]:pb-[38px] " +
-  "max-[700.01px]:w-[calc(100%_-_28px)] max-[700.01px]:grid-cols-1 max-[700.01px]:gap-6 max-[700.01px]:pt-[26px] max-[700.01px]:pb-8 " +
-  "max-[430.01px]:w-[calc(100%_-_24px)] max-[430.01px]:pt-[22px]";
+  "mx-auto grid w-[calc(100%_-_48px)] max-w-boutique-standard grid-cols-[minmax(350px,0.9fr)_minmax(480px,1.1fr)] items-center gap-[clamp(46px,6vw,84px)] pt-[38px] pb-[42px] " +
+  "max-[1024.01px]:grid-cols-[minmax(330px,0.92fr)_minmax(390px,1.08fr)] max-[1024.01px]:gap-9 " +
+  "max-[820.01px]:grid-cols-[minmax(0,0.95fr)_minmax(300px,1.05fr)] max-[820.01px]:gap-[26px] max-[820.01px]:pt-[30px] max-[820.01px]:pb-9 " +
+  "max-[700.01px]:w-[calc(100%_-_28px)] max-[700.01px]:grid-cols-1 max-[700.01px]:gap-7 max-[700.01px]:pt-7 max-[700.01px]:pb-[34px] " +
+  "max-[430.01px]:w-[calc(100%_-_24px)] max-[430.01px]:pt-6";
 
 const heroContentClass =
   "min-w-0 animate-[catalog-reveal_320ms_ease-out_both] motion-reduce:animate-none! max-[700.01px]:max-w-[590px]";
@@ -49,7 +49,7 @@ const heroEyebrowClass =
   "m-0 text-boutique-label text-boutique-muted uppercase";
 
 const heroTitleClass =
-  "mt-[13px] mb-0 max-w-[590px] text-balance font-boutique-display text-boutique-display " +
+  "mt-[13px] mb-0 max-w-[570px] text-balance font-boutique-display text-boutique-display " +
   "max-[820.01px]:text-[clamp(2.55rem,6vw,3.1rem)] " +
   "max-[700.01px]:max-w-[560px] max-[700.01px]:text-[clamp(2.45rem,10vw,3.2rem)] " +
   "max-[430.01px]:mt-[10px] max-[430.01px]:text-[clamp(2.3rem,10.8vw,2.8rem)] " +
@@ -57,19 +57,19 @@ const heroTitleClass =
 
 const heroDescriptionClass =
   "mt-4 mb-0 max-w-[520px] text-[clamp(0.86rem,1vw,0.96rem)] leading-[1.65] text-boutique-muted " +
-  "max-[430.01px]:mt-3 max-[430.01px]:text-[0.78rem]";
+  "max-[430.01px]:mt-3 max-[430.01px]:text-[0.84rem]";
 
 const heroCollectionLinkClass =
   "group mt-[17px] inline-flex items-center gap-[10px] border-0 border-b border-solid border-boutique-line-strong pb-[3px] text-[0.7rem] font-semibold no-underline!";
 
 const discoveryClass =
-  "mt-6 grid max-w-[530px] gap-[10px] max-[430.01px]:mt-[18px]";
+  "mt-[22px] grid max-w-[550px] gap-[11px] max-[430.01px]:mt-[18px]";
 
 const discoveryHeadingClass =
-  "flex items-baseline justify-between gap-[18px] text-[0.65rem] text-boutique-muted";
+  "flex items-baseline justify-between gap-[18px] text-[0.68rem] text-boutique-muted";
 
 const searchClass =
-  "relative flex min-h-[52px] min-w-0 items-center rounded-boutique-card border border-solid border-boutique-line-strong bg-boutique-surface-raised pl-[46px] " +
+  "relative flex min-h-[54px] min-w-0 items-center rounded-boutique-card border border-solid border-boutique-line-strong bg-boutique-surface-raised pl-[46px] " +
   "transition-[border-color,box-shadow] duration-[160ms] ease-[ease] focus-within:border-boutique-brand focus-within:[box-shadow:0_0_0_3px_var(--color-focus-ring)]";
 
 const searchIconClass =
@@ -77,16 +77,16 @@ const searchIconClass =
   "after:absolute after:right-[-5px] after:bottom-[-3px] after:h-[1.5px] after:w-[6px] after:origin-left after:bg-boutique-muted after:content-[''] after:[transform:rotate(45deg)]";
 
 const searchInputClass =
-  "min-h-[46px]! min-w-0 w-full rounded-none! [border:0]! bg-transparent! px-[14px]! py-0! text-[0.83rem]! [box-shadow:none]! [outline:0]! [&::-webkit-search-cancel-button]:hidden";
+  "min-h-[46px]! min-w-0 w-full rounded-none! [border:0]! bg-transparent! px-[14px]! py-0! text-[0.86rem]! [box-shadow:none]! [outline:0]! [&::-webkit-search-cancel-button]:hidden";
 
 const searchClearButtonClass =
-  "mr-2 min-h-8 flex-none border-0! border-l! border-solid! border-boutique-line! bg-transparent px-[10px] py-0 text-[0.63rem]! font-semibold! text-boutique-muted! hover:text-boutique-ink!";
+  "mr-[6px] min-h-10 flex-none border-0! border-l! border-solid! border-boutique-line! bg-transparent px-3 py-0 text-[0.67rem]! font-semibold! text-boutique-muted! hover:text-boutique-ink!";
 
 const categoriesClass =
-  "flex min-w-0 flex-wrap gap-[6px] max-[430.01px]:flex-nowrap max-[430.01px]:overflow-x-auto max-[430.01px]:pb-[2px] max-[430.01px]:[scrollbar-width:none] max-[430.01px]:[&::-webkit-scrollbar]:hidden";
+  "flex min-w-0 flex-wrap gap-2 max-[430.01px]:flex-nowrap max-[430.01px]:snap-x max-[430.01px]:snap-proximity max-[430.01px]:overflow-x-auto max-[430.01px]:overscroll-x-contain max-[430.01px]:pb-1 max-[430.01px]:[scrollbar-width:thin]";
 
 const categoryButtonBaseClass =
-  "min-h-8 rounded-boutique-pill border! border-solid! px-3 py-0 text-[0.64rem]! font-medium! max-[430.01px]:flex-none";
+  "min-h-11 max-w-[220px] rounded-boutique-pill border! border-solid! px-[14px] py-[7px] text-[0.7rem]! leading-[1.25]! font-medium! whitespace-normal max-[430.01px]:max-w-none max-[430.01px]:flex-none max-[430.01px]:snap-start max-[430.01px]:whitespace-nowrap";
 
 const categoryButtonActiveClass =
   `${categoryButtonBaseClass} border-boutique-brand! bg-boutique-brand text-boutique-inverse!`;
@@ -95,25 +95,27 @@ const categoryButtonInactiveClass =
   `${categoryButtonBaseClass} border-boutique-line! bg-transparent text-boutique-muted! hover:border-boutique-line-strong! hover:bg-boutique-canvas-subtle hover:text-boutique-ink!`;
 
 const showcaseClass =
-  "relative grid h-[clamp(350px,33vw,430px)] min-w-0 grid-cols-[minmax(0,1.48fr)_minmax(150px,0.58fr)] [align-items:end] gap-[14px] pt-[18px] pr-[18px] pb-[18px] pl-0 " +
-  "animate-[catalog-reveal_320ms_70ms_ease-out_both] motion-reduce:animate-none! " +
-  "before:absolute before:top-0 before:right-0 before:z-[-1] before:h-[76%] before:w-[72%] before:rounded-boutique-panel before:bg-boutique-blush before:content-[''] " +
-  "max-[1024.01px]:h-[390px] max-[1024.01px]:grid-cols-[minmax(0,1.35fr)_minmax(125px,0.56fr)] " +
-  "max-[820.01px]:h-[390px] max-[820.01px]:grid-cols-1 max-[820.01px]:pr-[14px] " +
-  "max-[700.01px]:h-[340px] max-[700.01px]:grid-cols-[minmax(0,1.45fr)_minmax(100px,0.55fr)] max-[700.01px]:gap-2 max-[700.01px]:pt-3 max-[700.01px]:pr-3 max-[700.01px]:pb-3 " +
-  "max-[430.01px]:h-[310px] " +
-  "max-[359.01px]:h-[290px] max-[359.01px]:grid-cols-1 max-[359.01px]:pr-[10px]";
+  "relative grid h-[clamp(350px,31vw,408px)] min-w-0 items-end gap-3 animate-[catalog-reveal_320ms_70ms_ease-out_both] motion-reduce:animate-none! " +
+  "max-[1024.01px]:h-[380px] max-[820.01px]:h-[370px] " +
+  "max-[700.01px]:h-[320px] max-[430.01px]:h-[296px] max-[359.01px]:h-[278px]";
+
+const showcaseMultipleLayoutClass =
+  "grid-cols-[minmax(0,1.38fr)_minmax(145px,0.62fr)] " +
+  "max-[1024.01px]:grid-cols-[minmax(0,1.34fr)_minmax(125px,0.58fr)] max-[820.01px]:grid-cols-1";
+
+const showcaseSingleLayoutClass =
+  "grid-cols-[minmax(0,430px)] justify-end max-[1024.01px]:grid-cols-[minmax(0,400px)] max-[820.01px]:grid-cols-1";
 
 const showcaseProductBaseClass =
-  "group grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden bg-boutique-surface-raised text-boutique-ink! no-underline!";
+  "group grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto] overflow-hidden rounded-boutique-card border border-solid border-boutique-line bg-boutique-surface-raised text-boutique-ink! no-underline! transition-[border-color] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-boutique-line-strong";
 
 const showcasePrimaryProductClass = `${showcaseProductBaseClass} h-full`;
 
 const showcaseSecondaryProductClass =
-  `${showcaseProductBaseClass} mb-[2px] h-[70%] max-[820.01px]:hidden max-[700.01px]:grid max-[700.01px]:h-[66%] max-[359.01px]:hidden`;
+  `${showcaseProductBaseClass} mb-[2px] h-[76%] max-[820.01px]:hidden`;
 
 const showcaseMediaBaseClass =
-  "block min-h-0 min-w-0 overflow-hidden [&>img]:h-full! [&>img]:w-full [&>img]:object-contain [&>img]:transition-transform [&>img]:duration-[280ms] [&>img]:ease-[ease] [&>.catalog-product-image-fallback]:h-full [&>.catalog-product-image-fallback]:w-full group-hover:[&>img]:scale-[1.015]";
+  "block min-h-0 min-w-0 overflow-hidden [&>img]:h-full! [&>img]:w-full [&>img]:object-contain [&>img]:[object-position:center_44%] [&>img]:transition-transform [&>img]:duration-[280ms] [&>img]:ease-[cubic-bezier(0.22,1,0.36,1)] [&>.catalog-product-image-fallback]:h-full [&>.catalog-product-image-fallback]:w-full group-hover:[&>img]:scale-[1.012]";
 
 const showcasePrimaryMediaClass =
   `${showcaseMediaBaseClass} bg-boutique-mist`;
@@ -122,8 +124,8 @@ const showcaseSecondaryMediaClass =
   `${showcaseMediaBaseClass} bg-boutique-sage`;
 
 const showcaseCaptionBaseClass =
-  "grid min-h-[62px] gap-[7px] border-0 border-t border-solid border-boutique-line bg-boutique-surface-raised pt-[9px] pr-[11px] pb-[10px] pl-[11px] " +
-  "max-[700.01px]:min-h-[57px] max-[700.01px]:p-[8px_9px]";
+  "grid min-h-[64px] gap-[7px] border-0 border-t border-solid border-boutique-line bg-boutique-surface-raised pt-[10px] pr-3 pb-[11px] pl-3 " +
+  "max-[700.01px]:min-h-[60px] max-[700.01px]:p-[9px_10px]";
 
 const showcasePrimaryCaptionClass =
   `${showcaseCaptionBaseClass} grid-cols-[minmax(0,1fr)_auto] [align-items:end] gap-[14px]`;
@@ -133,7 +135,7 @@ const showcaseSecondaryCaptionClass = showcaseCaptionBaseClass;
 const showcaseCaptionContentClass = "grid min-w-0 gap-[2px]";
 
 const showcasePrimaryLabelClass =
-  "text-[0.55rem] font-semibold tracking-[0.08em] text-boutique-muted uppercase";
+  "text-[0.58rem] font-semibold tracking-[0.075em] text-boutique-muted uppercase";
 
 const showcaseSecondaryLabelClass =
   `${showcasePrimaryLabelClass} max-[700.01px]:hidden`;
@@ -150,7 +152,7 @@ const showcaseSecondaryPriceClass =
   `${showcasePrimaryPriceClass} max-[700.01px]:hidden`;
 
 const showcaseEmptyClass =
-  "col-span-full grid h-full [place-items:end_start] bg-[linear-gradient(135deg,var(--color-pastel-mist),var(--color-pastel-blush))] p-6 font-boutique-display text-[1.35rem] text-boutique-muted";
+  "col-span-full grid h-full rounded-boutique-card border border-solid border-boutique-line bg-boutique-mist p-6 [place-items:end_start] font-boutique-display text-[1.35rem] text-boutique-muted";
 
 type ShowcasePlacement = "primary" | "secondary";
 
@@ -163,6 +165,14 @@ function resolveCategoryButtonClass(isActive: boolean): string {
   return isActive
     ? categoryButtonActiveClass
     : categoryButtonInactiveClass;
+}
+
+function resolveShowcaseClass(productCount: number): string {
+  return `${showcaseClass} ${
+    productCount === 1
+      ? showcaseSingleLayoutClass
+      : showcaseMultipleLayoutClass
+  }`;
 }
 
 function CatalogShowcaseProduct({
@@ -380,8 +390,10 @@ export function CatalogHomePage() {
                 <input
                   className={searchInputClass}
                   type="search"
+                  name="catalog-search"
+                  autoComplete="off"
                   value={searchTerm}
-                  placeholder="Busca por nombre o descripción"
+                  placeholder="Busca por nombre o descripción…"
                   onChange={(event) => {
                     setSearchTerm(event.target.value);
                   }}
@@ -434,7 +446,7 @@ export function CatalogHomePage() {
           </div>
 
           <div
-            className={showcaseClass}
+            className={resolveShowcaseClass(showcaseProducts.length)}
             role="group"
             aria-label={
               showcaseProducts.length > 0

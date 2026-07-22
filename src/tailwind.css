@@ -39,8 +39,8 @@
   --font-boutique-sans: var(--font-family-sans);
 
   --text-boutique-display: clamp(2.9rem, 4vw, 3.85rem);
-  --text-boutique-display--line-height: 0.98;
-  --text-boutique-display--letter-spacing: -0.042em;
+  --text-boutique-display--line-height: 1.02;
+  --text-boutique-display--letter-spacing: -0.035em;
   --text-boutique-display--font-weight: 400;
   --text-boutique-headline: clamp(2.2rem, 3vw, 2.8rem);
   --text-boutique-headline--line-height: 1;
