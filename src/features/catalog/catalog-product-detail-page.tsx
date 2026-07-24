@@ -315,7 +315,7 @@ export function CatalogProductDetailPage() {
 
             <aside className="catalog-detail-contact">
               <div>
-                <span>Consulta esta pieza</span>
+                <h2>Consulta esta pieza</h2>
                 <p>
                   Agrégala a tu selección o pregunta directamente por WhatsApp.
                 </p>

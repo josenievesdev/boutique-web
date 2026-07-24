@@ -93,14 +93,17 @@ export function CartPage() {
       <main className="cart-page">
         <header className="cart-page__header">
           <div>
-            <p className="catalog-eyebrow">Mi solicitud · {totalItems} piezas</p>
+            <p className="catalog-eyebrow">
+              Mi solicitud · {totalItems} {totalItems === 1 ? "pieza" : "piezas"}
+            </p>
             <h1>Tu selección para consultar.</h1>
           </div>
 
           <div className="cart-page__introduction">
             <p>
-              Ajusta las cantidades y envía una sola consulta por WhatsApp.
-              La disponibilidad se confirma directamente con la boutique.
+              Ajusta las cantidades y envía una sola consulta por WhatsApp. La
+              disponibilidad y los detalles se confirman con la boutique; aquí
+              no se procesa el pago.
             </p>
 
             {items.length > 0 ? (
@@ -117,9 +120,6 @@ export function CartPage() {
 
         {items.length === 0 ? (
           <section className="cart-empty">
-            <span className="cart-empty__number" aria-hidden="true">
-              00
-            </span>
             <div>
               <p className="catalog-eyebrow">Selección vacía</p>
               <h2>Aún no agregaste ninguna pieza.</h2>
@@ -174,6 +174,7 @@ export function CartPage() {
                       <div className="cart-item__controls">
                         <div
                           className="cart-quantity"
+                          role="group"
                           aria-label={`Cantidad de ${item.name}`}
                         >
                           <button
@@ -204,6 +205,7 @@ export function CartPage() {
                         <button
                           className="cart-item__remove"
                           type="button"
+                          aria-label={`Eliminar ${item.name} de la solicitud`}
                           onClick={() => {
                             removeItem(item.productId);
                           }}
@@ -228,12 +230,12 @@ export function CartPage() {
 
             <aside className="cart-summary">
               <div className="cart-summary__heading">
-                <p className="catalog-eyebrow">Resumen</p>
-                <span aria-hidden="true">↗</span>
+                <h2 className="catalog-eyebrow">Resumen de la solicitud</h2>
+                <span>{totalItems} {totalItems === 1 ? "pieza" : "piezas"}</span>
               </div>
 
               <div className="cart-summary__row">
-                <span>Productos</span>
+                <span>Piezas</span>
                 <strong>{totalItems}</strong>
               </div>
 
@@ -243,8 +245,8 @@ export function CartPage() {
               </div>
 
               <p className="cart-summary__note">
-                El valor es informativo. La disponibilidad, personalización y
-                entrega se confirman por WhatsApp.
+                El total es informativo y no implica un cobro. La disponibilidad,
+                personalización y entrega se confirman por WhatsApp.
               </p>
 
               {isLoading ? (

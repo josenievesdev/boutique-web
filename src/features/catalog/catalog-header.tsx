@@ -14,7 +14,7 @@ const headerContentClass =
   "max-[700.01px]:w-[calc(100%_-_28px)] max-[430.01px]:w-[calc(100%_-_24px)]";
 
 const brandClass =
-  "grid w-fit gap-[2px] no-underline max-[820.01px]:self-start";
+  "grid min-h-11 w-fit content-center gap-[2px] no-underline max-[820.01px]:self-start";
 
 const brandNameClass =
   "font-boutique-display text-[1.34rem] font-medium leading-none tracking-[-0.035em] max-[430.01px]:text-[1.14rem]";
@@ -32,7 +32,7 @@ const navigationLinkBaseClass =
   "after:absolute after:inset-x-0 after:-bottom-px after:h-px after:origin-left after:bg-boutique-brand after:content-[''] after:opacity-0 " +
   "after:[transform:scaleX(0.35)] after:transition-[opacity,transform] after:duration-[220ms] after:ease-[ease] " +
   "hover:text-boutique-ink! hover:after:opacity-100 hover:after:[transform:scaleX(1)] " +
-  "max-[820.01px]:min-h-[43px] max-[430.01px]:text-[0.6rem] max-[430.01px]:tracking-[0.055em] max-[359.01px]:text-[0.56rem]";
+  "max-[820.01px]:min-h-11 max-[430.01px]:text-[0.6rem] max-[430.01px]:tracking-[0.055em] max-[359.01px]:text-[0.56rem]";
 
 const cartLinkClass =
   "gap-2 max-[820.01px]:ml-auto max-[359.01px]:gap-[5px]";
