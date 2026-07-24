@@ -4,14 +4,15 @@ import {
   useState,
 } from "react";
 import { Link } from "react-router";
-import type {
-  Product,
-  ProductStatus,
-} from "../../../core/entities/product";
+import type { Product } from "../../../core/entities/product";
 import { ListAdminProducts } from "../../../core/use-cases/list-admin-products";
 import { SupabaseProductRepository } from "../../../infrastructure/repositories/supabase-product-repository";
 import { SupabaseProductImageStorage } from "../../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../../infrastructure/supabase/supabase-client";
+import {
+  filterAdminProducts,
+  type ProductStatusFilter,
+} from "./filter-admin-products";
 
 const productRepository =
   new SupabaseProductRepository(supabase);
@@ -22,12 +23,8 @@ const productImageStorage =
 const listAdminProducts =
   new ListAdminProducts(productRepository);
 
-type ProductStatusFilter =
-  | "all"
-  | ProductStatus;
-
 const statusLabels: Record<
-  ProductStatus,
+  Exclude<ProductStatusFilter, "all">,
   string
 > = {
   draft: "Borrador",
@@ -137,25 +134,11 @@ export function AdminProductsPage() {
   }, [reloadCounter]);
 
   const filteredProducts = useMemo(() => {
-    const normalizedSearch =
-      searchTerm.trim().toLowerCase();
-
-    return products.filter((product) => {
-      const matchesStatus =
-        statusFilter === "all" ||
-        product.status === statusFilter;
-
-      const matchesSearch =
-        !normalizedSearch ||
-        product.name
-          .toLowerCase()
-          .includes(normalizedSearch) ||
-        product.slug
-          .toLowerCase()
-          .includes(normalizedSearch);
-
-      return matchesStatus && matchesSearch;
-    });
+    return filterAdminProducts(
+      products,
+      searchTerm,
+      statusFilter,
+    );
   }, [
     products,
     searchTerm,
@@ -200,7 +183,7 @@ export function AdminProductsPage() {
           <input
             type="search"
             value={searchTerm}
-            placeholder="Nombre o slug"
+            placeholder="Nombre, slug o código de molde"
             onChange={(event) => {
               setSearchTerm(
                 event.target.value,
@@ -336,6 +319,12 @@ export function AdminProductsPage() {
                   <span>
                     /{product.slug}
                   </span>
+
+                  {product.moldCode ? (
+                    <span className="admin-product-row__mold-code">
+                      Molde: {product.moldCode}
+                    </span>
+                  ) : null}
                 </div>
 
                 <div className="admin-product-row__price">

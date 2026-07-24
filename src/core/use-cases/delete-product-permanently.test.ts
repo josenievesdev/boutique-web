@@ -34,6 +34,7 @@ describe("DeleteProductPermanently", () => {
       previousPriceInPesos: null,
       categoryId: "category-dresses",
       collectionId: null,
+      moldCode: null,
       status: "archived",
       featured: false,
       customizable: true,

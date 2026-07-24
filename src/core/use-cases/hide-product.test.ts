@@ -17,6 +17,7 @@ function createPublishedProduct(): Product {
     previousPriceInPesos: null,
     categoryId: "category-dresses",
     collectionId: null,
+    moldCode: null,
     status: "published",
     featured: false,
     customizable: true,

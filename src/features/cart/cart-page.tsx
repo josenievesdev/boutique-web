@@ -70,6 +70,7 @@ export function CartPage() {
       phoneNumber: shopSettings.whatsappNumber,
       items: items.map((item) => ({
         name: item.name,
+        moldCode: item.moldCode,
         quantity: item.quantity,
         priceInPesos: item.priceInPesos,
         productUrl: new URL(
@@ -163,9 +164,18 @@ export function CartPage() {
 
                     <div className="cart-item__information">
                       <div className="cart-item__title-row">
-                        <Link to={`/productos/${item.slug}`}>
-                          <h3>{item.name}</h3>
-                        </Link>
+                        <div>
+                          <Link to={`/productos/${item.slug}`}>
+                            <h3>{item.name}</h3>
+                          </Link>
+
+                          {item.moldCode ? (
+                            <p className="cart-item__mold-code">
+                              Código de molde: {item.moldCode}
+                            </p>
+                          ) : null}
+                        </div>
+
                         <strong>
                           {currencyFormatter.format(item.priceInPesos)}
                         </strong>

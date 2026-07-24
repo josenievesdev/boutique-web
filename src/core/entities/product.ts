@@ -19,6 +19,7 @@ export interface ProductProps {
   id: string;
   name: string;
   slug: string;
+  moldCode?: string | null;
   shortDescription: string;
   description: string;
   priceInPesos: number;
@@ -39,10 +40,15 @@ export class Product {
   private readonly props: ProductProps;
 
   constructor(props: ProductProps) {
-    this.validateInitialState(props);
+    const normalizedProps = {
+      ...props,
+      moldCode: props.moldCode?.trim() || null,
+    };
+
+    this.validateInitialState(normalizedProps);
 
     this.props = {
-      ...props,
+      ...normalizedProps,
       images: props.images.map((image) => ({ ...image })),
     };
   }
@@ -57,6 +63,10 @@ export class Product {
 
   get slug(): string {
     return this.props.slug;
+  }
+
+  get moldCode(): string | null {
+    return this.props.moldCode ?? null;
   }
 
   get priceInPesos(): number {
@@ -258,6 +268,7 @@ setCoverImage(imageId: string): void {
   toObject(): ProductProps {
     return {
       ...this.props,
+      moldCode: this.props.moldCode ?? null,
       images: this.props.images.map((image) => ({ ...image })),
       createdAt: new Date(this.props.createdAt),
       updatedAt: new Date(this.props.updatedAt),
@@ -294,6 +305,16 @@ if (!props.description.trim()) {
     "La descripción completa del producto es obligatoria.",
   );
 }
+
+    if (
+      props.moldCode !== null &&
+      props.moldCode !== undefined &&
+      Array.from(props.moldCode).length > 40
+    ) {
+      throw new DomainError(
+        "El código de molde no puede superar los 40 caracteres.",
+      );
+    }
 
 this.validatePrice(props.priceInPesos);
 

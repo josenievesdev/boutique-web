@@ -9,6 +9,7 @@ export interface UpdateProductDetailsInput {
   productId: string;
   name: string;
   slug: string;
+  moldCode: string | null;
   shortDescription: string;
   description: string;
   priceInPesos: number;
@@ -80,6 +81,7 @@ export class UpdateProductDetails {
       ...currentData,
       name: input.name.trim(),
       slug: normalizedSlug,
+      moldCode: input.moldCode?.trim() || null,
       shortDescription:
         input.shortDescription.trim(),
       description: input.description.trim(),

@@ -42,6 +42,7 @@ export function AdminNewProductPage() {
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [moldCode, setMoldCode] = useState("");
   const [slugWasEdited, setSlugWasEdited] =
     useState(false);
 
@@ -146,6 +147,7 @@ export function AdminNewProductPage() {
       await createProduct.execute({
         name,
         slug,
+        moldCode,
         shortDescription,
         description,
         priceInPesos: parsedPrice,
@@ -248,6 +250,20 @@ export function AdminNewProductPage() {
                 Dirección pública: /productos/{slug ||
                   "nombre-del-producto"}
               </small>
+            </label>
+
+            <label className="admin-field">
+              <span>Código de molde</span>
+
+              <input
+                type="text"
+                value={moldCode}
+                maxLength={40}
+                placeholder="V-024"
+                onChange={(event) => {
+                  setMoldCode(event.target.value);
+                }}
+              />
             </label>
 
             <label className="admin-field admin-field--full">

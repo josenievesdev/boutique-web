@@ -686,6 +686,7 @@
 .catalog-detail-facts dd {
   margin: 0;
   font-weight: 600;
+  overflow-wrap: anywhere;
   text-align: right;
 }
 
@@ -853,6 +854,17 @@
 .cart-item__title-row a {
   min-width: 0;
   text-decoration: none;
+}
+
+.cart-item__title-row > div {
+  min-width: 0;
+}
+
+.cart-item__mold-code {
+  margin: 6px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
 }
 
 .cart-item__title-row h3 {

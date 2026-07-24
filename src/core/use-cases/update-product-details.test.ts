@@ -34,6 +34,7 @@ function createProduct(
     previousPriceInPesos: null,
     categoryId: "category-dresses",
     collectionId: null,
+    moldCode: null,
     status: "draft",
     featured: false,
     customizable: true,
@@ -86,6 +87,7 @@ describe("UpdateProductDetails", () => {
         productId: product.id,
         name: " Vestido Aurora Renovado ",
         slug: " VESTIDO-AURORA-RENOVADO ",
+        moldCode: " AURORA-03 ",
         shortDescription:
           " Nueva descripción corta. ",
         description:
@@ -107,6 +109,8 @@ describe("UpdateProductDetails", () => {
     expect(data.slug).toBe(
       "vestido-aurora-renovado",
     );
+
+    expect(data.moldCode).toBe("AURORA-03");
 
     expect(data.shortDescription).toBe(
       "Nueva descripción corta.",
@@ -151,6 +155,7 @@ describe("UpdateProductDetails", () => {
         productId: product.id,
         name: "Vestido Aurora",
         slug: "vestido-aurora",
+        moldCode: null,
         shortDescription: "Vestido actualizado.",
         description:
           "Nueva descripción del vestido.",
@@ -165,6 +170,36 @@ describe("UpdateProductDetails", () => {
     expect(updatedProduct.slug).toBe(
       "vestido-aurora",
     );
+  });
+
+  it("permite borrar el código de molde", async () => {
+    const { repository, useCase } =
+      createUseCase();
+
+    const product = createProduct({
+      moldCode: "V-024",
+    });
+
+    await repository.create(product);
+
+    const updatedProduct =
+      await useCase.execute({
+        productId: product.id,
+        name: product.name,
+        slug: product.slug,
+        moldCode: "   ",
+        shortDescription: "Vestido actualizado.",
+        description:
+          "Nueva descripción del vestido.",
+        priceInPesos: product.priceInPesos,
+        categoryId: "category-dresses",
+        featured: false,
+        customizable: true,
+        madeToOrder: true,
+        preparationDays: 8,
+      });
+
+    expect(updatedProduct.moldCode).toBeNull();
   });
 
   it("rechaza utilizar el slug de otro producto", async () => {
@@ -187,6 +222,7 @@ describe("UpdateProductDetails", () => {
         productId: firstProduct.id,
         name: "Vestido Aurora",
         slug: "BLUSA-MAGNOLIA",
+        moldCode: null,
         shortDescription: "Vestido actualizado.",
         description:
           "Nueva descripción del vestido.",
@@ -219,6 +255,7 @@ describe("UpdateProductDetails", () => {
         productId: product.id,
         name: product.name,
         slug: product.slug,
+        moldCode: null,
         shortDescription: "Descripción corta.",
         description: "Descripción completa.",
         priceInPesos: product.priceInPesos,
@@ -243,6 +280,7 @@ describe("UpdateProductDetails", () => {
         productId: "missing-product",
         name: "Producto inexistente",
         slug: "producto-inexistente",
+        moldCode: null,
         shortDescription: "Descripción corta.",
         description: "Descripción completa.",
         priceInPesos: 100_000,

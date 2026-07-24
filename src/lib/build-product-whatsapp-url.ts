@@ -1,6 +1,7 @@
 export interface BuildProductWhatsAppUrlInput {
   phoneNumber: string;
   productName: string;
+  moldCode?: string | null;
   priceInPesos: number;
   productUrl: string;
 }
@@ -15,10 +16,15 @@ const currencyFormatter =
 export function buildProductWhatsAppUrl(
   input: BuildProductWhatsAppUrlInput,
 ): string {
+  const moldCode = input.moldCode?.trim();
+
   const message = [
     "Hola, me interesa este producto:",
     "",
     input.productName,
+    ...(moldCode
+      ? [`Código de molde: ${moldCode}`]
+      : []),
     `Precio: ${currencyFormatter.format(
       input.priceInPesos,
     )}`,

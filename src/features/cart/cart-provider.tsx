@@ -27,9 +27,16 @@ interface CartProviderProps {
   children: ReactNode;
 }
 
+type StoredCartItem = Omit<
+  CartItem,
+  "moldCode"
+> & {
+  moldCode?: unknown;
+};
+
 function isCartItem(
   value: unknown,
-): value is CartItem {
+): value is StoredCartItem {
   if (
     typeof value !== "object" ||
     value === null
@@ -72,16 +79,28 @@ function readStoredItems(): CartItem[] {
 
     return parsedValue
       .filter(isCartItem)
-      .map((item) => ({
-        ...item,
-        quantity: Math.min(
-          99,
-          Math.max(
-            1,
-            Math.trunc(item.quantity),
+      .map((item) => {
+        const normalizedMoldCode =
+          typeof item.moldCode === "string"
+            ? item.moldCode.trim()
+            : "";
+
+        return {
+          ...item,
+          moldCode:
+            normalizedMoldCode &&
+            Array.from(normalizedMoldCode).length <= 40
+              ? normalizedMoldCode
+              : null,
+          quantity: Math.min(
+            99,
+            Math.max(
+              1,
+              Math.trunc(item.quantity),
+            ),
           ),
-        ),
-      }));
+        };
+      });
   } catch {
     return [];
   }

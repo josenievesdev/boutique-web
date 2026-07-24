@@ -69,6 +69,7 @@ export function AdminEditProductPage() {
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
+  const [moldCode, setMoldCode] = useState("");
 
   const [
     shortDescription,
@@ -137,6 +138,7 @@ export function AdminEditProductPage() {
         setCategories(loadedCategories);
         setName(productData.name);
         setSlug(productData.slug);
+        setMoldCode(productData.moldCode ?? "");
 
         setShortDescription(
           productData.shortDescription,
@@ -217,6 +219,7 @@ export function AdminEditProductPage() {
         productId,
         name,
         slug,
+        moldCode,
         shortDescription,
         description,
         priceInPesos: parsedPrice,
@@ -353,6 +356,20 @@ export function AdminEditProductPage() {
               <small>
                 Dirección pública: /productos/{slug}
               </small>
+            </label>
+
+            <label className="admin-field">
+              <span>Código de molde</span>
+
+              <input
+                type="text"
+                value={moldCode}
+                maxLength={40}
+                placeholder="V-024"
+                onChange={(event) => {
+                  setMoldCode(event.target.value);
+                }}
+              />
             </label>
 
             <label className="admin-field admin-field--full">

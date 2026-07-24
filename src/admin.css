@@ -386,6 +386,10 @@
   font-size: 0.8rem;
 }
 
+.admin-product-row__mold-code {
+  overflow-wrap: anywhere;
+}
+
 .admin-status-badge {
   display: inline-flex;
   width: fit-content;

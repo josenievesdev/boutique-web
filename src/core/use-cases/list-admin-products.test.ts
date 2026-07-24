@@ -22,6 +22,7 @@ function createProduct(
     previousPriceInPesos: null,
     categoryId: "category-1",
     collectionId: null,
+    moldCode: null,
     status,
     featured: false,
     customizable: false,

@@ -19,6 +19,7 @@ function createProduct(): Product {
     previousPriceInPesos: null,
     categoryId: "category-dresses",
     collectionId: null,
+    moldCode: null,
     status: "draft",
     featured: false,
     customizable: true,

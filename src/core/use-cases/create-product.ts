@@ -7,6 +7,7 @@ import type { ProductRepository } from "../repositories/product-repository";
 export interface CreateProductInput {
   name: string;
   slug: string;
+  moldCode?: string | null;
   shortDescription: string;
   description: string;
   priceInPesos: number;
@@ -52,6 +53,7 @@ export class CreateProduct {
       id: this.idGenerator.generate(),
       name: input.name.trim(),
       slug: normalizedSlug,
+      moldCode: input.moldCode?.trim() || null,
       shortDescription: input.shortDescription.trim(),
       description: input.description.trim(),
       priceInPesos: input.priceInPesos,

@@ -132,6 +132,7 @@ export type Database = {
           featured: boolean
           id: string
           made_to_order: boolean
+          mold_code: string | null
           name: string
           preparation_days: number | null
           previous_price_in_pesos: number | null
@@ -149,6 +150,7 @@ export type Database = {
           featured?: boolean
           id?: string
           made_to_order?: boolean
+          mold_code?: string | null
           name: string
           preparation_days?: number | null
           previous_price_in_pesos?: number | null
@@ -166,6 +168,7 @@ export type Database = {
           featured?: boolean
           id?: string
           made_to_order?: boolean
+          mold_code?: string | null
           name?: string
           preparation_days?: number | null
           previous_price_in_pesos?: number | null

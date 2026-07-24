@@ -195,6 +195,7 @@ export function CatalogProductDetailPage() {
     ? buildProductWhatsAppUrl({
         phoneNumber: shopSettings.whatsappNumber,
         productName: productData.name,
+        moldCode: productData.moldCode,
         priceInPesos: productData.priceInPesos,
         productUrl: productPublicUrl,
       })
@@ -216,6 +217,7 @@ export function CatalogProductDetailPage() {
       productId: productData.id,
       slug: productData.slug,
       name: productData.name,
+      moldCode: productData.moldCode ?? null,
       priceInPesos: productData.priceInPesos,
       imagePath: coverImage?.path ?? null,
       imageAltText: coverImage?.altText || productData.name,
@@ -369,6 +371,13 @@ export function CatalogProductDetailPage() {
                 <dt>Disponibilidad</dt>
                 <dd>Disponible</dd>
               </div>
+
+              {productData.moldCode ? (
+                <div>
+                  <dt>Código de molde</dt>
+                  <dd>{productData.moldCode}</dd>
+                </div>
+              ) : null}
 
               {productData.preparationDays ? (
                 <div>

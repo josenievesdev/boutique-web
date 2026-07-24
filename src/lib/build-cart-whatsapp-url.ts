@@ -1,5 +1,6 @@
 export interface CartWhatsAppItem {
   name: string;
+  moldCode?: string | null;
   quantity: number;
   priceInPesos: number;
   productUrl: string;
@@ -27,18 +28,24 @@ export function buildCartWhatsAppUrl(
     0,
   );
 
-  const productLines =
-    input.items.flatMap(
-      (item, index) => [
+  const productLines = input.items.flatMap(
+    (item, index) => {
+      const moldCode = item.moldCode?.trim();
+
+      return [
         `${index + 1}. ${item.name}`,
+        ...(moldCode
+          ? [`Código de molde: ${moldCode}`]
+          : []),
         `Cantidad: ${item.quantity}`,
         `Precio unitario: ${currencyFormatter.format(
           item.priceInPesos,
         )}`,
         `Enlace: ${item.productUrl}`,
         "",
-      ],
-    );
+      ];
+    },
+  );
 
   const message = [
     "Hola, quiero consultar estos productos:",

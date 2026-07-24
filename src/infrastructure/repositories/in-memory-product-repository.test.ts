@@ -22,6 +22,7 @@ function createProduct(
     previousPriceInPesos: null,
     categoryId: "category-dresses",
     collectionId: null,
+    moldCode: null,
     status: "draft",
     featured: false,
     customizable: true,
@@ -46,6 +47,23 @@ describe("InMemoryProductRepository", () => {
     );
 
     expect(storedProduct).toBe(product);
+  });
+
+  it("conserva el código de molde del producto", async () => {
+    const repository = new InMemoryProductRepository();
+    const product = createProduct({
+      moldCode: "MOL-VEST-018",
+    });
+
+    await repository.create(product);
+
+    const storedProduct = await repository.findById(
+      product.id,
+    );
+
+    expect(storedProduct?.moldCode).toBe(
+      "MOL-VEST-018",
+    );
   });
 
   it("encuentra un producto por slug", async () => {

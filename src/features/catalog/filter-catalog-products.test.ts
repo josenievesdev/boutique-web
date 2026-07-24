@@ -33,6 +33,7 @@ function createProduct({
     previousPriceInPesos: null,
     categoryId,
     collectionId: null,
+    moldCode: null,
     status: "published",
     featured,
     customizable: false,
