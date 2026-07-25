@@ -1,203 +1,249 @@
-# Plan de migración a Tailwind CSS
+# Plan técnico de Tailwind CSS
 
-## Estado y alcance
+## Estado actual
 
-Este plan gobierna una migración progresiva y visualmente neutra del frontend público de `boutique-web`, desde CSS convencional hacia Tailwind CSS.
+Tailwind CSS v4 está instalado y funcionando:
 
-- Tailwind CSS no está instalado. `package.json`, `package-lock.json`, `vite.config.ts`, `src/` y `skills-lock.json` no contienen dependencia, plugin, directiva ni import de Tailwind.
-- La aplicación carga actualmente `src/index.css`, `src/catalog.css` y `src/admin.css` desde `src/main.tsx`.
-- El frontend público está implementado y constituye la base provisional aprobada documentada en `DESIGN.md`.
-- La referencia visual segura es el tag inmutable `visual-public-v1`. Actualmente resuelve al commit `155787bbaf16df7fc2e8d93b76d1563c59e4135e`.
-- Todo el trabajo de migración se desarrolla únicamente en `refactor/tailwind-public-migration`.
-- La superficie pública entra primero en alcance. `src/admin.css` y la interfaz administrativa permanecen fuera hasta la fase administrativa posterior.
+- `tailwindcss` y `@tailwindcss/vite` están declarados como dependencias.
+- `vite.config.ts` registra el plugin oficial de Tailwind para Vite.
+- `src/main.tsx` importa `src/tailwind.css` antes de las hojas heredadas.
+- `src/tailwind.css` importa `tailwindcss/theme.css` y `tailwindcss/utilities.css`.
+- Preflight no se importa y permanece desactivado.
+- No existe ni se necesita `tailwind.config.*`; el proyecto usa configuración CSS-first.
 
-## Objetivo
+La superficie pública es híbrida:
 
-Migrar progresivamente la construcción visual a Tailwind CSS sin alterar inicialmente el diseño provisional aprobado, el comportamiento del producto, el flujo de datos ni el copy público. La paridad técnica y visual precede al rediseño.
-
-La migración debe conservar el dominio, la integración de Supabase, los repositorios, los casos de uso, la autenticación, el comportamiento de solicitud en `localStorage` y la generación de mensajes de WhatsApp.
-
-## Estrategia técnica
-
-1. Usar Tailwind CSS v4 y su integración oficial para Vite; instalar `tailwindcss` y `@tailwindcss/vite` únicamente cuando se autorice explícitamente la Fase 1.
-2. Añadir el plugin de Tailwind para Vite junto al plugin actual de React, sin reemplazar la integración de React.
-3. Mantener Preflight desactivado durante la primera etapa. Importar las capas de theme y utilities sin importar `tailwindcss/preflight.css` hasta evaluar el impacto en toda la aplicación.
-4. Conservar inicialmente `src/index.css`, `src/catalog.css` y `src/admin.css`. La cascada y el reset existentes siguen siendo la fuente de paridad visual.
-5. Definir tokens semánticos a partir de los valores exactos de `src/index.css`; no inventar una paleta ni una escala tipográfica nuevas durante la migración.
-6. Migrar un componente o grupo estrechamente acoplado por vez. Cada paso debe ser revisable y reversible.
-7. Eliminar un selector heredado solo después de que una búsqueda completa confirme que ningún JSX, TSX ni stylesheet restante lo consume.
-8. No mezclar un rediseño fuerte con la migración. Las mejoras pertenecen a la Fase 10, después de la paridad y limpieza pública.
-9. No migrar el panel administrativo durante las fases públicas. `src/admin.css` permanece intacto.
-
-La documentación oficial de Tailwind confirma el paquete y plugin de Vite para v4 y explica cómo desactivar Preflight importando únicamente las partes necesarias:
-
-- [Instalar Tailwind CSS con Vite](https://tailwindcss.com/docs/installation/using-vite)
-- [Preflight](https://tailwindcss.com/docs/preflight)
-
-## Fases de migración
-
-### Fase 1 — Infraestructura Tailwind sin cambios visuales
-
-- Instalar Tailwind CSS v4 y `@tailwindcss/vite`.
-- Registrar el plugin oficial de Vite.
-- Añadir una entrada CSS de Tailwind que importe theme y utilities, pero no Preflight.
-- Mantener funcionando todos los imports y selectores actuales.
-- Demostrar que pruebas, build, lint y capturas representativas no cambian antes de migrar un componente.
-
-### Fase 2 — Tokens y tema
-
-- Mapear colores semánticos, familias, espaciado, radios, anchos, transiciones y capas z-index de `src/index.css` al tema de Tailwind v4 cuando corresponda.
-- Mantener disponibles las variables CSS existentes durante la convivencia.
-- Conservar los valores exactos de `DESIGN.md`; no rediseñar paleta ni tipografía.
-- Documentar cualquier token que no pueda representarse directamente antes de añadir una excepción.
-
-### Fase 3 — Header público como piloto
-
-- Migrar `CatalogHeader` y los estados del contador de solicitud como primer componente.
-- Incluir el comportamiento de escritorio, `820px`, `700px`, `430px` y bajo `360px`.
-- Conservar tipografía de marca, posición sticky, hairline, overlay funcional, regla de navegación activa y contador.
-- No migrar `CatalogFooter` en el mismo commit.
-
-### Fase 4 — Hero, búsqueda y filtros
-
-- Migrar columna de copy del hero, enlace a colección, cabecera de descubrimiento, buscador, acción Limpiar, filtros de categoría y showcase.
-- Conservar imágenes reales, estados actuales y scroller horizontal deliberado de categorías a `430px` o menos.
-- Confirmar reducción de movimiento y ausencia de overflow horizontal de página.
-
-### Fase 5 — Colección y tarjetas
-
-- Migrar wrapper y header de colección, resumen de resultados, grid, `CatalogProductCard`, fallback de imagen, etiqueta destacada, tags y estados públicos.
-- Conservar centrado de un producto, proporciones responsive, line clamping, bordes finos, radios moderados y ausencia de drop shadows.
-- Eliminar los selectores correspondientes solo después de migrar todos sus consumidores.
-
-### Fase 6 — Footer
-
-- Migrar `CatalogFooter` por separado.
-- Conservar superficie marrón profunda, jerarquía de opacidad del texto inverso, navegación, enlace administrativo y composiciones desktop, media y estrecha.
-
-### Fase 7 — Detalle de producto
-
-- Migrar breadcrumb, galería, thumbnails, información, precio, tags, panel de consulta, descripción, datos y estados de carga, error y producto ausente.
-- Conservar columna sticky en escritorio, recomposición de `820px`, stack de `700px`, semántica del thumbnail elegido y comportamiento alt.
-
-### Fase 8 — Solicitud
-
-- Migrar `CartPage`, filas, cantidad, eliminación, totales, estado vacío, estados de contacto y acción de WhatsApp.
-- Conservar provider, clave y forma de datos de `localStorage`, límites de cantidad, cálculo de total, confirmación y construcción de URL de WhatsApp.
-- Validar resumen sticky de escritorio y todas las recomposiciones responsive.
-
-### Fase 9 — Limpieza de CSS público heredado
-
-- Buscar cada selector público en todo el repositorio antes de eliminarlo.
-- Retirar reglas públicas obsoletas de `src/catalog.css` y declaraciones exclusivamente públicas de `src/index.css` que hayan quedado redundantes.
-- Conservar carga de fuentes, variables aún consumidas, normalización, foco, carga de rutas y excepciones globales justificadas.
-- Dejar `src/admin.css` intacto.
-- Reducir o eliminar `src/catalog.css` solo hasta donde sus consumidores y la validación demuestren que es seguro.
-
-### Fase 10 — Pulido visual mediante skills
-
-- Comenzar solo después de paridad visual, pruebas, build, lint y responsive correctos.
-- Tratar hero, composición exacta de escritorio, escala de imagen, espacio con pocos productos, detalles responsive seleccionados y tracking de display como backlog independiente.
-- Usar un flujo documentado de Impeccable para cada mejora; no ocultar rediseño dentro de limpieza técnica.
-
-### Fase 11 — Migración administrativa posterior
-
-- Tratar administración como superficie `product`, centrada en claridad operativa y controles familiares.
-- Auditar componentes administrativos y `src/admin.css` de forma independiente antes de definir tokens y orden.
-- No asumir que cada tratamiento de marca público corresponde al panel.
-
-## Inventario actual de CSS y componentes
-
-### `src/index.css`
-
-Provee la base global consumida por superficies públicas y administrativas:
-
-- Variables semánticas de color para fondos, superficies, contenido, marca, bordes, foco, estados y pasteles reutilizables.
-- Escalas de espaciado, radio, sombra, ancho de contenido, transición y z-index.
-- Variables de familia Newsreader y Manrope.
-- Box sizing, defaults de body, herencia de controles, inputs/selects/textarea, enlaces, imágenes, selección, disabled y foco global.
-- Tamaño raíz y estado de carga de rutas lazy, spinner y override de movimiento reducido.
-
-Estas responsabilidades se separarán con cuidado durante la convivencia. Las variables y normalización globales no se eliminan porque un componente público haya migrado.
-
-### `src/catalog.css`
-
-Los grupos funcionales públicos principales son:
-
-- **Shell y primitivas compartidas:** `.catalog-site`, contenido visualmente oculto, `.catalog-eyebrow` y acciones primaria, secundaria y WhatsApp.
-- **Header y navegación:** `.catalog-header`, wrapper, marca, enlaces y regla activa, enlace de solicitud y badge contador.
-- **Hero y descubrimiento:** `.catalog-hero`, contenido y copy, enlace a colección, cabecera de descubrimiento, búsqueda, categorías y botones.
-- **Showcase del hero:** `.catalog-showcase`, media, captions, variantes de producto y composición vacía.
-- **Colección y tarjetas:** `.catalog-collection`, header, grid, media/cuerpo/pie de tarjeta, etiqueta destacada, tags y fallback.
-- **Estados públicos:** carga, vacío, sin coincidencias y error mediante variantes de `.catalog-state`.
-- **Detalle:** breadcrumb, layout, galería, thumbnails, información, precio, tags, consulta, acción de solicitud, descripción, datos y estados.
-- **Solicitud:** `.cart-page`, header, lista, filas, cantidad, eliminación, subtotal, resumen sticky, WhatsApp, estado/error y vacío.
-- **Footer:** marca, navegación, metadata y cambios responsive de columnas.
-- **404 pública:** código, contenido, copy y acción de retorno.
-- **Responsive:** grupos en `1024px`, `820px`, `700px`, `430px` y bajo `360px`.
-- **Movimiento:** `catalog-reveal` y excepción pública de reduced motion.
-
-### Consumidores React públicos
-
-| Superficie o componente | Dependencia actual de estilos |
+| Superficie | Construcción actual |
 | --- | --- |
-| `PublicPageShell`, `CatalogHeader`, `CatalogFooter` | Shell, header/navegación, acciones, footer y responsive de `src/catalog.css`; tokens y reset de `src/index.css`. |
-| `CatalogHomePage` | Hero, descubrimiento, búsqueda, filtros, showcase, colección, estados, grid y responsive/motion. |
-| `CatalogProductCard`, `CatalogProductImage` | Tarjeta, media, fallback, etiquetas, tags y reglas responsive. |
-| `CatalogProductDetailPage` | Estados, breadcrumb, galería, thumbnails, información, contacto, datos, acciones y responsive. |
-| `CartPage` y presentación del carrito | Header de solicitud, filas, cantidad, resumen, vacío, acciones, shell/footer y responsive. |
-| `CatalogNotFoundPage` | Shell, composición 404, tipografía, acción primaria y responsive. |
-| Fallback de rutas de `src/main.tsx` | Base de carga y reduced motion de `src/index.css`. |
+| Header, apertura, búsqueda, filtros y showcase existente | Utilities de Tailwind v4. |
+| Catálogo, cards, estados, detalle, solicitud, footer y 404 | CSS convencional en `src/catalog.css`. |
+| Administración | CSS convencional en `src/admin.css`. |
+| Normalización y defaults compartidos | `src/index.css`. |
 
-`src/admin.css` se carga globalmente hoy, pero no es objetivo de la migración pública. Permanece intacto hasta la Fase 11.
+## Objetivo técnico vigente
 
-## Reglas de convivencia
+La migración debe permitir el rediseño por tandas de `DESIGN_BIBLE.md` sin modificar comportamiento de producto ni trasladar la personalidad pública a administración.
 
-- Un componente migrado usa Tailwind para la mayor parte de su construcción visual específica.
-- No añadir overrides indefinidos para enfrentar CSS viejo y Tailwind por especificidad. Cada componente debe tener propiedad clara.
-- Mantener CSS global solo para fuentes, variables globales, normalización, defaults de documento y excepciones justificadas.
-- No usar `@apply` como sustituto general de componentes React ni para reconstruir el stylesheet anterior con otra sintaxis.
-- No construir fragmentos dinámicos de clases que Tailwind no pueda detectar. Usar clases estáticas completas o mapas explícitos de variantes completas.
-- No añadir `tailwind.config.js` salvo necesidad real y documentada. El tema CSS-first de Tailwind v4 es la ruta predeterminada.
-- No activar Preflight hasta revisar su impacto en toda la aplicación pública y administrativa.
-- `src/admin.css` permanece intacto durante la migración pública.
-- Conservar deliberadamente el orden de imports CSS hasta que una fase demuestre otro orden seguro.
-- Si selector heredado y Tailwind conviven temporalmente, registrar cuál gobierna cada propiedad y retirar la regla vieja al migrar su último consumidor.
-- No introducir dependencias visuales, librerías de componentes ni paquetes de iconos como parte de la migración.
+Debe conservar:
 
-## Validación por fase
+- Dominio, Supabase, repositorios y casos de uso.
+- Autenticación, rutas, slugs y permisos.
+- Solicitud persistida en `localStorage`.
+- Cantidades, precios, subtotales y valor de referencia.
+- Mensajes y enlaces de WhatsApp.
+- Contratos y código de molde.
+- Carga diferida de rutas y cargas independientes en paralelo.
 
-Cada fase de componente incluye:
+## Orden de estilos
 
-1. `npm run test:run`
-2. `npm run build`
-3. `npm run lint`
-4. `git diff --check`
-5. Búsqueda en el repositorio de selectores eliminados y consumidores.
-6. Comparación visual con `visual-public-v1` en `1440×900`, `1366×768`, `1280×720`, `1024×768`, `768px`, `430×932`, `390×844`, `360×800` y `320×568`.
-7. Verificación de teclado, foco, reduced motion, touch targets, alt, contraste, ausencia de scroll horizontal y contenido cortado.
-8. Confirmación de que solicitud, cantidades, precios, enlaces de producto y salida de WhatsApp permanecen intactos.
+`src/main.tsx` conserva este orden:
 
-## Criterios de finalización
+```text
+tailwind.css
+→ index.css
+→ catalog.css
+→ admin.css
+```
 
-La migración pública termina únicamente cuando:
+Consecuencias actuales:
 
-- El frontend público está migrado a Tailwind según el alcance por fases.
-- No existen diferencias visuales accidentales frente a la base provisional aprobada antes de las mejoras de Fase 10.
-- No quedan selectores públicos obsoletos.
-- Ningún viewport compatible presenta scroll horizontal de página ni contenido cortado.
-- Las pruebas pasan.
-- El build de producción pasa.
-- El lint está limpio.
-- La matriz responsive completa está validada.
-- El CSS público heredado está eliminado o reducido a excepciones globales justificadas.
-- CSS y comportamiento administrativos permanecen intactos hasta su propia fase.
+- Theme y utilities de Tailwind están en layers.
+- `index.css`, `catalog.css` y `admin.css` no están layerizados y se cargan después.
+- Algunos componentes migrados usan utilities importantes para vencer defaults globales.
+- Tanda 0B no cambia este orden, no layeriza hojas heredadas y no añade nuevos `!important`.
 
-## Reglas de Git
+La resolución definitiva de especificidad pertenece a la tanda del consumidor. No se debe responder a la convivencia acumulando overrides transversales.
 
-- Una responsabilidad por commit.
-- Codex nunca crea commits para esta migración.
-- Cada tanda debe mostrar `git diff` y sus resultados de validación antes de entregar.
-- La migración se desarrolla únicamente en `refactor/tailwind-public-migration`.
-- El tag `visual-public-v1` nunca se mueve, reemplaza ni sobrescribe.
-- Infraestructura, tokens, cada grupo de componentes, limpieza y pulido posterior permanecen como cambios revisables y separados.
+## Tanda 0B: tokens públicos
+
+### Estado
+
+Implementada a nivel de CSS y documentación. La validación visual manual continúa pendiente.
+
+### Fuente única
+
+`src/tailwind.css` contiene los valores definitivos `--catalog-*` dentro de `.catalog-site`:
+
+- fondos y superficies;
+- texto, acción y acento;
+- líneas, foco y estados;
+- familias y escala tipográfica;
+- espaciado y alturas de control;
+- radios y sombras;
+- anchos;
+- motion y z-index.
+
+El scope coincide con el wrapper de `PublicPageShell`:
+
+```tsx
+<div className="catalog-site">…</div>
+```
+
+Las rutas administrativas no viven dentro de ese wrapper y no reciben los aliases públicos.
+
+### Theme de Tailwind
+
+`@theme inline` conecta las utilities existentes `boutique-*` con `--catalog-*`. Las utilities no contienen valores de marca independientes.
+
+Ejemplos:
+
+```css
+--color-boutique-canvas: var(--catalog-color-canvas);
+--color-boutique-ink: var(--catalog-color-ink);
+--font-boutique-display: var(--catalog-font-display);
+--radius-boutique-control: var(--catalog-radius-control);
+```
+
+Esto mantiene nombres de clase detectables de forma estática y evita fragmentos dinámicos.
+
+### Bridge de compatibilidad
+
+Los selectores convencionales públicos todavía leen nombres globales como `--color-text`, `--radius-md` o `--transition-fast`. `.catalog-site` los redefine como aliases de los tokens públicos:
+
+```css
+.catalog-site {
+  --color-text: var(--catalog-color-ink);
+  --radius-md: var(--catalog-radius-media);
+  --transition-fast: var(--catalog-transition-fast);
+}
+```
+
+Este bridge permite una migración progresiva sin editar cards, detalle, solicitud o footer en Tanda 0B. No duplica valores: cada alias apunta a una fuente `--catalog-*`.
+
+Se retira por familia solo cuando una búsqueda completa confirme que el último consumidor público usa el nombre nuevo.
+
+### Compatibilidad de nombres pastel
+
+Los nombres `boutique-sage`, `boutique-blush`, `boutique-rose`, `boutique-mist` y sus equivalentes globales permanecen temporalmente porque ya tienen consumidores.
+
+No representan una nueva paleta pública:
+
+- sage resuelve a superficie de éxito;
+- blush resuelve a superficie de error;
+- rose resuelve al acento neutral suave;
+- mist resuelve a superficie informativa;
+- sand resuelve a la superficie arena.
+
+No se deben crear consumidores nuevos con esos nombres legacy.
+
+## Ownership visual
+
+| Archivo o capa | Responsabilidad permitida |
+| --- | --- |
+| `src/tailwind.css` | Valores `--catalog-*`, scope público, bridge temporal y theme utilities. |
+| `src/index.css` | Normalización, defaults del documento, tokens globales de compatibilidad, formularios globales, carga de rutas y reduced motion. |
+| Utilities en TSX | Construcción visual específica del componente ya migrado. |
+| `src/catalog.css` | Primitivas públicas y componentes aún no migrados. |
+| `src/admin.css` | Toda la presentación administrativa hasta Tanda 5. |
+
+### Lo que permanece global
+
+- `color-scheme`.
+- `box-sizing`.
+- Defaults de `html`, `body`, enlaces, imágenes y controles.
+- Foco y disabled globales mientras existan consumidores compartidos.
+- Variables de `:root` consumidas por administración.
+- `.route-loading`, porque el fallback de Suspense se renderiza fuera de `.catalog-site`.
+- Override general de `prefers-reduced-motion`.
+
+### Lo reservado para administración
+
+- Valores actuales de `:root`.
+- Todos los selectores `.admin-*`.
+- Densidad, escalas, formularios, cards, tablas/listas y estados del panel.
+- Un futuro scope administrativo con registro `product`, definido solo en Tanda 5.
+
+No se debe mover un token público a `:root` para facilitar una utility. Si una necesidad administrativa y pública coincide, ambas superficies pueden apuntar a un valor común explícito en una tanda posterior; no se asume esa coincidencia.
+
+## Primitivas disponibles
+
+`src/catalog.css` contiene el contrato visual inicial para:
+
+- `.catalog-container` y modificadores de medida;
+- `.catalog-title` y escalas de display/item;
+- `.catalog-eyebrow`;
+- `.catalog-secondary-text`;
+- `.catalog-primary-action`;
+- `.catalog-secondary-action`;
+- `.catalog-whatsapp-action`;
+- `.catalog-field`;
+- `.catalog-focus-ring`;
+- `.catalog-badge`;
+- `.catalog-state` y sus tonos actuales de carga/información y error;
+- `.catalog-product-media`;
+- `.catalog-price`;
+- `.catalog-separator`.
+
+Acciones, eyebrow y estados existentes ya comparten ese contrato. Las demás primitivas quedan disponibles, pero no se aplican masivamente antes de la tanda de cada componente.
+
+## Estado de la migración
+
+| Área | Estado | Siguiente autoridad |
+| --- | --- | --- |
+| Infraestructura Tailwind v4 | Completa | Mantener sin reinstalar ni activar Preflight. |
+| Tokens públicos aislados | Implementados en Tanda 0B | `DESIGN.md` y `DESIGN_BIBLE.md`. |
+| Header | Migrado a utilities, diseño anterior | Tanda 1A. |
+| Apertura, búsqueda, filtros y showcase | Migrados a utilities, diseño anterior | Tanda 1A y Tanda 1B. |
+| Colección y cards | CSS heredado | Tanda 1B. |
+| Footer y 404 | CSS heredado | Tanda 4, dividido en subtandas. |
+| Detalle | CSS heredado | Tanda 2. |
+| Solicitud | CSS heredado | Tanda 3. |
+| Administración | CSS heredado y fuera del scope público | Tanda 5. |
+| Limpieza final de CSS público | Pendiente | Solo después de migrar todos los consumidores. |
+
+## Reglas para próximas tandas
+
+1. Migrar una responsabilidad visual estrecha por vez.
+2. Usar `--catalog-*` o utilities `boutique-*` conectadas al theme; no añadir valores de marca paralelos.
+3. No usar `@apply` para reconstruir componentes.
+4. No componer nombres de utilities dinámicamente.
+5. No añadir `tailwind.config.*` sin una necesidad técnica demostrada.
+6. No activar Preflight.
+7. No cambiar el orden de imports sin una tanda de cascade específica.
+8. No eliminar un selector heredado antes de buscar todos sus consumidores.
+9. No migrar `src/admin.css` durante las tandas públicas.
+10. No corregir microtexto, breakpoints o layouts de un componente fuera de su tanda.
+11. No añadir dependencias visuales para resolver primitives disponibles en CSS o plataforma.
+12. Conservar lazy loading de rutas, cargas paralelas y `content-visibility` donde siga siendo útil.
+
+## Deuda heredada conocida
+
+- Utilities y selectores con tamaños menores de `12px` continúan en header, cards, detalle, solicitud y footer.
+- Existen utilities importantes por la precedencia de hojas no layerizadas.
+- `body` usa `overflow-x: hidden` y `.catalog-site` usa `overflow-x: clip`.
+- Breakpoints equivalentes están repartidos entre utilities arbitrarias y media queries.
+- Muchos selectores convencionales todavía consumen nombres globales mediante el bridge.
+- `.route-loading` sigue usando el sistema global y no los tokens públicos.
+- Los nombres legacy de pasteles todavía tienen consumidores.
+- No existe todavía un scope semántico administrativo.
+
+Estas deudas se registran; no se corrigen dentro de Tanda 0B.
+
+## Validación manual por tanda
+
+El usuario ejecuta pruebas, build, lint, comandos Git y validación visual según `AGENTS.md`.
+
+Para Tanda 0B debe revisar como mínimo:
+
+- Inicio, detalle, solicitud, 404 y estados públicos bajo `.catalog-site`.
+- Login, dashboard, productos, formulario, categorías y configuración administrativos para confirmar que no cambiaron.
+- Contraste de texto secundario, línea fuerte, foco y estados sobre superficies reales.
+- Foco de botones, enlaces, campos y controles compuestos.
+- Reduced motion en acciones compartidas.
+- Viewports `1440×900`, `1280×720`, `1024×768`, `768px`, `430×932`, `390×844`, `360×800` y `320×568`.
+- Ausencia de cambios en solicitud, cantidades, precios, WhatsApp y código de molde.
+
+No se ejecutaron suite completa, build, lint ni comandos Git durante la implementación de Tanda 0B.
+
+## Criterio de retiro del bridge
+
+El bridge scoped se elimina únicamente cuando:
+
+- cada selector público usa tokens `--catalog-*` o utilities conectadas al theme;
+- una búsqueda completa no encuentra consumidores públicos del nombre global retirado;
+- `src/index.css` conserva lo necesario para administración y defaults reales;
+- la superficie administrativa se valida sin cambios;
+- la matriz pública se valida manualmente;
+- no se introducen nuevos `!important` para compensar la retirada.
+
+Hasta entonces, el bridge es parte intencional del sistema híbrido y no deuda que deba eliminarse de forma oportunista.

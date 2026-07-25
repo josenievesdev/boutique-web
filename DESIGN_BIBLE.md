@@ -9,16 +9,18 @@ Orden de autoridad para decisiones de producto y diseño:
 1. `PRODUCT.md` conserva la autoridad sobre propósito, usuarios, rutas, datos, flujos y restricciones funcionales.
 2. `DESIGN_BIBLE.md` gobierna la dirección visual v2.
 3. `docs/design-audit-v2.md` conserva el diagnóstico y la evidencia del estado anterior.
-4. `DESIGN.md` documenta la etapa visual provisional y sirve como referencia histórica cuando no contradice esta dirección.
-5. `docs/tailwind-migration-plan.md` conserva contexto técnico histórico; su estado debe verificarse contra el código.
+4. `DESIGN.md` registra los tokens y la implementación técnica vigente; no reemplaza las decisiones de arquitectura de esta Biblia.
+5. `docs/tailwind-migration-plan.md` gobierna la convivencia técnica entre Tailwind y CSS heredado.
 
 Esta Biblia no autoriza por sí sola cambios de implementación. Cada modificación se ejecuta en la tanda correspondiente, con alcance visual explícito y verificación manual.
 
-### Discrepancias conocidas
+### Estado técnico después de Tanda 0B
 
-- `PRODUCT.md` y `docs/tailwind-migration-plan.md` todavía afirman que Tailwind no está instalado. El código actual usa Tailwind CSS v4, `@tailwindcss/vite` y `src/tailwind.css` sin Preflight.
-- Los tokens globales de `src/index.css` son consumidos por las superficies pública y administrativa. El rediseño público no debe cambiar su personalidad hasta establecer aliases o scope público.
-- `DESIGN.md` describe una base provisional que ya difiere del código en paleta, densidad del grid, tarjetas y filtros. Cuando exista conflicto visual, esta Biblia prevalece.
+- Tailwind CSS v4, `@tailwindcss/vite` y `src/tailwind.css` están activos sin Preflight.
+- Los valores públicos definitivos viven bajo `.catalog-site` como aliases `--catalog-*`; `src/index.css` conserva los tokens globales consumidos por administración.
+- Un bridge scoped mantiene los selectores públicos heredados sin trasladar la nueva personalidad al panel.
+- `DESIGN.md` registra la implementación técnica vigente. Esta Biblia conserva autoridad sobre dirección y arquitectura.
+- `PRODUCT.md`, `DESIGN.md` y el plan técnico reflejan el estado híbrido actual de Tailwind.
 
 ## Límites de producto
 
@@ -293,29 +295,32 @@ La pareja se conserva como identidad existente. No se añade una tercera familia
 
 ### Estrategia
 
-La estrategia es **restrained con un primario comprometido**: neutros casi acromáticos para la mayor parte de la superficie, marrón profundo para acciones y cierre, y rosa empolvado solo como acento pequeño. La calidez surge de la tinta, la fotografía y los acentos, no de bañar toda la página en crema.
+La estrategia es **restrained con acción de carbón**: marfil cálido para el canvas, piedra y arena para separar planos, carbón suave para texto y acciones, y un taupe neutral configurable como único acento. La calidez surge de materiales, fotografía y temperatura de los neutros; no de rosa cliché, dorado artificial ni una página cubierta de beige.
 
-### Tokens públicos objetivo
+### Tokens públicos definitivos
 
-| Token conceptual | Valor objetivo | Uso |
+| Token conceptual | Valor | Uso |
 | --- | --- | --- |
-| Fondo principal | `#FCFBF8` | Página pública. |
-| Superficie clara | `#FFFEFC` | Campos, media y zonas que necesitan separación mínima. |
-| Superficie silenciosa | `#F1EFEB` | Fallbacks, estados y agrupaciones secundarias. |
-| Tinta principal | `#252321` | Texto y encabezados. |
-| Tinta secundaria | `#625D58` | Apoyo y metadata con contraste suficiente. |
-| Línea | `#D8D3CD` | Divisores y límites esenciales. |
-| Línea fuerte | `#817A74` | Límites interactivos y estados que necesitan `3:1`. |
-| Marrón atelier | `#402014` | Acción primaria, selección y footer. |
-| Marrón hover | `#2F160E` | Hover de acción primaria. |
-| Rosa empolvado | `#E5CAC7` | Acento reservado, nunca fondo dominante. |
+| Canvas marfil | `#FAF8F3` | Página pública. |
+| Canvas sutil | `#F3F1EC` | Secciones de bajo énfasis. |
+| Superficie piedra | `#EFEDE7` | Agrupaciones secundarias. |
+| Superficie clara | `#FFFEFA` | Campos y planos de producto. |
+| Superficie arena | `#EBE7DF` | Fallbacks y separación tonal. |
+| Tinta y acción carbón | `#292825` | Texto, acción primaria, WhatsApp y footer. |
+| Tinta secundaria | `#625F59` | Apoyo y metadata. |
+| Línea | `rgba(41, 40, 37, 0.16)` | Hairlines no esenciales. |
+| Línea fuerte | `#817B73` | Límites interactivos esenciales. |
+| Foco | `#5C534C` | Outline y focus-within. |
+| Acento taupe | `#695F57` | Acento neutral configurable. |
+| Acento hover | `#514A44` | Estado fuerte del acento. |
+| Acento soft | `#E8E2DB` | Campo suave del acento. |
 
-Los estados de éxito, advertencia y error conservan inicialmente las familias cromáticas existentes. La Tanda 0B debe verificar todos los pares mediante contraste calculado antes de publicar aliases.
+Éxito, advertencia, error e información usan familias semánticas independientes documentadas en `DESIGN.md`. Los pares principales y de estado alcanzan al menos `4.5:1` para texto; la línea fuerte alcanza `3.95:1` sobre canvas. Transparencias y estados disabled se validan sobre la composición final.
 
 ### Distribución
 
 - Neutros: `80–90%` de la superficie.
-- Primario oscuro: `8–15%`, concentrado en acciones, selección y footer.
+- Carbón de acción: `8–15%`, concentrado en acciones, selección y footer.
 - Acento: máximo visual cercano a `5%` y siempre con función.
 - La fotografía real no se recolorea para encajar artificialmente en la paleta.
 
@@ -325,7 +330,7 @@ Los estados de éxito, advertencia y error conservan inicialmente las familias c
 - No combinar varios pasteles en una misma vista para simular variedad.
 - No usar gris de baja opacidad para texto normal.
 - Placeholder y texto secundario deben alcanzar `4.5:1` sobre su fondo final.
-- Los ajustes de luminosidad necesarios para contraste pueden modificar estos hex sin cambiar sus roles o familias.
+- Cualquier cambio de la familia configurable de acento debe mantener sus tres valores y volver a verificar contraste.
 
 ## 9. Espaciado y medidas
 
@@ -509,7 +514,7 @@ La barra no será sticky en la primera implementación. La Tanda 4 puede evaluar
 
 | Tipo | Tratamiento | Uso |
 | --- | --- | --- |
-| Primario | Fondo marrón atelier, texto claro, borde del mismo tono | Añadir a solicitud y acción principal de WhatsApp. |
+| Primario | Fondo carbón suave, texto marfil, borde del mismo tono | Añadir a solicitud y acción principal de WhatsApp. |
 | Secundario | Fondo transparente, borde fuerte o enlace subrayado según contexto | Ver solicitud, volver y acciones de apoyo. |
 | Terciario | Texto con área táctil completa | Limpiar, continuar explorando y navegación contextual. |
 | Destructivo | Texto o fondo de peligro solo donde la acción lo requiera | Eliminar y vaciar, conservando confirmación actual. |
@@ -769,7 +774,7 @@ Beauty in STEM, Brunello Cucinelli AI E-commerce y ChatGPT pueden seguir funcion
 - Imagen, nombre y precio son la jerarquía primaria de producto.
 - Newsreader y Manrope se conservan.
 - Superficies planas, líneas finas, radios contenidos y sombras mínimas.
-- Fondo casi neutro, primario marrón profundo y acento rosa muy limitado.
+- Marfil cálido, acción carbón, piedra, arena y un único acento taupe configurable.
 - Card completa enlaza al detalle; añadir permanece en el detalle.
 - Código de molde ausente de cards y discreto donde sí corresponde.
 - Solicitud sigue siendo solicitud y WhatsApp sigue siendo la salida comercial.
@@ -778,7 +783,7 @@ Beauty in STEM, Brunello Cucinelli AI E-commerce y ChatGPT pueden seguir funcion
 
 ### Provisionales hasta validación de tanda
 
-- Hex exactos que necesiten ajuste para contraste en superficies reales.
+- Composición final de transparencias y estados disabled sobre cada superficie real.
 - Umbral exacto entre `3` y `4` columnas.
 - Composición asimétrica exacta de la apertura en escritorio.
 - Presencia de descripción corta o affordance textual en cards compactas.
@@ -809,13 +814,16 @@ Las tandas siguientes son macrofases de roadmap, no autorización para un diff �
 
 **Objetivo:** preparar el sistema híbrido para rediseñar lo público sin alterar administración.
 
+**Estado:** implementada a nivel de tokens, primitivas y documentación; validación visual manual pendiente.
+
 **Alcance:**
 
-- Inventariar consumidores reales de tokens globales.
-- Crear aliases o scope semántico público.
-- Mapear paleta, tipografía, medidas, radios, movimiento y capas de esta Biblia.
-- Resolver ownership entre utilities y CSS convencional sin activar Preflight ni cambiar el orden de hojas.
-- Actualizar documentación técnica que afirma que Tailwind no está instalado.
+- Valores definitivos `--catalog-*` bajo `.catalog-site` en `src/tailwind.css`.
+- Theme utilities `boutique-*` conectadas al scope público.
+- Bridge temporal para consumidores de nombres globales dentro del mismo scope de `src/tailwind.css`.
+- Primitivas públicas para contenedor, títulos, texto, acciones, campos, foco, badges, estados, media, precio y separadores.
+- Ownership documentado sin activar Preflight, cambiar el orden de hojas ni tocar `src/admin.css`.
+- Estado real de Tailwind actualizado en `DESIGN.md`, esta Biblia y el plan de migración.
 
 **No tocar:** componentes visuales, datos, rutas, comportamiento ni `src/admin.css` salvo lectura de consumidores.
 

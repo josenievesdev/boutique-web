@@ -117,13 +117,14 @@ No se puede inventar ningún producto, perfil social, teléfono, testimonio, pro
 - Supabase mediante `@supabase/supabase-js` `^2.110.7`.
 - Vitest `^4.1.10`.
 - Oxlint `^1.71.0`.
-- CSS convencional cargado desde `src/index.css`, `src/catalog.css` y `src/admin.css`.
+- Tailwind CSS v4 mediante `tailwindcss` y `@tailwindcss/vite`.
+- Sistema híbrido cargado desde `src/tailwind.css`, `src/index.css`, `src/catalog.css` y `src/admin.css`.
 
 ## Estado de Tailwind
 
-Tailwind CSS estuvo contemplado inicialmente, pero nunca fue instalado. No existe dependencia, plugin de Vite, archivo de configuración, directiva `@tailwind` ni import de Tailwind en el repositorio actual.
+Tailwind CSS v4 está instalado mediante el plugin oficial de Vite. `src/tailwind.css` carga theme y utilities con configuración CSS-first; Preflight permanece desactivado y no existe `tailwind.config.*`.
 
-Tailwind CSS se incorporará mediante una migración controlada y por etapas. Las primeras fases públicas deben ser visualmente neutras; la superficie administrativa queda fuera de alcance hasta su fase posterior y la referencia visual segura es el tag inmutable `visual-public-v1`.
+La superficie pública continúa una migración controlada y por etapas: header, apertura, búsqueda y filtros usan utilities, mientras catálogo, detalle, solicitud y footer conservan CSS convencional. Los tokens de marca pública están aislados bajo `.catalog-site`; la superficie administrativa permanece fuera de ese scope hasta su fase posterior.
 
 ## Accessibility & Inclusion
 

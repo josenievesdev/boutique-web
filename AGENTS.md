@@ -13,7 +13,7 @@ Consultar en este orden antes de trabajar:
 1. `PRODUCT.md`: propósito, usuarios, rutas, flujos y restricciones funcionales.
 2. `DESIGN_BIBLE.md`: dirección visual objetivo para el rediseño v2.
 3. `docs/design-audit-v2.md`: diagnóstico y evidencia del estado previo al rediseño.
-4. `DESIGN.md`: registro provisional de la etapa visual anterior; no prevalece sobre `DESIGN_BIBLE.md` cuando ambos difieren.
+4. `DESIGN.md`: registro técnico de tokens y ownership visual vigente; no prevalece sobre `DESIGN_BIBLE.md` cuando ambos difieren.
 5. `docs/tailwind-migration-plan.md`: contexto histórico y técnico de la migración; verificar siempre su estado contra el código actual.
 
 Si la documentación contradice la implementación, no asumir cuál es correcta. Registrar la discrepancia y limitar el cambio al alcance aprobado.

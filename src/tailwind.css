@@ -4,80 +4,295 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 
 @theme inline {
-  --color-boutique-canvas: var(--color-background);
-  --color-boutique-canvas-subtle: var(--color-background-subtle);
-  --color-boutique-surface: var(--color-surface);
-  --color-boutique-surface-raised: var(--color-surface-raised);
-  --color-boutique-surface-muted: var(--color-surface-muted);
-  --color-boutique-overlay: var(--color-surface-overlay);
-  --color-boutique-ink: var(--color-text);
-  --color-boutique-muted: var(--color-text-secondary);
-  --color-boutique-inverse: var(--color-text-inverse);
-  --color-boutique-brand: var(--color-primary);
-  --color-boutique-brand-hover: var(--color-primary-hover);
-  --color-boutique-brand-soft: var(--color-primary-soft);
-  --color-boutique-accent: var(--color-accent);
-  --color-boutique-line: var(--color-border);
-  --color-boutique-line-strong: var(--color-border-strong);
-  --color-boutique-focus: var(--color-focus-ring);
-  --color-boutique-success: var(--color-success);
-  --color-boutique-success-soft: var(--color-success-soft);
-  --color-boutique-success-line: var(--color-success-border);
-  --color-boutique-warning: var(--color-warning);
-  --color-boutique-warning-soft: var(--color-warning-soft);
-  --color-boutique-danger: var(--color-danger);
-  --color-boutique-danger-hover: var(--color-danger-hover);
-  --color-boutique-danger-soft: var(--color-danger-soft);
-  --color-boutique-danger-line: var(--color-danger-border);
-  --color-boutique-sage: var(--color-pastel-sage);
-  --color-boutique-blush: var(--color-pastel-blush);
-  --color-boutique-rose: var(--color-pastel-rose);
-  --color-boutique-mist: var(--color-pastel-mist);
-  --color-boutique-sand: var(--color-pastel-sand);
+  --color-boutique-canvas: var(--catalog-color-canvas);
+  --color-boutique-canvas-subtle: var(--catalog-color-canvas-subtle);
+  --color-boutique-surface: var(--catalog-color-surface);
+  --color-boutique-surface-raised: var(--catalog-color-surface-raised);
+  --color-boutique-surface-muted: var(--catalog-color-surface-muted);
+  --color-boutique-overlay: var(--catalog-color-overlay);
+  --color-boutique-ink: var(--catalog-color-ink);
+  --color-boutique-muted: var(--catalog-color-text-muted);
+  --color-boutique-inverse: var(--catalog-color-text-inverse);
+  --color-boutique-brand: var(--catalog-color-action);
+  --color-boutique-brand-hover: var(--catalog-color-action-hover);
+  --color-boutique-brand-soft: var(--catalog-color-action-soft);
+  --color-boutique-accent: var(--catalog-color-accent);
+  --color-boutique-accent-hover: var(--catalog-color-accent-hover);
+  --color-boutique-accent-soft: var(--catalog-color-accent-soft);
+  --color-boutique-line: var(--catalog-color-line);
+  --color-boutique-line-strong: var(--catalog-color-line-strong);
+  --color-boutique-focus: var(--catalog-color-focus);
+  --color-boutique-success: var(--catalog-color-success);
+  --color-boutique-success-soft: var(--catalog-color-success-soft);
+  --color-boutique-success-line: var(--catalog-color-success-line);
+  --color-boutique-warning: var(--catalog-color-warning);
+  --color-boutique-warning-soft: var(--catalog-color-warning-soft);
+  --color-boutique-warning-line: var(--catalog-color-warning-line);
+  --color-boutique-danger: var(--catalog-color-danger);
+  --color-boutique-danger-hover: var(--catalog-color-danger-hover);
+  --color-boutique-danger-soft: var(--catalog-color-danger-soft);
+  --color-boutique-danger-line: var(--catalog-color-danger-line);
+  --color-boutique-info: var(--catalog-color-info);
+  --color-boutique-info-soft: var(--catalog-color-info-soft);
+  --color-boutique-info-line: var(--catalog-color-info-line);
+  --color-boutique-stone: var(--catalog-color-stone);
+  --color-boutique-sand: var(--catalog-color-sand);
 
-  --font-boutique-display: var(--font-family-editorial);
-  --font-boutique-sans: var(--font-family-sans);
+  /* Compatibility names retained until their current consumers migrate. */
+  --color-boutique-sage: var(--catalog-color-success-soft);
+  --color-boutique-blush: var(--catalog-color-danger-soft);
+  --color-boutique-rose: var(--catalog-color-accent-soft);
+  --color-boutique-mist: var(--catalog-color-info-soft);
 
-  --text-boutique-display: clamp(2.9rem, 4vw, 3.85rem);
-  --text-boutique-display--line-height: 1.02;
-  --text-boutique-display--letter-spacing: -0.035em;
+  --font-boutique-display: var(--catalog-font-display);
+  --font-boutique-sans: var(--catalog-font-sans);
+
+  --text-boutique-display: var(--catalog-text-display);
+  --text-boutique-display--line-height: var(--catalog-leading-display);
+  --text-boutique-display--letter-spacing: var(--catalog-tracking-display);
   --text-boutique-display--font-weight: 400;
-  --text-boutique-headline: clamp(2.2rem, 3vw, 2.8rem);
-  --text-boutique-headline--line-height: 1;
-  --text-boutique-headline--letter-spacing: -0.035em;
+  --text-boutique-headline: var(--catalog-text-headline);
+  --text-boutique-headline--line-height: var(--catalog-leading-headline);
+  --text-boutique-headline--letter-spacing: var(--catalog-tracking-headline);
   --text-boutique-headline--font-weight: 400;
-  --text-boutique-title: 1.34rem;
-  --text-boutique-title--line-height: 1.08;
-  --text-boutique-title--letter-spacing: -0.02em;
+  --text-boutique-title: var(--catalog-text-title);
+  --text-boutique-title--line-height: var(--catalog-leading-title);
+  --text-boutique-title--letter-spacing: var(--catalog-tracking-title);
   --text-boutique-title--font-weight: 500;
-  --text-boutique-body: 1rem;
-  --text-boutique-body--line-height: 1.5;
+  --text-boutique-body: var(--catalog-text-body);
+  --text-boutique-body--line-height: var(--catalog-leading-body);
   --text-boutique-body--font-weight: 400;
-  --text-boutique-navigation: 0.68rem;
-  --text-boutique-navigation--letter-spacing: 0.075em;
+  --text-boutique-navigation: var(--catalog-text-navigation);
+  --text-boutique-navigation--line-height: 1.4;
+  --text-boutique-navigation--letter-spacing: 0.05em;
   --text-boutique-navigation--font-weight: 600;
-  --text-boutique-button: 0.74rem;
+  --text-boutique-button: var(--catalog-text-button);
+  --text-boutique-button--line-height: 1.3;
   --text-boutique-button--letter-spacing: 0.02em;
   --text-boutique-button--font-weight: 600;
-  --text-boutique-price: 0.72rem;
+  --text-boutique-price: var(--catalog-text-price);
+  --text-boutique-price--line-height: 1.4;
   --text-boutique-price--font-weight: 600;
-  --text-boutique-label: 0.65rem;
-  --text-boutique-label--letter-spacing: 0.11em;
+  --text-boutique-label: var(--catalog-text-label);
+  --text-boutique-label--line-height: 1.4;
+  --text-boutique-label--letter-spacing: 0.06em;
   --text-boutique-label--font-weight: 600;
 
-  --radius-boutique-control: var(--radius-sm);
-  --radius-boutique-card: var(--radius-md);
-  --radius-boutique-panel: var(--radius-lg);
-  --radius-boutique-pill: var(--radius-pill);
-  --radius-boutique-circle: var(--radius-circle);
+  --radius-boutique-control: var(--catalog-radius-control);
+  --radius-boutique-card: var(--catalog-radius-media);
+  --radius-boutique-panel: var(--catalog-radius-panel);
+  --radius-boutique-pill: var(--catalog-radius-pill);
+  --radius-boutique-circle: var(--catalog-radius-circle);
 
-  --shadow-boutique-sm: var(--shadow-sm);
-  --shadow-boutique-md: var(--shadow-md);
-  --shadow-boutique-lg: var(--shadow-lg);
+  --shadow-boutique-hairline: var(--catalog-shadow-hairline);
+  --shadow-boutique-sm: var(--catalog-shadow-sm);
+  --shadow-boutique-md: var(--catalog-shadow-md);
+  --shadow-boutique-lg: var(--catalog-shadow-lg);
 
-  --container-boutique-narrow: var(--content-width-narrow);
-  --container-boutique-prose: var(--content-width-prose);
-  --container-boutique-form: var(--content-width-form);
-  --container-boutique-standard: var(--content-width-standard);
-  --container-boutique-wide: var(--content-width-wide);
+  --container-boutique-narrow: var(--catalog-width-narrow);
+  --container-boutique-prose: var(--catalog-width-prose);
+  --container-boutique-form: var(--catalog-width-form);
+  --container-boutique-detail: var(--catalog-width-detail);
+  --container-boutique-standard: var(--catalog-width-standard);
+  --container-boutique-wide: var(--catalog-width-wide);
+
+  --spacing-boutique-control-compact: var(--catalog-control-height-compact);
+  --spacing-boutique-control: var(--catalog-control-height);
+  --spacing-boutique-control-large: var(--catalog-control-height-large);
+
+  --ease-boutique-out: var(--catalog-ease-out);
+  --ease-boutique-standard: var(--catalog-ease-standard);
+}
+
+@layer theme {
+  .catalog-site {
+    /* Override this neutral family as a unit when configuration is added. */
+    --catalog-accent: #695f57;
+    --catalog-accent-hover: #514a44;
+    --catalog-accent-soft: #e8e2db;
+
+    /* Color: warm ivory, soft coal, stone and sand. */
+    --catalog-color-canvas: #faf8f3;
+    --catalog-color-canvas-subtle: #f3f1ec;
+    --catalog-color-surface: #efede7;
+    --catalog-color-surface-raised: #fffefa;
+    --catalog-color-surface-muted: #ebe7df;
+    --catalog-color-overlay: rgba(250, 248, 243, 0.96);
+    --catalog-color-ink: #292825;
+    --catalog-color-text-muted: #625f59;
+    --catalog-color-text-inverse: #faf8f3;
+    --catalog-color-action: #292825;
+    --catalog-color-action-hover: #191815;
+    --catalog-color-action-soft: #e2ded6;
+    --catalog-color-accent: var(--catalog-accent);
+    --catalog-color-accent-hover: var(--catalog-accent-hover);
+    --catalog-color-accent-soft: var(--catalog-accent-soft);
+    --catalog-color-line: rgba(41, 40, 37, 0.16);
+    --catalog-color-line-strong: #817b73;
+    --catalog-color-focus: #5c534c;
+    --catalog-color-stone: #d9d5ce;
+    --catalog-color-sand: #e9e2d7;
+
+    /* Color: semantic states. */
+    --catalog-color-success: #3f654e;
+    --catalog-color-success-soft: #e1ebe3;
+    --catalog-color-success-line: #708878;
+    --catalog-color-warning: #6d5832;
+    --catalog-color-warning-soft: #f1e9d9;
+    --catalog-color-warning-line: #987b49;
+    --catalog-color-danger: #85483f;
+    --catalog-color-danger-hover: #6b342d;
+    --catalog-color-danger-soft: #f2e2df;
+    --catalog-color-danger-line: #a0645d;
+    --catalog-color-info: #4f6269;
+    --catalog-color-info-soft: #e4ebed;
+    --catalog-color-info-line: #71878e;
+
+    /* Typography: two voices, no functional text below 12px. */
+    --catalog-font-display:
+      "Newsreader", Georgia, "Times New Roman", serif;
+    --catalog-font-sans:
+      "Manrope", ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --catalog-text-display: clamp(2.5rem, 4.2vw, 4rem);
+    --catalog-text-headline: clamp(1.9rem, 3vw, 2.75rem);
+    --catalog-text-title: clamp(1.1rem, 1.5vw, 1.35rem);
+    --catalog-text-body: 1rem;
+    --catalog-text-supporting: 0.875rem;
+    --catalog-text-navigation: 0.75rem;
+    --catalog-text-button: 0.8125rem;
+    --catalog-text-price: 0.9375rem;
+    --catalog-text-label: 0.75rem;
+    --catalog-leading-display: 1.02;
+    --catalog-leading-headline: 1.06;
+    --catalog-leading-title: 1.16;
+    --catalog-leading-body: 1.6;
+    --catalog-tracking-display: -0.035em;
+    --catalog-tracking-headline: -0.03em;
+    --catalog-tracking-title: -0.015em;
+
+    /* Spacing and sizing. */
+    --catalog-space-1: 4px;
+    --catalog-space-2: 8px;
+    --catalog-space-3: 12px;
+    --catalog-space-4: 16px;
+    --catalog-space-5: 20px;
+    --catalog-space-6: 24px;
+    --catalog-space-8: 32px;
+    --catalog-space-10: 40px;
+    --catalog-space-12: 48px;
+    --catalog-space-16: 64px;
+    --catalog-space-20: 80px;
+    --catalog-space-24: 96px;
+    --catalog-gutter-inline: clamp(16px, 4vw, 64px);
+    --catalog-control-height-compact: 44px;
+    --catalog-control-height: 48px;
+    --catalog-control-height-large: 52px;
+
+    /* Shape and elevation. */
+    --catalog-radius-control: 8px;
+    --catalog-radius-media: 10px;
+    --catalog-radius-panel: 12px;
+    --catalog-radius-pill: 999px;
+    --catalog-radius-circle: 50%;
+    --catalog-shadow-hairline: 0 1px 0 rgba(41, 40, 37, 0.12);
+    --catalog-shadow-sm: 0 1px 2px rgba(41, 40, 37, 0.04);
+    --catalog-shadow-md: 0 4px 10px rgba(41, 40, 37, 0.05);
+    --catalog-shadow-lg: 0 8px 16px rgba(41, 40, 37, 0.06);
+
+    /* Content widths. */
+    --catalog-width-wide: 1440px;
+    --catalog-width-standard: 1240px;
+    --catalog-width-detail: 1200px;
+    --catalog-width-form: 900px;
+    --catalog-width-prose: 70ch;
+    --catalog-width-narrow: 460px;
+
+    /* Motion and layers. */
+    --catalog-duration-fast: 140ms;
+    --catalog-duration-base: 180ms;
+    --catalog-duration-slow: 220ms;
+    --catalog-ease-standard: ease;
+    --catalog-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --catalog-transition-fast:
+      var(--catalog-duration-fast) var(--catalog-ease-standard);
+    --catalog-transition-base:
+      var(--catalog-duration-base) var(--catalog-ease-standard);
+    --catalog-transition-slow:
+      var(--catalog-duration-slow) var(--catalog-ease-out);
+    --catalog-z-base: 0;
+    --catalog-z-raised: 10;
+    --catalog-z-sticky: 20;
+    --catalog-z-overlay: 40;
+    --catalog-z-modal: 50;
+
+    /* Temporary bridge for public selectors that still use global names. */
+    --color-background: var(--catalog-color-canvas);
+    --color-background-subtle: var(--catalog-color-canvas-subtle);
+    --color-surface: var(--catalog-color-surface);
+    --color-surface-raised: var(--catalog-color-surface-raised);
+    --color-surface-muted: var(--catalog-color-surface-muted);
+    --color-surface-overlay: var(--catalog-color-overlay);
+    --color-text: var(--catalog-color-ink);
+    --color-text-secondary: var(--catalog-color-text-muted);
+    --color-text-inverse: var(--catalog-color-text-inverse);
+    --color-primary: var(--catalog-color-action);
+    --color-primary-hover: var(--catalog-color-action-hover);
+    --color-primary-soft: var(--catalog-color-action-soft);
+    --color-accent: var(--catalog-color-accent);
+    --color-border: var(--catalog-color-line);
+    --color-border-strong: var(--catalog-color-line-strong);
+    --color-focus-ring: var(--catalog-color-focus);
+    --color-success: var(--catalog-color-success);
+    --color-success-soft: var(--catalog-color-success-soft);
+    --color-success-border: var(--catalog-color-success-line);
+    --color-warning: var(--catalog-color-warning);
+    --color-warning-soft: var(--catalog-color-warning-soft);
+    --color-danger: var(--catalog-color-danger);
+    --color-danger-hover: var(--catalog-color-danger-hover);
+    --color-danger-soft: var(--catalog-color-danger-soft);
+    --color-danger-border: var(--catalog-color-danger-line);
+    --color-pastel-sage: var(--catalog-color-success-soft);
+    --color-pastel-blush: var(--catalog-color-danger-soft);
+    --color-pastel-rose: var(--catalog-color-accent-soft);
+    --color-pastel-mist: var(--catalog-color-info-soft);
+    --color-pastel-sand: var(--catalog-color-sand);
+    --space-1: var(--catalog-space-1);
+    --space-2: var(--catalog-space-2);
+    --space-3: var(--catalog-space-3);
+    --space-4: var(--catalog-space-4);
+    --space-5: var(--catalog-space-5);
+    --space-6: var(--catalog-space-6);
+    --space-8: var(--catalog-space-8);
+    --space-10: var(--catalog-space-10);
+    --space-12: var(--catalog-space-12);
+    --space-16: var(--catalog-space-16);
+    --space-20: var(--catalog-space-20);
+    --space-24: var(--catalog-space-24);
+    --radius-sm: var(--catalog-radius-control);
+    --radius-md: var(--catalog-radius-media);
+    --radius-lg: var(--catalog-radius-panel);
+    --radius-xl: var(--catalog-radius-panel);
+    --radius-2xl: var(--catalog-radius-panel);
+    --radius-pill: var(--catalog-radius-pill);
+    --radius-circle: var(--catalog-radius-circle);
+    --shadow-sm: var(--catalog-shadow-sm);
+    --shadow-md: var(--catalog-shadow-md);
+    --shadow-lg: var(--catalog-shadow-lg);
+    --content-width-wide: var(--catalog-width-wide);
+    --content-width-standard: var(--catalog-width-standard);
+    --content-width-form: var(--catalog-width-form);
+    --content-width-prose: var(--catalog-width-prose);
+    --content-width-narrow: var(--catalog-width-narrow);
+    --transition-fast: var(--catalog-transition-fast);
+    --transition-base: var(--catalog-transition-base);
+    --transition-slow: var(--catalog-transition-slow);
+    --z-base: var(--catalog-z-base);
+    --z-raised: var(--catalog-z-raised);
+    --z-sticky: var(--catalog-z-sticky);
+    --z-overlay: var(--catalog-z-overlay);
+    --z-modal: var(--catalog-z-modal);
+    --font-family-editorial: var(--catalog-font-display);
+    --font-family-sans: var(--catalog-font-sans);
+  }
 }
