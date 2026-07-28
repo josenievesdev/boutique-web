@@ -25,11 +25,12 @@ export function CatalogProductCard({
       to={`/productos/${product.slug}`}
     >
       <div className="catalog-product-card__media">
-        <CatalogProductImage source={imageUrl} alt={imageAlt} />
-
-        {product.featured ? (
-          <span className="catalog-product-card__featured">Selección</span>
-        ) : null}
+        <CatalogProductImage
+          source={imageUrl}
+          alt={imageAlt}
+          width={800}
+          height={1000}
+        />
       </div>
 
       <div className="catalog-product-card__body">
@@ -39,18 +40,16 @@ export function CatalogProductCard({
           <strong>{currencyFormatter.format(product.priceInPesos)}</strong>
         </div>
 
-        <p>{product.shortDescription}</p>
+        <p className="catalog-product-card__description">
+          {product.shortDescription}
+        </p>
 
-        <div className="catalog-product-card__footer">
-          <div className="catalog-product-card__tags">
-            {product.madeToOrder ? <span>Sobre pedido</span> : null}
-            {product.customizable ? <span>Personalizable</span> : null}
-          </div>
-
-          <span className="catalog-product-card__action">
-            Ver pieza <span aria-hidden="true">↗</span>
-          </span>
-        </div>
+        {product.madeToOrder || product.customizable ? (
+          <ul className="catalog-product-card__attributes">
+            {product.madeToOrder ? <li>Sobre pedido</li> : null}
+            {product.customizable ? <li>Personalizable</li> : null}
+          </ul>
+        ) : null}
       </div>
     </Link>
   );

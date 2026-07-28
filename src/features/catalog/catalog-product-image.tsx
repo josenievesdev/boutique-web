@@ -6,11 +6,15 @@ import {
 interface CatalogProductImageProps {
   source: string | null;
   alt: string;
+  width?: number;
+  height?: number;
 }
 
 export function CatalogProductImage({
   source,
   alt,
+  width,
+  height,
 }: CatalogProductImageProps) {
   const [hasFailed, setHasFailed] =
     useState(false);
@@ -31,6 +35,8 @@ export function CatalogProductImage({
     <img
       src={source}
       alt={alt}
+      width={width}
+      height={height}
       loading="lazy"
       onError={() => {
         setHasFailed(true);
