@@ -1,33 +1,31 @@
 import type { ReactNode } from "react";
+import { CatalogFooter } from "./catalog-footer";
 import {
-  CatalogFooter,
   CatalogHeader,
-  type CatalogHeaderControls,
+  type CatalogHeaderSearchControls,
 } from "./catalog-header";
 
 interface PublicPageShellProps {
   businessName?: string;
   children: ReactNode;
-  headerControls?: CatalogHeaderControls;
+  headerSearchControls?: CatalogHeaderSearchControls;
   skipTargetId?: string;
 }
 
 export function PublicPageShell({
   businessName,
   children,
-  headerControls,
-  skipTargetId,
+  headerSearchControls,
+  skipTargetId = "contenido-principal",
 }: PublicPageShellProps) {
   return (
     <div className="catalog-site">
-      {skipTargetId ? (
-        <a className="catalog-skip-link" href={`#${skipTargetId}`}>
-          Ir al contenido
-        </a>
-      ) : null}
+      <a className="catalog-skip-link" href={`#${skipTargetId}`}>
+        Ir al contenido
+      </a>
       <CatalogHeader
         businessName={businessName}
-        controls={headerControls}
+        searchControls={headerSearchControls}
       />
       {children}
       <CatalogFooter businessName={businessName} />

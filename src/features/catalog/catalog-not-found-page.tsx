@@ -31,13 +31,9 @@ export function CatalogNotFoundPage() {
 
   return (
     <PublicPageShell businessName={shopSettings?.businessName}>
-      <main className="catalog-not-found">
-        <div className="catalog-not-found__code" aria-hidden="true">
-          404
-        </div>
-
+      <main className="catalog-not-found" id="contenido-principal">
         <section className="catalog-not-found__content">
-          <p className="catalog-eyebrow">Fuera de colección</p>
+          <p className="catalog-eyebrow">404 · Fuera de colección</p>
           <h1>Esta página ya no está en el escaparate.</h1>
           <p>
             El enlace puede haber cambiado. La colección actual sigue

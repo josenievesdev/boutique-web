@@ -4,6 +4,8 @@
 
 Auditoría estática del frontend existente, realizada antes de iniciar el rediseño visual. No incluye cambios de componentes, CSS, datos, rutas ni comportamiento.
 
+> Nota posterior, 29 de julio de 2026: este documento conserva el diagnóstico histórico. La pasada integral pública ya reemplazó el header híbrido, separó categorías, eliminó la escala de landing, rehízo grid, cards, detalle, solicitud, estados, 404 y footer, y concentró la presentación pública en `src/catalog.css`. Consultar `DESIGN.md` para el estado técnico vigente.
+
 La evaluación se basa en:
 
 - `PRODUCT.md`, `DESIGN.md`, `README.md` y `docs/tailwind-migration-plan.md`.

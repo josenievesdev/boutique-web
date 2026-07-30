@@ -8,6 +8,8 @@ interface CatalogProductImageProps {
   alt: string;
   width?: number;
   height?: number;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
 }
 
 export function CatalogProductImage({
@@ -15,6 +17,8 @@ export function CatalogProductImage({
   alt,
   width,
   height,
+  loading = "lazy",
+  fetchPriority = "auto",
 }: CatalogProductImageProps) {
   const [hasFailed, setHasFailed] =
     useState(false);
@@ -25,7 +29,12 @@ export function CatalogProductImage({
 
   if (!source || hasFailed) {
     return (
-      <div className="catalog-product-image-fallback">
+      <div
+        className="catalog-product-image-fallback"
+        role={alt ? "img" : undefined}
+        aria-label={alt || undefined}
+        aria-hidden={alt ? undefined : true}
+      >
         <span>Imagen no disponible</span>
       </div>
     );
@@ -37,7 +46,9 @@ export function CatalogProductImage({
       alt={alt}
       width={width}
       height={height}
-      loading="lazy"
+      loading={loading}
+      fetchPriority={fetchPriority}
+      decoding="async"
       onError={() => {
         setHasFailed(true);
       }}

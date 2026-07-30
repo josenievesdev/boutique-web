@@ -6,6 +6,11 @@ import { SupabaseShopSettingsRepository } from "../../infrastructure/repositorie
 import { SupabaseProductImageStorage } from "../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../infrastructure/supabase/supabase-client";
 import { buildCartWhatsAppUrl } from "../../lib/build-cart-whatsapp-url";
+import {
+  ArrowUpRightIcon,
+  MinusIcon,
+  PlusIcon,
+} from "../catalog/catalog-icons";
 import { CatalogProductImage } from "../catalog/catalog-product-image";
 import { PublicPageShell } from "../catalog/public-page-shell";
 import { useCart } from "./use-cart";
@@ -32,6 +37,7 @@ export function CartPage() {
   const [shopSettings, setShopSettings] = useState<ShopSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [requestAnnouncement, setRequestAnnouncement] = useState("");
 
   useEffect(() => {
     let isActive = true;
@@ -86,12 +92,52 @@ export function CartPage() {
 
     if (confirmed) {
       clear();
+      setRequestAnnouncement("La solicitud quedó vacía.");
+      window.requestAnimationFrame(() => {
+        document.getElementById("cart-empty-title")?.focus();
+      });
     }
+  }
+
+  function updateItemQuantity(
+    productId: string,
+    productName: string,
+    quantity: number,
+  ): void {
+    setQuantity(productId, quantity);
+    setRequestAnnouncement(
+      `${productName}: ${quantity} ${quantity === 1 ? "pieza" : "piezas"}.`,
+    );
+  }
+
+  function handleRemoveItem(
+    productId: string,
+    productName: string,
+    focusTarget: HTMLElement | null,
+  ): void {
+    removeItem(productId);
+    setRequestAnnouncement(`${productName} se eliminó de la solicitud.`);
+    window.requestAnimationFrame(() => {
+      if (focusTarget?.isConnected) {
+        focusTarget.focus();
+        return;
+      }
+
+      document.getElementById("cart-empty-title")?.focus();
+    });
   }
 
   return (
     <PublicPageShell businessName={shopSettings?.businessName}>
-      <main className="cart-page">
+      <main className="cart-page" id="contenido-principal">
+        <p
+          className="catalog-visually-hidden"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {requestAnnouncement}
+        </p>
+
         <header className="cart-page__header">
           <div>
             <p className="catalog-eyebrow">
@@ -123,7 +169,9 @@ export function CartPage() {
           <section className="cart-empty">
             <div>
               <p className="catalog-eyebrow">Selección vacía</p>
-              <h2>Aún no agregaste ninguna pieza.</h2>
+              <h2 id="cart-empty-title" tabIndex={-1}>
+                Aún no agregaste ninguna pieza.
+              </h2>
               <p>
                 Explora la colección y guarda aquí los diseños que quieras
                 consultar.
@@ -137,110 +185,147 @@ export function CartPage() {
           <div className="cart-layout">
             <section className="cart-items" aria-labelledby="cart-items-title">
               <header className="cart-items__header">
-                <h2 id="cart-items-title">Piezas seleccionadas</h2>
+                <h2 id="cart-items-title" tabIndex={-1}>
+                  Piezas seleccionadas
+                </h2>
                 <span>{totalItems} en total</span>
               </header>
 
-              {items.map((item, index) => {
-                const imageUrl = item.imagePath
-                  ? productImageStorage.getPublicUrl(item.imagePath)
-                  : null;
+              <ol className="cart-list">
+                {items.map((item) => {
+                  const imageUrl = item.imagePath
+                    ? productImageStorage.getPublicUrl(item.imagePath)
+                    : null;
 
-                return (
-                  <article className="cart-item" key={item.productId}>
-                    <span className="cart-item__index" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
+                  return (
+                    <li key={item.productId}>
+                      <article className="cart-item">
+                        <Link
+                          className="cart-item__image"
+                          to={`/productos/${item.slug}`}
+                        >
+                          <CatalogProductImage
+                            source={imageUrl}
+                            alt={item.imageAltText}
+                            width={240}
+                            height={300}
+                          />
+                        </Link>
 
-                    <Link
-                      className="cart-item__image"
-                      to={`/productos/${item.slug}`}
-                    >
-                      <CatalogProductImage
-                        source={imageUrl}
-                        alt={item.imageAltText}
-                      />
-                    </Link>
+                        <div className="cart-item__information">
+                          <div className="cart-item__title-row">
+                            <div>
+                              <Link to={`/productos/${item.slug}`}>
+                                <h3>{item.name}</h3>
+                              </Link>
 
-                    <div className="cart-item__information">
-                      <div className="cart-item__title-row">
-                        <div>
-                          <Link to={`/productos/${item.slug}`}>
-                            <h3>{item.name}</h3>
-                          </Link>
+                              {item.moldCode ? (
+                                <p className="cart-item__mold-code">
+                                  Código de molde: {item.moldCode}
+                                </p>
+                              ) : null}
+                            </div>
 
-                          {item.moldCode ? (
-                            <p className="cart-item__mold-code">
-                              Código de molde: {item.moldCode}
+                            <p className="cart-item__unit-price">
+                              <span>Valor unitario</span>
+                              <strong>
+                                {currencyFormatter.format(item.priceInPesos)}
+                              </strong>
                             </p>
-                          ) : null}
+                          </div>
+
+                          <div className="cart-item__controls">
+                            <div
+                              className="cart-quantity"
+                              role="group"
+                              aria-label={`Cantidad de ${item.name}`}
+                            >
+                              <button
+                                type="button"
+                                aria-label={
+                                  item.quantity <= 1
+                                    ? `Cantidad mínima de ${item.name}: 1`
+                                    : `Reducir cantidad de ${item.name}`
+                                }
+                                disabled={item.quantity <= 1}
+                                onClick={() => {
+                                  updateItemQuantity(
+                                    item.productId,
+                                    item.name,
+                                    item.quantity - 1,
+                                  );
+                                }}
+                              >
+                                <MinusIcon className="catalog-icon" />
+                              </button>
+
+                              <span>{item.quantity}</span>
+
+                              <button
+                                type="button"
+                                aria-label={
+                                  item.quantity >= 99
+                                    ? `Cantidad máxima de ${item.name}: 99`
+                                    : `Aumentar cantidad de ${item.name}`
+                                }
+                                disabled={item.quantity >= 99}
+                                onClick={() => {
+                                  updateItemQuantity(
+                                    item.productId,
+                                    item.name,
+                                    item.quantity + 1,
+                                  );
+                                }}
+                              >
+                                <PlusIcon className="catalog-icon" />
+                              </button>
+                            </div>
+
+                            <button
+                              className="cart-item__remove"
+                              type="button"
+                              aria-label={`Eliminar ${item.name} de la solicitud`}
+                              onClick={(event) => {
+                                const listItem = event.currentTarget.closest("li");
+                                const focusTarget =
+                                  listItem?.nextElementSibling?.querySelector<HTMLElement>(
+                                    ".cart-item__remove",
+                                  ) ??
+                                  listItem?.previousElementSibling?.querySelector<HTMLElement>(
+                                    ".cart-item__remove",
+                                  ) ??
+                                  null;
+
+                                handleRemoveItem(
+                                  item.productId,
+                                  item.name,
+                                  focusTarget,
+                                );
+                              }}
+                            >
+                              Eliminar
+                            </button>
+                          </div>
                         </div>
 
-                        <strong>
-                          {currencyFormatter.format(item.priceInPesos)}
-                        </strong>
-                      </div>
-
-                      <div className="cart-item__controls">
-                        <div
-                          className="cart-quantity"
-                          role="group"
-                          aria-label={`Cantidad de ${item.name}`}
-                        >
-                          <button
-                            type="button"
-                            aria-label={`Reducir cantidad de ${item.name}`}
-                            disabled={item.quantity <= 1}
-                            onClick={() => {
-                              setQuantity(item.productId, item.quantity - 1);
-                            }}
-                          >
-                            −
-                          </button>
-
-                          <span>{item.quantity}</span>
-
-                          <button
-                            type="button"
-                            aria-label={`Aumentar cantidad de ${item.name}`}
-                            disabled={item.quantity >= 99}
-                            onClick={() => {
-                              setQuantity(item.productId, item.quantity + 1);
-                            }}
-                          >
-                            +
-                          </button>
+                        <div className="cart-item__subtotal">
+                          <span>Subtotal</span>
+                          <strong>
+                            {currencyFormatter.format(
+                              item.priceInPesos * item.quantity,
+                            )}
+                          </strong>
                         </div>
-
-                        <button
-                          className="cart-item__remove"
-                          type="button"
-                          aria-label={`Eliminar ${item.name} de la solicitud`}
-                          onClick={() => {
-                            removeItem(item.productId);
-                          }}
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="cart-item__subtotal">
-                      <span>Subtotal</span>
-                      <strong>
-                        {currencyFormatter.format(
-                          item.priceInPesos * item.quantity,
-                        )}
-                      </strong>
-                    </div>
-                  </article>
-                );
-              })}
+                      </article>
+                    </li>
+                  );
+                })}
+              </ol>
             </section>
 
-            <aside className="cart-summary">
+            <aside className="cart-summary" aria-labelledby="cart-summary-title">
               <div className="cart-summary__heading">
-                <h2 className="catalog-eyebrow">Resumen de la solicitud</h2>
+                <h2 id="cart-summary-title">Resumen de la solicitud</h2>
                 <span>{totalItems} {totalItems === 1 ? "pieza" : "piezas"}</span>
               </div>
 
@@ -259,32 +344,36 @@ export function CartPage() {
                 personalización y entrega se confirman por WhatsApp.
               </p>
 
-              {isLoading ? (
-                <p className="cart-summary__status">Cargando contacto…</p>
-              ) : null}
+              <div className="cart-summary__contact" aria-live="polite">
+                {isLoading ? (
+                  <p className="cart-summary__status">Cargando contacto…</p>
+                ) : null}
 
-              {error ? (
-                <p className="catalog-inline-error" role="alert">
-                  {error}
-                </p>
-              ) : null}
+                {error ? (
+                  <p className="catalog-inline-error" role="alert">
+                    {error}
+                  </p>
+                ) : null}
 
-              {!isLoading && !error && whatsappUrl ? (
-                <a
-                  className="catalog-whatsapp-action"
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Enviar por WhatsApp <span aria-hidden="true">↗</span>
-                </a>
-              ) : null}
+                {!isLoading && !error && whatsappUrl ? (
+                  <a
+                    className="catalog-whatsapp-action"
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <span>Enviar por WhatsApp</span>
+                    <ArrowUpRightIcon className="catalog-icon" />
+                  </a>
+                ) : null}
 
-              {!isLoading && !error && !whatsappUrl ? (
-                <p className="cart-summary__status">
-                  El número de WhatsApp aún no está configurado.
-                </p>
-              ) : null}
+                {!isLoading && !error && !whatsappUrl ? (
+                  <p className="cart-summary__status">
+                    No podemos preparar el envío por WhatsApp en este momento.
+                    Puedes seguir revisando tu solicitud.
+                  </p>
+                ) : null}
+              </div>
 
               <Link className="catalog-secondary-action" to="/">
                 Seguir explorando

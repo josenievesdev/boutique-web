@@ -1,21 +1,23 @@
-# Design System: boutique-web
+# Sistema visual: boutique-web
 
 ## Estado
 
-Registro técnico del sistema visual público después de la **Tanda 0B: tokens y sistema visual público**.
+Registro técnico posterior a la pasada integral de rediseño público del 29 de julio de 2026.
 
-- Concepto: **“Atelier abierto: una boutique digital donde la colección es la interfaz”.**
+- Concepto: **“Una colección abierta: las prendas, los precios y la personalización son el centro de la experiencia”.**
+- Registro público: `brand`.
 - Scope público: `.catalog-site`.
 - Fuente de tokens públicos: `src/tailwind.css`.
-- Primitivas públicas: `src/catalog.css`.
+- Construcción visual pública: clases semánticas en `src/catalog.css`.
 - Dirección normativa: `DESIGN_BIBLE.md`.
-- Tailwind CSS v4 y `@tailwindcss/vite` están instalados y activos.
-- `src/tailwind.css` importa theme y utilities; Preflight continúa desactivado.
-- La interfaz sigue siendo híbrida. Esta tanda no migra páginas ni elimina selectores heredados.
+- Tailwind CSS v4 sigue activo sin Preflight ni `tailwind.config.*`.
+- Administración continúa fuera del scope público y conserva `src/admin.css` sin cambios.
+
+El rediseño sustituyó la capa híbrida de utilities y CSS heredado. Los componentes públicos ya no construyen su layout con utilities Tailwind: consumen clases semánticas respaldadas por los aliases `--catalog-*`. Tailwind permanece como infraestructura CSS-first y fuente de theme, no como una segunda implementación visual.
 
 ## Principio de aislamiento
 
-Los valores `--catalog-*` existen únicamente bajo `.catalog-site`. No se cambiaron los tokens globales de `:root`, porque `src/admin.css` todavía los consume de forma directa.
+Los valores públicos viven únicamente bajo `.catalog-site`:
 
 ```css
 .catalog-site {
@@ -25,245 +27,186 @@ Los valores `--catalog-*` existen únicamente bajo `.catalog-site`. No se cambia
 }
 ```
 
-El mismo scope expone temporalmente nombres heredados como `--color-background`, `--radius-md` y `--transition-fast`. Los selectores públicos que aún usan esos nombres reciben los valores de v2 por herencia; administración, al estar fuera de `.catalog-site`, continúa resolviendo los valores globales de `src/index.css`.
+Los tokens globales de `src/index.css` no se modificaron porque administración los consume directamente. El bridge scoped hacia nombres globales se conserva para los defaults compartidos de documento, campos y foco; no existen consumos directos de `--color-*`, `--space-*`, `--radius-*` o `--font-family-*` dentro del nuevo `src/catalog.css`.
 
-Este puente es de compatibilidad, no una segunda fuente de valores. Se retira nombre por nombre cuando migre el último consumidor público.
+## Arquitectura pública
 
-## Paleta pública definitiva
+```text
+PublicPageShell
+├── enlace de salto
+├── CatalogHeader sticky
+├── contenido de ruta
+└── CatalogFooter
+```
 
-La paleta usa marfil cálido, carbón suave, piedra y arena. El acento es un taupe neutral configurable y no un rosa de marca, dorado artificial ni color promocional.
+### Inicio
 
-### Base y superficies
+```text
+Header con búsqueda
+→ categorías
+→ cabecera breve de colección + contador
+→ estado o grid filtrado
+→ proceso de solicitud
+→ footer
+```
 
-| Token | Valor | Rol |
-| --- | --- | --- |
-| `--catalog-color-canvas` | `#faf8f3` | Fondo marfil de la experiencia pública. |
-| `--catalog-color-canvas-subtle` | `#f3f1ec` | Secciones y estados de bajo énfasis. |
-| `--catalog-color-surface` | `#efede7` | Superficie piedra. |
-| `--catalog-color-surface-raised` | `#fffefa` | Campos y planos claros de producto. |
-| `--catalog-color-surface-muted` | `#ebe7df` | Superficie arena atenuada. |
-| `--catalog-color-overlay` | `rgba(250, 248, 243, 0.96)` | Superficie sticky pública. |
-| `--catalog-color-stone` | `#d9d5ce` | Piedra explícita para separaciones tonales. |
-| `--catalog-color-sand` | `#e9e2d7` | Arena explícita para agrupaciones cálidas. |
+`CatalogCategoryNavigation` separa filtros del header. En escritorio muestra `Todo`, cuatro categorías y `Más` cuando corresponde. En tablet y móvil muestra todas las categorías en un scroller horizontal contenido. El menú `Más` cierra con `Escape`, selección, pérdida de foco y clic exterior.
 
-### Texto, acción y acento
+### Detalle y solicitud
 
-| Token | Valor | Rol |
-| --- | --- | --- |
-| `--catalog-color-ink` | `#292825` | Texto principal y carbón de acción. |
-| `--catalog-color-text-muted` | `#625f59` | Texto secundario y metadata. |
-| `--catalog-color-text-inverse` | `#faf8f3` | Texto sobre carbón. |
-| `--catalog-color-action` | `#292825` | Acción primaria y WhatsApp. |
-| `--catalog-color-action-hover` | `#191815` | Hover de acción primaria. |
-| `--catalog-color-action-soft` | `#e2ded6` | Selección o apoyo de acción. |
-| `--catalog-accent` | `#695f57` | Fuente configurable del acento neutral. |
-| `--catalog-accent-hover` | `#514a44` | Estado fuerte del acento. |
-| `--catalog-accent-soft` | `#e8e2db` | Campo suave del acento. |
-| `--catalog-color-accent` | `var(--catalog-accent)` | Alias semántico de uso. |
-| `--catalog-color-accent-hover` | `var(--catalog-accent-hover)` | Alias semántico de hover. |
-| `--catalog-color-accent-soft` | `var(--catalog-accent-soft)` | Alias semántico suave. |
+El header usa una variante contextual con marca, `Buscar prendas`, `Colección` y `Mi selección`. No renderiza un campo de búsqueda fuera del inicio.
 
-La familia de acento se cambia como unidad. Cualquier configuración futura debe proporcionar base, hover y soft, y volver a verificar contraste; esta tanda no conecta el acento a datos ni configuración de Supabase.
+El detalle conserva galería, thumbnails, agregado, consulta individual, descripción, personalización, preparación y código de molde. La afirmación fija `Disponible` se retiró porque el contrato de producto no contiene inventario.
 
-### Líneas y foco
+La solicitud conserva snapshots, cantidades, eliminación, vaciado, subtotales, total de referencia y WhatsApp. Las piezas se presentan como filas de una lista y el resumen permanece sticky solo cuando hay anchura útil.
+
+## Paleta pública
 
 | Token | Valor | Rol |
 | --- | --- | --- |
-| `--catalog-color-line` | `rgba(41, 40, 37, 0.16)` | Hairline estructural no esencial. |
-| `--catalog-color-line-strong` | `#817b73` | Límite interactivo esencial. |
-| `--catalog-color-focus` | `#5c534c` | Outline y focus-within público. |
+| `--catalog-color-canvas` | `#faf8f3` | Canvas público. |
+| `--catalog-color-canvas-subtle` | `#f3f1ec` | Franja de proceso y estados neutros. |
+| `--catalog-color-surface` | `#efede7` | Planos de imagen. |
+| `--catalog-color-surface-raised` | `#fffefa` | Campos y menú. |
+| `--catalog-color-surface-muted` | `#ebe7df` | Imagen ausente. |
+| `--catalog-color-ink` | `#292825` | Texto y acciones principales. |
+| `--catalog-color-text-muted` | `#625f59` | Apoyo y metadata. |
+| `--catalog-color-line` | `rgba(41, 40, 37, 0.16)` | Separación estructural. |
+| `--catalog-color-line-strong` | `#817b73` | Límites interactivos. |
+| `--catalog-color-focus` | `#5c534c` | Foco visible. |
+| `--catalog-color-accent` | `#695f57` | Acento neutral funcional. |
 
-### Estados
+La acción principal y WhatsApp comparten carbón. No se inventó un verde de canal, una paleta promocional ni color de disponibilidad.
 
-| Estado | Texto | Superficie | Línea |
-| --- | --- | --- | --- |
-| Éxito | `#3f654e` | `#e1ebe3` | `#708878` |
-| Advertencia | `#6d5832` | `#f1e9d9` | `#987b49` |
-| Error | `#85483f` | `#f2e2df` | `#a0645d` |
-| Información/carga | `#4f6269` | `#e4ebed` | `#71878e` |
+## Tipografía
 
-Contrastes calculados sobre sus superficies:
-
-- Tinta principal sobre canvas: `13.89:1`.
-- Texto secundario sobre canvas: `5.99:1`.
-- Línea fuerte sobre canvas: `3.95:1`.
-- Texto inverso sobre acción: `13.89:1`.
-- Acento sobre canvas: `5.86:1`.
-- Textos de estado sobre sus superficies: entre `5.30:1` y `5.63:1`.
-- Líneas de estado sobre sus superficies: entre `3.13:1` y `3.74:1`.
-
-Las transparencias, estados disabled y composiciones reales todavía requieren comprobación visual manual.
-
-## Tipografía pública
-
-### Familias
-
-| Token | Familia | Uso |
+| Rol | Familia | Uso |
 | --- | --- | --- |
-| `--catalog-font-display` | Newsreader, Georgia, Times New Roman, serif | Marca, títulos y nombres de producto. |
-| `--catalog-font-sans` | Manrope, ui-sans-serif, system-ui, Segoe UI, sans-serif | Navegación, precios, controles y texto funcional. |
+| Marca y display | Newsreader `400–500` | Marca, títulos y nombres de producto. |
+| Interfaz y datos | Manrope `400–600` | Navegación, controles, precios, metadata y cuerpo. |
 
-### Escala
+Reglas vigentes:
 
-| Token | Valor |
+- El display no baja de `-0.035em` de tracking.
+- El cuerpo funcional no baja de `12px`.
+- Nombres, códigos y copy dinámico usan wrapping seguro.
+- Precios, cantidades, subtotales y contadores usan números tabulares.
+- Headings breves usan `text-wrap: balance`; prosa usa `text-wrap: pretty`.
+
+## Escala y medidas
+
+| Token o superficie | Medida |
 | --- | --- |
-| `--catalog-text-display` | `clamp(2.5rem, 4.2vw, 4rem)` |
-| `--catalog-text-headline` | `clamp(1.9rem, 3vw, 2.75rem)` |
-| `--catalog-text-title` | `clamp(1.1rem, 1.5vw, 1.35rem)` |
-| `--catalog-text-body` | `1rem` |
-| `--catalog-text-supporting` | `0.875rem` |
-| `--catalog-text-navigation` | `0.75rem` |
-| `--catalog-text-button` | `0.8125rem` |
-| `--catalog-text-price` | `0.9375rem` |
-| `--catalog-text-label` | `0.75rem` |
+| Contenedor público | `1240px` |
+| Detalle y solicitud | `1200px` |
+| Estado lineal | `900px` |
+| Header habitual | `66px` |
+| Categorías | `44px` mínimo |
+| Control táctil mínimo | `44px` |
+| Acción principal | `48px` |
+| Plano de catálogo | `4:5` |
+| Radio de media | `10px` |
+| Radio de control | `8px` |
 
-Ningún token funcional nuevo baja de `12px`. Los tamaños menores escritos directamente en selectores o utilities existentes son deuda heredada y se corrigen en la tanda del consumidor, no mediante overrides globales.
+Los gutters siguen `clamp(16px, 4vw, 64px)`. El ancho `--catalog-width-wide` cambió de `1440px` a `1240px` para sostener una escala comercial y tarjetas controladas.
 
-### Ritmo tipográfico
+## Grid y cards
 
-| Token | Valor |
+El grid usa container queries sobre `.catalog-collection`:
+
+| Ancho útil | Columnas máximas |
 | --- | --- |
-| `--catalog-leading-display` | `1.02` |
-| `--catalog-leading-headline` | `1.06` |
-| `--catalog-leading-title` | `1.16` |
-| `--catalog-leading-body` | `1.6` |
-| `--catalog-tracking-display` | `-0.035em` |
-| `--catalog-tracking-headline` | `-0.03em` |
-| `--catalog-tracking-title` | `-0.015em` |
+| Menos de `328px` | 1 |
+| Desde `328px` | 2 |
+| Desde `900px` | 3 |
+| Desde `1200px` y al menos 4 resultados | 4 |
 
-## Espaciado y controles
+Cada track tiene máximo `290px`. Con uno o dos resultados, el bloque se centra sin estirar las piezas. Los casos de referencia resultan en:
 
-La escala `--catalog-space-*` conserva incrementos de `4px`:
+- `1366px`: 4 columnas.
+- `1280px`: 3 columnas.
+- `1024px`: 3 columnas.
+- `768px`: 2 columnas.
+- `430–360px`: 2 columnas.
+- `320px`: 1 columna.
 
-`4`, `8`, `12`, `16`, `20`, `24`, `32`, `40`, `48`, `64`, `80`, `96`.
+La card mantiene un único enlace al detalle. Su jerarquía es imagen, nombre, precio, descripción de dos líneas y hasta dos atributos reales. `Ver pieza` es un affordance secundario, no una acción nueva. El código de molde permanece ausente.
 
-| Token | Valor | Uso |
-| --- | --- | --- |
-| `--catalog-gutter-inline` | `clamp(16px, 4vw, 64px)` | Margen exterior público. |
-| `--catalog-control-height-compact` | `44px` | Mínimo táctil. |
-| `--catalog-control-height` | `48px` | Botones y campos estándar. |
-| `--catalog-control-height-large` | `52px` | Búsqueda o control principal. |
+La primera imagen del resultado actual usa carga eager y prioridad alta; el resto conserva lazy loading para no competir con el LCP móvil. Todas las instancias públicas reciben dimensiones explícitas.
 
-## Forma y elevación
+## Detalle
 
-| Token | Valor | Uso |
-| --- | --- | --- |
-| `--catalog-radius-control` | `8px` | Botones y campos. |
-| `--catalog-radius-media` | `10px` | Planos de imagen. |
-| `--catalog-radius-panel` | `12px` | Estados agrupados. |
-| `--catalog-radius-pill` | `999px` | Badges y contadores únicamente. |
-| `--catalog-radius-circle` | `50%` | Elementos circulares reales. |
-| `--catalog-shadow-hairline` | `0 1px 0 rgba(41, 40, 37, 0.12)` | Separación sticky. |
-| `--catalog-shadow-sm` | `0 1px 2px rgba(41, 40, 37, 0.04)` | Excepción funcional mínima. |
-| `--catalog-shadow-md` | `0 4px 10px rgba(41, 40, 37, 0.05)` | Overlay pequeño. |
-| `--catalog-shadow-lg` | `0 8px 16px rgba(41, 40, 37, 0.06)` | Techo de elevación pública. |
+- Layout amplio: galería dominante y columna informativa sticky.
+- Imagen principal: `4:5`, entre `480px` y `640px` de alto según viewport amplio.
+- Móvil: imagen `4:5`, thumbnails horizontales y contenido en flujo.
+- Orden: categoría, nombre, precio, resumen, atributos, acciones, descripción y metadata.
+- Código de molde: metadata posterior, con wrapping seguro.
+- La consulta individual conserva el builder y destino existentes.
 
-Las cards públicas permanecen sin sombra. Ningún componente combina hairline decorativo con sombra amplia.
+## Solicitud
 
-## Anchos
+- Cabecera compacta, lista principal y resumen lateral.
+- Miniaturas `4:5`, controles de cantidad de `44px` y subtotales asociados por fila.
+- Reflow a una columna bajo `900px` y filas de dos columnas en móvil.
+- El total conserva el label `Valor de referencia` y el copy no transaccional.
+- Una región polite anuncia cantidad, eliminación y vaciado sin alterar las operaciones del provider.
+- No existe barra fija inferior ni CTA duplicado.
 
-| Token | Valor |
+## Estados y navegación
+
+- `CatalogPublicState` admite `h1` para estados de ruta y `h2` dentro del catálogo.
+- Carga, error, vacío y sin coincidencias sustituyen el área de resultados sin productos falsos ni shimmer.
+- Imagen ausente usa un plano neutral honesto.
+- La 404 es compacta y no usa una cifra monumental.
+- Todas las rutas públicas tienen enlace de salto y `main#contenido-principal`.
+- `main` y `#coleccion` reservan `scroll-margin-top` para el header sticky.
+- El footer contiene solo marca, frase breve, colección, selección y copyright.
+- `/admin/login` y todas las rutas administrativas permanecen intactas, aunque el acceso administrativo no se promociona en el footer público.
+
+## Movimiento
+
+- Color, borde y feedback de presión: `140–180ms`.
+- Imagen de card: escala máxima `1.012` solo con puntero fino.
+- Menú `Más`: entrada de `140ms` desde su trigger.
+- No hay reveals de scroll, parallax, marquee ni animación de layout.
+- `prefers-reduced-motion` elimina traslación, escala y entrada del menú.
+
+## Selectores retirados
+
+La reescritura de `src/catalog.css` eliminó las familias heredadas sin consumidores finales:
+
+- primitivas dormidas `catalog-title*`, `catalog-field`, `catalog-focus-ring`, `catalog-badge`, `catalog-product-media`, `catalog-price` y `catalog-separator`;
+- header híbrido `catalog-category-nav` y sus dependencias de utilities importantes;
+- detalle `catalog-detail-tags`, `catalog-detail-contact*` y `catalog-whatsapp-secondary`;
+- solicitud `cart-item__index`;
+- 404 `catalog-not-found__code`;
+- hoja de plantilla sin consumidores `src/App.css`;
+- todos los breakpoints y overrides heredados asociados a esas familias.
+
+No se retiró el bridge scoped de variables porque los defaults globales compartidos siguen siendo parte de la convivencia con administración.
+
+## Ownership actual
+
+| Capa | Responsabilidad |
 | --- | --- |
-| `--catalog-width-wide` | `1440px` |
-| `--catalog-width-standard` | `1240px` |
-| `--catalog-width-detail` | `1200px` |
-| `--catalog-width-form` | `900px` |
-| `--catalog-width-prose` | `70ch` |
-| `--catalog-width-narrow` | `460px` |
+| `src/tailwind.css` | Tokens `--catalog-*`, aliases de theme y bridge scoped. |
+| `src/index.css` | Normalización y defaults globales compartidos. |
+| `src/catalog.css` | Toda la presentación pública y sus breakpoints. |
+| `src/admin.css` | Presentación administrativa, sin cambios. |
 
-## Motion y capas
+El orden de imports continúa `tailwind.css → index.css → catalog.css → admin.css`. No se activó Preflight, no se añadieron dependencias, `@apply`, `!important` ni configuración JavaScript de Tailwind.
 
-| Token | Valor |
-| --- | --- |
-| `--catalog-duration-fast` | `140ms` |
-| `--catalog-duration-base` | `180ms` |
-| `--catalog-duration-slow` | `220ms` |
-| `--catalog-ease-standard` | `ease` |
-| `--catalog-ease-out` | `cubic-bezier(0.23, 1, 0.32, 1)` |
-| `--catalog-z-base` | `0` |
-| `--catalog-z-raised` | `10` |
-| `--catalog-z-sticky` | `20` |
-| `--catalog-z-overlay` | `40` |
-| `--catalog-z-modal` | `50` |
+## Invariantes preservadas
 
-Las transiciones compuestas `--catalog-transition-fast`, `--catalog-transition-base` y `--catalog-transition-slow` combinan esas duraciones y curvas. No se usa `transition: all`. Las primitivas con transform de presión eliminan el movimiento bajo `prefers-reduced-motion`.
+- Supabase, repositorios, entidades y casos de uso.
+- Autenticación, rutas, slugs y lazy loading.
+- Búsqueda, filtro y orden de resultados.
+- Clave, forma y compatibilidad de la solicitud en `localStorage`.
+- Cantidades `1–99`, subtotales, total y confirmación de vaciado.
+- Constructores y URLs de WhatsApp.
+- Código de molde en detalle, solicitud, WhatsApp y administración.
+- Ausencia de código de molde en cards públicas.
 
-## Primitivas públicas
+## Verificación
 
-`src/catalog.css` define estas APIs sin migrar todavía todos sus consumidores:
-
-| Primitiva | Responsabilidad |
-| --- | --- |
-| `.catalog-container` | Medida amplia y gutter público. |
-| `.catalog-container--standard` | Medida estándar. |
-| `.catalog-container--prose` | Medida de lectura. |
-| `.catalog-title` | Título Newsreader principal. |
-| `.catalog-title--display` | Escala de apertura. |
-| `.catalog-title--item` | Nombre o título de producto. |
-| `.catalog-eyebrow` | Label breve de `12px`, uso excepcional. |
-| `.catalog-secondary-text` | Texto funcional secundario. |
-| `.catalog-primary-action` | Acción primaria carbón. |
-| `.catalog-secondary-action` | Acción secundaria delineada. |
-| `.catalog-whatsapp-action` | Acción WhatsApp con la misma jerarquía primaria, sin verde inventado. |
-| `.catalog-field` | Input público de `48px`. |
-| `.catalog-focus-ring` | Focus-within único para controles compuestos y sus hijos directos. |
-| `.catalog-badge` | Metadata discreta; no promociones. |
-| `.catalog-state`, `--mist` y `--error` | Vacío, carga/información y error compatibles con el componente actual. |
-| `.catalog-product-media` | Plano `4:5`, imagen contenida. |
-| `.catalog-price` | Precio Manrope con números tabulares. |
-| `.catalog-separator` | Hairline horizontal. |
-
-Las clases existentes de acciones, eyebrow y estados ya consumen el sistema. Las nuevas primitivas de contenedor, títulos, texto, campo, badge, media, precio y separador quedan disponibles para las siguientes tandas.
-
-## Tailwind CSS v4
-
-`@theme inline` expone utilities `boutique-*` que resuelven los aliases `--catalog-*` dentro del shell público:
-
-- Colores: `bg-boutique-canvas`, `text-boutique-ink`, `border-boutique-line`, estados, piedra y arena.
-- Familias: `font-boutique-display`, `font-boutique-sans`.
-- Escala: `text-boutique-display`, `text-boutique-headline`, `text-boutique-title`, `text-boutique-body`, `text-boutique-navigation`, `text-boutique-button`, `text-boutique-price`, `text-boutique-label`.
-- Radios: `rounded-boutique-control`, `rounded-boutique-card`, `rounded-boutique-panel` y pills reservados.
-- Sombras, contenedores, alturas de control y easings equivalentes.
-
-Los nombres heredados `boutique-sage`, `boutique-blush`, `boutique-rose` y `boutique-mist` permanecen como aliases de compatibilidad. Ya no definen una paleta pastel de marca: resuelven estados semánticos o acento neutral y se retiran con sus consumidores.
-
-## Propiedad visual
-
-| Capa | Propiedad actual |
-| --- | --- |
-| `src/tailwind.css` | Valores definitivos `--catalog-*`, scope `.catalog-site`, bridge heredado y theme utilities. |
-| `src/index.css` | Tokens globales de compatibilidad, normalización, defaults de documento, formularios globales, carga de rutas y reduced motion. |
-| Utilities en TSX | Construcción visual ya migrada de header, apertura, búsqueda, filtros y showcase. No se reorganizó en Tanda 0B. |
-| `src/catalog.css` | Primitivas públicas y layout heredado de catálogo, detalle, solicitud, footer y 404. |
-| `src/admin.css` | Propiedad exclusiva de la superficie administrativa actual. |
-
-El orden de imports permanece `tailwind.css` → `index.css` → `catalog.css` → `admin.css`. Preflight sigue desactivado. No se añadieron layers a hojas heredadas ni nuevos `!important`.
-
-## Qué permanece global
-
-- `color-scheme` y defaults del documento.
-- `box-sizing`, body, herencia de controles, enlaces e imágenes.
-- Variables `--color-*`, `--space-*`, `--radius-*`, `--shadow-*`, `--content-width-*`, `--transition-*`, `--z-*` y `--font-family-*` mientras administración las consuma.
-- Foco y formularios globales durante la convivencia.
-- Fallback de rutas `.route-loading`.
-- Override global de `prefers-reduced-motion`.
-
-## Qué queda reservado para administración
-
-- Todos los valores globales actuales de `src/index.css`.
-- Todos los selectores de `src/admin.css`.
-- Densidad, tipografía, radios, sombras, formularios, tablas/listas y estados administrativos.
-- Una futura familia de aliases administrativos bajo registro `product`, que solo se define en Tanda 5.
-
-Administración no hereda `--catalog-*` porque sus rutas no se renderizan dentro de `.catalog-site`. No se modificó `src/admin.css`.
-
-## Reglas pendientes de convivencia
-
-- No eliminar el bridge de variables hasta migrar y buscar todos los consumidores públicos.
-- No sustituir valores hard-coded de componentes fuera de su tanda.
-- No corregir microtexto heredado en header, cards, detalle, solicitud o footer desde un override transversal.
-- No activar Preflight ni cambiar el orden de hojas.
-- No añadir `@apply`, configuración JavaScript de Tailwind o nombres dinámicos de utilities.
-- No convertir los aliases legacy de pasteles en una segunda paleta.
-- No asumir que `.route-loading`, al vivir fuera de `.catalog-site`, ya usa el sistema público.
-- No declarar paridad o finalización sin validación manual de la superficie pública y administrativa.
+El typecheck `npm exec tsc -- --noEmit` pasó después de la implementación. La validación visual con datos reales, teclado, lector de pantalla, zoom y matriz completa de viewports permanece manual según `AGENTS.md`.

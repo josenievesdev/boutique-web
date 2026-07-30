@@ -24,7 +24,7 @@ Si la documentación contradice la implementación, no asumir cuál es correcta.
 - Supabase para datos, autenticación y almacenamiento.
 - Tailwind CSS v4 con `@tailwindcss/vite` ya está instalado.
 - `src/tailwind.css` carga theme y utilities sin Preflight.
-- La interfaz pública está en una etapa híbrida: header, apertura, búsqueda y filtros usan utilities; catálogo, detalle, solicitud y footer conservan CSS convencional.
+- La interfaz pública usa tokens CSS-first desde `src/tailwind.css` y clases semánticas convencionales en `src/catalog.css`; los componentes públicos ya no construyen su layout con utilities Tailwind.
 - `src/index.css` contiene variables y normalización globales compartidas.
 - `src/admin.css` continúa siendo la implementación visual administrativa.
 

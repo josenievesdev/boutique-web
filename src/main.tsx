@@ -26,7 +26,7 @@ createRoot(
           >
             <div className="route-loading__indicator" />
 
-            <p>Cargando contenido...</p>
+            <p>Cargando contenido…</p>
           </main>
         }
       >

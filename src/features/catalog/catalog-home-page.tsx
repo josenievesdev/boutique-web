@@ -10,6 +10,7 @@ import { SupabaseProductCatalogRepository } from "../../infrastructure/repositor
 import { SupabaseShopSettingsRepository } from "../../infrastructure/repositories/supabase-shop-settings-repository";
 import { SupabaseProductImageStorage } from "../../infrastructure/storage/supabase-product-image-storage";
 import { supabase } from "../../infrastructure/supabase/supabase-client";
+import { CatalogCategoryNavigation } from "./catalog-category-navigation";
 import { CatalogProductCard } from "./catalog-product-card";
 import { CatalogPublicState } from "./catalog-public-state";
 import { filterCatalogProducts } from "./filter-catalog-products";
@@ -26,27 +27,6 @@ const listPublishedProducts = new ListPublishedProducts(
 );
 const listActiveCategories = new ListActiveCategories(categoryRepository);
 const getShopSettings = new GetShopSettings(shopSettingsRepository);
-
-const openingClass =
-  "catalog-opening catalog-container grid gap-1 py-[14px] max-[820.01px]:py-2 max-[359.01px]:gap-0 max-[359.01px]:py-1";
-
-const openingMetaClass =
-  "flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0";
-
-const openingEyebrowClass =
-  "m-0 text-boutique-label text-boutique-muted uppercase";
-
-const openingResultClass =
-  "m-0 text-[0.78rem] font-medium text-boutique-muted [font-variant-numeric:tabular-nums]";
-
-const openingTitleClass =
-  "m-0 max-w-[760px] text-balance font-boutique-display text-[clamp(2.15rem,3.2vw,2.9rem)] font-normal leading-none tracking-[-0.035em] text-boutique-ink " +
-  "max-[820.01px]:max-w-[590px] max-[820.01px]:text-[clamp(1.75rem,7.2vw,2rem)] " +
-  "max-[359.01px]:leading-[0.98]";
-
-const openingDescriptionClass =
-  "m-0 max-w-[65ch] text-[0.9rem] leading-[1.5] text-boutique-muted [text-wrap:pretty] " +
-  "max-[430.01px]:text-[0.8rem] max-[430.01px]:leading-[1.4] max-[359.01px]:text-[0.75rem]";
 
 export function CatalogHomePage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -108,6 +88,9 @@ export function CatalogHomePage() {
       }),
     [products, searchTerm, selectedCategoryId],
   );
+  const selectedCategoryName = categories.find(
+    (category) => category.id === selectedCategoryId,
+  )?.name;
 
   const resultSummary = isLoading
     ? "Preparando la colección…"
@@ -118,6 +101,13 @@ export function CatalogHomePage() {
             ? "pieza"
             : "piezas"
         }`;
+  const resultAnnouncement = [
+    resultSummary,
+    selectedCategoryName ? `Categoría: ${selectedCategoryName}.` : null,
+    searchTerm.trim() ? `Búsqueda: ${searchTerm.trim()}.` : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   function updateSearchTerm(value: string): void {
     setSearchTerm(value);
@@ -134,56 +124,75 @@ export function CatalogHomePage() {
   function clearFilters(): void {
     setSearchTerm("");
     setSelectedCategoryId(null);
+    window.requestAnimationFrame(() => {
+      document.getElementById("catalog-header-search")?.focus();
+    });
   }
 
   return (
     <PublicPageShell
       businessName={shopSettings?.businessName}
-      headerControls={{
+      headerSearchControls={{
         searchTerm,
         onSearchTermChange: updateSearchTerm,
         onClearSearch: clearSearch,
-        categories,
-        selectedCategoryId,
-        onSelectCategory: selectCategory,
       }}
       skipTargetId="contenido-principal"
     >
       <main id="contenido-principal">
+        <CatalogCategoryNavigation
+          categories={categories}
+          selectedCategoryId={selectedCategoryId}
+          onSelectCategory={selectCategory}
+        />
+
         <section
-          className={openingClass}
+          className="catalog-opening"
           aria-labelledby="catalog-opening-title"
         >
-          <div className={openingMetaClass}>
-            <p className={openingEyebrowClass}>Colección actual · Boutique</p>
+          <div className="catalog-container catalog-opening__content">
+            <div className="catalog-opening__meta">
+              <p className="catalog-eyebrow">Colección actual</p>
 
-            <p
-              className={openingResultClass}
-              aria-live="polite"
-              role="status"
-            >
-              {resultSummary}
+              <span className="catalog-opening__meta-separator" aria-hidden="true" />
+
+              <p
+                className="catalog-opening__result"
+                aria-live="polite"
+                role="status"
+              >
+                <span aria-hidden="true">{resultSummary}</span>
+                <span className="catalog-visually-hidden">
+                  {resultAnnouncement}
+                </span>
+              </p>
+            </div>
+
+            <h1 id="catalog-opening-title">La colección, a tu manera.</h1>
+
+            <p className="catalog-opening__description">
+              Piezas seleccionadas con atención al detalle.
             </p>
           </div>
-
-          <h1 className={openingTitleClass} id="catalog-opening-title">
-            La colección, a tu manera.
-          </h1>
-
-          <p className={openingDescriptionClass}>
-            Piezas seleccionadas con atención al detalle.
-          </p>
         </section>
 
         <section
           className="catalog-collection"
           id="coleccion"
-          aria-label="Productos de la colección"
+          aria-labelledby="catalog-grid-title"
           aria-busy={isLoading}
         >
+          <h2 className="catalog-visually-hidden" id="catalog-grid-title">
+            Productos de la colección
+          </h2>
+
           <div className="catalog-results">
             {isLoading ? (
-              <CatalogPublicState eyebrow="Actualizando" tone="mist">
+              <CatalogPublicState
+                eyebrow="Actualizando"
+                title="Preparando la colección"
+                tone="mist"
+              >
                 <p>Cargando las piezas disponibles…</p>
               </CatalogPublicState>
             ) : null}
@@ -199,6 +208,11 @@ export function CatalogHomePage() {
                   type="button"
                   onClick={() => {
                     setReloadCounter((current) => current + 1);
+                    window.requestAnimationFrame(() => {
+                      document
+                        .querySelector<HTMLElement>("#coleccion .catalog-state")
+                        ?.focus();
+                    });
                   }}
                 >
                   Intentar nuevamente
@@ -230,12 +244,15 @@ export function CatalogHomePage() {
 
             {!isLoading && !error && visibleProducts.length > 0 ? (
               <ul
-                className={`catalog-product-grid catalog-product-grid--${Math.min(
-                  visibleProducts.length,
-                  4,
-                )}`}
+                className={`catalog-product-grid${
+                  visibleProducts.length <= 2
+                    ? ` catalog-product-grid--${visibleProducts.length}`
+                    : visibleProducts.length >= 4
+                      ? " catalog-product-grid--4"
+                      : ""
+                }`}
               >
-                {visibleProducts.map((product) => {
+                {visibleProducts.map((product, index) => {
                   const productData = product.toObject();
                   const coverImage =
                     productData.images.find((image) => image.isCover) ??
@@ -250,6 +267,8 @@ export function CatalogHomePage() {
                         product={productData}
                         imageUrl={imageUrl}
                         imageAlt={coverImage?.altText || productData.name}
+                        imageLoading={index === 0 ? "eager" : "lazy"}
+                        imageFetchPriority={index === 0 ? "high" : "auto"}
                       />
                     </li>
                   );
@@ -259,7 +278,7 @@ export function CatalogHomePage() {
           </div>
         </section>
 
-        {!isLoading && !error && products.length > 0 ? (
+        {!isLoading && !error && visibleProducts.length > 0 ? (
           <section
             className="catalog-process"
             aria-labelledby="catalog-process-title"

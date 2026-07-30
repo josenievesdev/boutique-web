@@ -1,11 +1,14 @@
 import { Link } from "react-router";
 import type { ProductProps } from "../../core/entities/product";
+import { ArrowRightIcon } from "./catalog-icons";
 import { CatalogProductImage } from "./catalog-product-image";
 
 interface CatalogProductCardProps {
   product: ProductProps;
   imageUrl: string | null;
   imageAlt: string;
+  imageLoading?: "eager" | "lazy";
+  imageFetchPriority?: "high" | "low" | "auto";
 }
 
 const currencyFormatter = new Intl.NumberFormat("es-CO", {
@@ -18,6 +21,8 @@ export function CatalogProductCard({
   product,
   imageUrl,
   imageAlt,
+  imageLoading = "lazy",
+  imageFetchPriority = "auto",
 }: CatalogProductCardProps) {
   return (
     <Link
@@ -30,6 +35,8 @@ export function CatalogProductCard({
           alt={imageAlt}
           width={800}
           height={1000}
+          loading={imageLoading}
+          fetchPriority={imageFetchPriority}
         />
       </div>
 
@@ -37,19 +44,37 @@ export function CatalogProductCard({
         <div className="catalog-product-card__heading">
           <h3>{product.name}</h3>
 
-          <strong>{currencyFormatter.format(product.priceInPesos)}</strong>
+          <div className="catalog-product-card__price">
+            <strong>{currencyFormatter.format(product.priceInPesos)}</strong>
+            {product.previousPriceInPesos ? (
+              <del>
+                {currencyFormatter.format(product.previousPriceInPesos)}
+              </del>
+            ) : null}
+          </div>
         </div>
 
-        <p className="catalog-product-card__description">
-          {product.shortDescription}
-        </p>
-
-        {product.madeToOrder || product.customizable ? (
-          <ul className="catalog-product-card__attributes">
-            {product.madeToOrder ? <li>Sobre pedido</li> : null}
-            {product.customizable ? <li>Personalizable</li> : null}
-          </ul>
+        {product.shortDescription ? (
+          <p className="catalog-product-card__description">
+            {product.shortDescription}
+          </p>
         ) : null}
+
+        <div className="catalog-product-card__footer">
+          {product.madeToOrder || product.customizable ? (
+            <ul className="catalog-product-card__attributes">
+              {product.madeToOrder ? <li>Sobre pedido</li> : null}
+              {product.customizable ? <li>Personalizable</li> : null}
+            </ul>
+          ) : (
+            <span />
+          )}
+
+          <span className="catalog-product-card__action">
+            Ver pieza
+            <ArrowRightIcon className="catalog-icon" />
+          </span>
+        </div>
       </div>
     </Link>
   );

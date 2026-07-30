@@ -78,7 +78,7 @@ El detalle de producto también permite una consulta directa por una sola pieza 
 
 ### Públicas
 
-- `/` — inicio del catálogo, hero, controles de descubrimiento y colección.
+- `/` — inicio del catálogo, búsqueda, categorías, cabecera breve y colección.
 - `/productos/:slug` — detalle público y galería de producto.
 - `/solicitud` — productos seleccionados, gestión de cantidades, resumen y acción de WhatsApp.
 - `*` — experiencia pública de página no encontrada.
@@ -118,13 +118,13 @@ No se puede inventar ningún producto, perfil social, teléfono, testimonio, pro
 - Vitest `^4.1.10`.
 - Oxlint `^1.71.0`.
 - Tailwind CSS v4 mediante `tailwindcss` y `@tailwindcss/vite`.
-- Sistema híbrido cargado desde `src/tailwind.css`, `src/index.css`, `src/catalog.css` y `src/admin.css`.
+- Sistema de estilos cargado desde `src/tailwind.css`, `src/index.css`, `src/catalog.css` y `src/admin.css`, con ownership público y administrativo separado.
 
 ## Estado de Tailwind
 
 Tailwind CSS v4 está instalado mediante el plugin oficial de Vite. `src/tailwind.css` carga theme y utilities con configuración CSS-first; Preflight permanece desactivado y no existe `tailwind.config.*`.
 
-La superficie pública continúa una migración controlada y por etapas: header, apertura, búsqueda y filtros usan utilities, mientras catálogo, detalle, solicitud y footer conservan CSS convencional. Los tokens de marca pública están aislados bajo `.catalog-site`; la superficie administrativa permanece fuera de ese scope hasta su fase posterior.
+La superficie pública consume tokens de marca aislados bajo `.catalog-site` y concentra su construcción visual en clases semánticas de `src/catalog.css`. Tailwind permanece activo como infraestructura CSS-first y fuente de theme, sin Preflight. La superficie administrativa sigue fuera de ese scope y conserva su implementación en `src/admin.css`.
 
 ## Accessibility & Inclusion
 

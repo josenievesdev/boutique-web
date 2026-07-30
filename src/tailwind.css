@@ -201,7 +201,7 @@
     --catalog-shadow-lg: 0 8px 16px rgba(41, 40, 37, 0.06);
 
     /* Content widths. */
-    --catalog-width-wide: 1440px;
+    --catalog-width-wide: 1240px;
     --catalog-width-standard: 1240px;
     --catalog-width-detail: 1200px;
     --catalog-width-form: 900px;

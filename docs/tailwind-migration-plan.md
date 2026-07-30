@@ -11,12 +11,12 @@ Tailwind CSS v4 está instalado y funcionando:
 - Preflight no se importa y permanece desactivado.
 - No existe ni se necesita `tailwind.config.*`; el proyecto usa configuración CSS-first.
 
-La superficie pública es híbrida:
+La superficie pública completó la consolidación visual posterior al rediseño integral:
 
 | Superficie | Construcción actual |
 | --- | --- |
-| Header, apertura, búsqueda, filtros y showcase existente | Utilities de Tailwind v4. |
-| Catálogo, cards, estados, detalle, solicitud, footer y 404 | CSS convencional en `src/catalog.css`. |
+| Tokens y aliases públicos | CSS-first en `src/tailwind.css`. |
+| Header, categorías, apertura, catálogo, cards, estados, detalle, solicitud, footer y 404 | Clases semánticas convencionales en `src/catalog.css`. |
 | Administración | CSS convencional en `src/admin.css`. |
 | Normalización y defaults compartidos | `src/index.css`. |
 
@@ -49,8 +49,8 @@ Consecuencias actuales:
 
 - Theme y utilities de Tailwind están en layers.
 - `index.css`, `catalog.css` y `admin.css` no están layerizados y se cargan después.
-- Algunos componentes migrados usan utilities importantes para vencer defaults globales.
-- Tanda 0B no cambia este orden, no layeriza hojas heredadas y no añade nuevos `!important`.
+- Los componentes públicos ya no usan utilities importantes; `catalog.css` resuelve su especificidad dentro del scope público.
+- El orden no cambia, las hojas convencionales no se layerizan y no se añaden nuevos `!important`.
 
 La resolución definitiva de especificidad pertenece a la tanda del consumidor. No se debe responder a la convivencia acumulando overrides transversales.
 
@@ -132,8 +132,8 @@ No se deben crear consumidores nuevos con esos nombres legacy.
 | --- | --- |
 | `src/tailwind.css` | Valores `--catalog-*`, scope público, bridge temporal y theme utilities. |
 | `src/index.css` | Normalización, defaults del documento, tokens globales de compatibilidad, formularios globales, carga de rutas y reduced motion. |
-| Utilities en TSX | Construcción visual específica del componente ya migrado. |
-| `src/catalog.css` | Primitivas públicas y componentes aún no migrados. |
+| Componentes TSX públicos | Estructura semántica y comportamiento visual local; sin construcción de layout mediante utilities. |
+| `src/catalog.css` | Toda la presentación pública, estados, movimiento y responsive. |
 | `src/admin.css` | Toda la presentación administrativa hasta Tanda 5. |
 
 ### Lo que permanece global
@@ -155,26 +155,19 @@ No se deben crear consumidores nuevos con esos nombres legacy.
 
 No se debe mover un token público a `:root` para facilitar una utility. Si una necesidad administrativa y pública coincide, ambas superficies pueden apuntar a un valor común explícito en una tanda posterior; no se asume esa coincidencia.
 
-## Primitivas disponibles
+## Contrato visual público
 
-`src/catalog.css` contiene el contrato visual inicial para:
+`src/catalog.css` contiene el contrato visual activo para:
 
-- `.catalog-container` y modificadores de medida;
-- `.catalog-title` y escalas de display/item;
+- `.catalog-container`;
 - `.catalog-eyebrow`;
-- `.catalog-secondary-text`;
 - `.catalog-primary-action`;
 - `.catalog-secondary-action`;
 - `.catalog-whatsapp-action`;
-- `.catalog-field`;
-- `.catalog-focus-ring`;
-- `.catalog-badge`;
 - `.catalog-state` y sus tonos actuales de carga/información y error;
-- `.catalog-product-media`;
-- `.catalog-price`;
-- `.catalog-separator`.
+- familias semánticas de header, categorías, colección, card, detalle, solicitud, footer y 404.
 
-Acciones, eyebrow y estados existentes ya comparten ese contrato. Las demás primitivas quedan disponibles, pero no se aplican masivamente antes de la tanda de cada componente.
+Las primitivas dormidas de la etapa anterior se retiraron después de verificar sus consumidores. El listado completo está registrado en `DESIGN.md`.
 
 ## Estado de la migración
 
@@ -182,14 +175,14 @@ Acciones, eyebrow y estados existentes ya comparten ese contrato. Las demás pri
 | --- | --- | --- |
 | Infraestructura Tailwind v4 | Completa | Mantener sin reinstalar ni activar Preflight. |
 | Tokens públicos aislados | Implementados en Tanda 0B | `DESIGN.md` y `DESIGN_BIBLE.md`. |
-| Header | Migrado a utilities, diseño anterior | Tanda 1A. |
-| Apertura, búsqueda, filtros y showcase | Migrados a utilities, diseño anterior | Tanda 1A y Tanda 1B. |
-| Colección y cards | CSS heredado | Tanda 1B. |
-| Footer y 404 | CSS heredado | Tanda 4, dividido en subtandas. |
-| Detalle | CSS heredado | Tanda 2. |
-| Solicitud | CSS heredado | Tanda 3. |
+| Header y búsqueda | Rediseñados con clases semánticas | Mantener compacto y contextual por ruta. |
+| Categorías y apertura | Rediseñadas con clases semánticas | Validación visual manual pendiente. |
+| Colección y cards | Rediseñadas con container queries | Validación con inventarios reales pendiente. |
+| Footer, 404 y estados | Rediseñados | Revisión manual de contenido y accesibilidad pendiente. |
+| Detalle | Rediseñado | Validación de fotografía real pendiente. |
+| Solicitud | Rediseñada | Validación de contenido largo y teclado pendiente. |
 | Administración | CSS heredado y fuera del scope público | Tanda 5. |
-| Limpieza final de CSS público | Pendiente | Solo después de migrar todos los consumidores. |
+| Limpieza final de CSS público | Completada para selectores reemplazados | Mantener bridge hasta separar defaults globales. |
 
 ## Reglas para próximas tandas
 
@@ -208,32 +201,29 @@ Acciones, eyebrow y estados existentes ya comparten ese contrato. Las demás pri
 
 ## Deuda heredada conocida
 
-- Utilities y selectores con tamaños menores de `12px` continúan en header, cards, detalle, solicitud y footer.
-- Existen utilities importantes por la precedencia de hojas no layerizadas.
-- `body` usa `overflow-x: hidden` y `.catalog-site` usa `overflow-x: clip`.
-- Breakpoints equivalentes están repartidos entre utilities arbitrarias y media queries.
-- Muchos selectores convencionales todavía consumen nombres globales mediante el bridge.
+- `body` conserva `overflow-x: hidden` como default global para administración; `catalog.css` lo neutraliza solo cuando existe `.catalog-site`.
+- Los defaults globales compartidos todavía justifican el bridge scoped aunque `catalog.css` ya consuma únicamente `--catalog-*`.
 - `.route-loading` sigue usando el sistema global y no los tokens públicos.
 - Los nombres legacy de pasteles todavía tienen consumidores.
 - No existe todavía un scope semántico administrativo.
 
-Estas deudas se registran; no se corrigen dentro de Tanda 0B.
+Estas deudas permanecen registradas porque resolverlas afectaría administración o el fallback global fuera del alcance público.
 
-## Validación manual por tanda
+## Validación del rediseño público
 
 El usuario ejecuta pruebas, build, lint, comandos Git y validación visual según `AGENTS.md`.
 
-Para Tanda 0B debe revisar como mínimo:
+La revisión manual debe cubrir como mínimo:
 
 - Inicio, detalle, solicitud, 404 y estados públicos bajo `.catalog-site`.
 - Login, dashboard, productos, formulario, categorías y configuración administrativos para confirmar que no cambiaron.
 - Contraste de texto secundario, línea fuerte, foco y estados sobre superficies reales.
 - Foco de botones, enlaces, campos y controles compuestos.
 - Reduced motion en acciones compartidas.
-- Viewports `1440×900`, `1280×720`, `1024×768`, `768px`, `430×932`, `390×844`, `360×800` y `320×568`.
+- Viewports `1440×900`, `1366×768`, `1280×720`, `1024×768`, `768px`, `430×932`, `390×844`, `360×800` y `320×568`.
 - Ausencia de cambios en solicitud, cantidades, precios, WhatsApp y código de molde.
 
-No se ejecutaron suite completa, build, lint ni comandos Git durante la implementación de Tanda 0B.
+Durante el rediseño pasaron el typecheck, la transformación específica de Vite y las unidades acotadas de filtro, estado de solicitud y builders de WhatsApp. No se ejecutaron suite completa, build, lint ni comandos Git.
 
 ## Criterio de retiro del bridge
 

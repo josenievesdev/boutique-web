@@ -104,10 +104,9 @@ Estas medidas se validan a `100%` de zoom, con fuentes cargadas, al menos `4` pr
 ### Orden visual objetivo
 
 ```text
-Header compacto
-→ apertura breve
-→ búsqueda + resultado
+Header compacto con búsqueda
 → categorías
+→ apertura breve + resultado
 → primera fila del catálogo como escaparate
 → resto del catálogo
 → personalización o proceso real, si existe contenido aprobado
@@ -123,16 +122,12 @@ No existe un showcase independiente. No se repite ningún producto antes del gri
 ```text
 PublicPageShell
 ├── enlace de salto
-├── header
+├── header con búsqueda
 ├── main
-│   ├── apertura compacta
-│   └── colección
-│       ├── barra de catálogo
-│       │   ├── búsqueda
-│       │   ├── resultado único
-│       │   └── categorías
-│       ├── estado contextual o grid
-│       └── explicación posterior, si procede
+│   ├── categorías
+│   ├── apertura compacta + resultado único
+│   ├── estado contextual o grid
+│   └── explicación posterior, si procede
 └── footer
 ```
 
@@ -146,11 +141,11 @@ PublicPageShell
 
 ### Colección
 
-- Búsqueda, filtros, contador, estados y grid pertenecen a una sola región visual y semántica.
+- Búsqueda, categorías, contador, estados y grid forman una secuencia visual continua aunque la búsqueda viva en el header por razones comerciales.
 - El resultado se anuncia una vez.
 - La primera fila usa exactamente el conjunto filtrado actual.
 - La colección no necesita una segunda tesis ni otro encabezado de gran escala.
-- Con pocos productos, las piezas ocupan las primeras posiciones del grid; no se centran como campaña ni se duplican para llenar espacio.
+- Con pocos productos, las piezas forman un bloque contenido y centrado; no se estiran, no se aíslan como campaña ni se duplican para llenar espacio.
 - Con muchos productos, el ritmo procede del grid y de sus etiquetas, no de inserts promocionales entre filas.
 
 ### Contenido posterior
@@ -234,7 +229,8 @@ El código de molde permanece visible como dato secundario para que la solicitud
 ### Header público
 
 - Sticky, plano y compacto.
-- Marca a la izquierda; colección y solicitud a la derecha en anchos suficientes.
+- En inicio: marca a la izquierda, búsqueda compacta al centro y colección/selección a la derecha en anchos suficientes.
+- En detalle y solicitud: la búsqueda se reemplaza por la acción compacta “Buscar prendas”, sin introducir estado global.
 - “Descubrir” deja de ser una entrada visual separada, porque colección y descubrimiento pasan a ser la misma superficie. Su anchor, `id` y destino existentes se conservan como alias del inicio de la barra de catálogo para no romper enlaces.
 - “Colección” enlaza al contenido real del inicio; “Solicitud” conserva contador y ruta.
 - En móvil, marca y solicitud tienen prioridad. No se introduce un menú hamburguesa para ocultar una única navegación secundaria.
@@ -243,7 +239,7 @@ El código de molde permanece visible como dato secundario para que la solicitud
 
 ### Footer público
 
-- Conserva marca, navegación, año y acceso administrativo discreto.
+- Conserva marca, navegación pública y año. El acceso administrativo no se promociona visualmente en el footer y `/admin/login` permanece intacta.
 - Usa una superficie oscura y compacta como cierre, no como segundo hero.
 - Recompone columnas antes de comprimir el contenido.
 - Los enlaces cumplen el target táctil mínimo.
@@ -271,8 +267,8 @@ La pareja se conserva como identidad existente. No se añade una tercera familia
 
 | Rol | Tamaño objetivo | Peso | Interlineado | Tracking |
 | --- | --- | --- | --- | --- |
-| Apertura | `clamp(2.5rem, 4.2vw, 4rem)` | Newsreader `400` | `0.98–1.04` | `-0.035em` máximo |
-| Nombre de detalle | `clamp(2.25rem, 4vw, 3.75rem)` | Newsreader `400` | `0.98–1.04` | `-0.035em` máximo |
+| Apertura | `clamp(2rem, 3.2vw, 2.75rem)` | Newsreader `400` | `0.98–1.04` | `-0.03em` máximo |
+| Nombre de detalle | `clamp(2.25rem, 4vw, 3.4rem)` | Newsreader `400` | `0.98–1.04` | `-0.035em` máximo |
 | Encabezado de sección | `clamp(1.9rem, 3vw, 2.75rem)` | Newsreader `400` | `1–1.08` | `-0.03em` |
 | Nombre en card | `clamp(1.1rem, 1.5vw, 1.35rem)` | Newsreader `500` | `1.1–1.2` | `-0.015em` |
 | Cuerpo principal | `1rem` | Manrope `400` | `1.55–1.7` | normal |
@@ -353,7 +349,7 @@ No todos los intervalos tienen el mismo peso. Controles relacionados usan `8–1
 
 | Medida | Máximo objetivo | Uso |
 | --- | --- | --- |
-| Catálogo amplio | `1440px` | Header, apertura, toolbar y grid. |
+| Catálogo amplio | `1240px` | Header, categorías, apertura y grid. |
 | Contenido estándar | `1240px` | Footer, solicitud y agrupaciones generales. |
 | Detalle | `1200px` | Galería e información. |
 | Formulario o estado | `900px` | Estados y tareas lineales. |
@@ -428,25 +424,26 @@ Indicación discreta de apertura al detalle
 - No introducir quick add, favoritos ni quick view.
 - Hover no revela información indispensable.
 - En puntero fino, el hover puede reforzar línea o imagen de forma mínima; en touch no deja estados pegados.
-- Con `1` o `2` productos, las cards ocupan las primeras columnas y conservan ancho útil. No se estiran a todo el contenedor ni se centran como campaña.
+- Con `1` o `2` productos, las cards conservan ancho útil dentro de un bloque centrado. No se estiran a todo el contenedor ni se presentan como campaña.
 
 ## 12. Barra de catálogo
 
-### Composición de escritorio
+### Composición de escritorio implementada
 
 ```text
-[Label + búsqueda amplia]                    [resultado]
+[Marca]            [búsqueda compacta]       [navegación]
+[Todo] [Categoría] [Categoría] [Categoría] [Más]
+[apertura breve + resultado]
 ────────────────────────────────────────────────────────
-[Todo] [Categoría] [Categoría] [Categoría] ...
+[grid]
 ```
 
 ### Composición móvil
 
 ```text
-[Label]
-[búsqueda                         limpiar]
-[resultado]
+[marca] [búsqueda] [selección]
 [categorías con scroll horizontal contenido]
+[apertura breve + resultado]
 ────────────────────────────────────────────
 [grid]
 ```
@@ -455,7 +452,7 @@ Indicación discreta de apertura al detalle
 
 - Mantiene label persistente; el placeholder no sustituye al label.
 - Conserva `type="search"`, `name` significativo y acción “Limpiar” cuando existe texto.
-- Mide al menos `48px` de alto.
+- Mide al menos `44px` de alto dentro del header compacto.
 - El control compuesto usa `:focus-within` y un foco claramente visible.
 - La búsqueda responde sobre el grid inmediatamente adyacente.
 - No se añade debounce o estado diferido sin evidencia de coste real.
@@ -479,7 +476,7 @@ Indicación discreta de apertura al detalle
 
 ### Sticky
 
-La barra no será sticky en la primera implementación. La Tanda 4 puede evaluar una versión sticky solo si una colección larga demuestra que mejora el retorno a los controles sin consumir demasiado viewport junto al header.
+Solo el header y su búsqueda son sticky. Las categorías y el resultado permanecen en el flujo para no consumir viewport ni crear dos franjas sticky superpuestas.
 
 ## 13. Precio, atributos y código de molde
 

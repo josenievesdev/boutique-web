@@ -13,6 +13,12 @@ import { SupabaseProductImageStorage } from "../../infrastructure/storage/supaba
 import { supabase } from "../../infrastructure/supabase/supabase-client";
 import { buildProductWhatsAppUrl } from "../../lib/build-product-whatsapp-url";
 import { useCart } from "../cart/use-cart";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  PlusIcon,
+} from "./catalog-icons";
 import { CatalogProductImage } from "./catalog-product-image";
 import { CatalogPublicState } from "./catalog-public-state";
 import { PublicPageShell } from "./public-page-shell";
@@ -134,8 +140,18 @@ export function CatalogProductDetailPage() {
   if (isLoading) {
     return (
       <PublicPageShell businessName={shopSettings?.businessName}>
-        <main className="catalog-detail-state">
-          <CatalogPublicState eyebrow="Cargando" tone="mist">
+        <main
+          className="catalog-detail-state"
+          id="contenido-principal"
+          aria-busy="true"
+        >
+          <CatalogPublicState
+            eyebrow="Cargando"
+            title="Preparando la pieza"
+            tone="mist"
+            headingLevel="h1"
+            announce
+          >
             <p>Preparando los detalles de la pieza…</p>
           </CatalogPublicState>
         </main>
@@ -146,11 +162,12 @@ export function CatalogProductDetailPage() {
   if (error) {
     return (
       <PublicPageShell businessName={shopSettings?.businessName}>
-        <main className="catalog-detail-state">
+        <main className="catalog-detail-state" id="contenido-principal">
           <CatalogPublicState
             eyebrow="No disponible"
             title="No pudimos abrir esta pieza"
             tone="error"
+            headingLevel="h1"
           >
             <p role="alert">{error}</p>
             <Link className="catalog-primary-action" to="/">
@@ -165,10 +182,11 @@ export function CatalogProductDetailPage() {
   if (!productData) {
     return (
       <PublicPageShell businessName={shopSettings?.businessName}>
-        <main className="catalog-detail-state">
+        <main className="catalog-detail-state" id="contenido-principal">
           <CatalogPublicState
             eyebrow="Producto no encontrado"
             title="Este diseño no está disponible"
+            headingLevel="h1"
           >
             <p>Puede haber sido retirado, ocultado o aún no estar publicado.</p>
             <Link className="catalog-primary-action" to="/">
@@ -208,6 +226,11 @@ export function CatalogProductDetailPage() {
       return;
     }
 
+    if (cartQuantity >= 99) {
+      setCartMessage("Alcanzaste el máximo de 99 piezas en tu solicitud.");
+      return;
+    }
+
     const coverImage =
       productData.images.find((image) => image.isCover) ??
       productData.images[0] ??
@@ -227,9 +250,12 @@ export function CatalogProductDetailPage() {
 
   return (
     <PublicPageShell businessName={shopSettings?.businessName}>
-      <main className="catalog-product-detail">
+      <main className="catalog-product-detail" id="contenido-principal">
         <nav className="catalog-detail-back" aria-label="Ruta de navegación">
-          <Link to="/">Colección</Link>
+          <Link to="/">
+            <ArrowLeftIcon className="catalog-icon" />
+            <span>Colección</span>
+          </Link>
           <span aria-hidden="true">/</span>
           <span>{category?.name ?? "Pieza"}</span>
         </nav>
@@ -243,6 +269,23 @@ export function CatalogProductDetailPage() {
             }`}
             aria-label={`Galería de ${productData.name}`}
           >
+            <figure className="catalog-product-gallery__main">
+              <CatalogProductImage
+                source={selectedImageUrl}
+                alt={selectedImage?.altText || productData.name}
+                width={800}
+                height={1000}
+                loading="eager"
+                fetchPriority="high"
+              />
+              {productData.images.length > 1 ? (
+                <figcaption>
+                  {String(selectedImagePosition).padStart(2, "0")} / {" "}
+                  {String(productData.images.length).padStart(2, "0")}
+                </figcaption>
+              ) : null}
+            </figure>
+
             {productData.images.length > 1 ? (
               <div className="catalog-product-gallery__thumbnails">
                 {productData.images.map((image, index) => (
@@ -263,24 +306,13 @@ export function CatalogProductDetailPage() {
                     <CatalogProductImage
                       source={productImageStorage.getPublicUrl(image.path)}
                       alt=""
+                      width={160}
+                      height={160}
                     />
                   </button>
                 ))}
               </div>
             ) : null}
-
-            <figure className="catalog-product-gallery__main">
-              <CatalogProductImage
-                source={selectedImageUrl}
-                alt={selectedImage?.altText || productData.name}
-              />
-              {productData.images.length > 1 ? (
-                <figcaption>
-                  {String(selectedImagePosition).padStart(2, "0")} / {" "}
-                  {String(productData.images.length).padStart(2, "0")}
-                </figcaption>
-              ) : null}
-            </figure>
           </section>
 
           <section className="catalog-product-information">
@@ -309,15 +341,19 @@ export function CatalogProductDetailPage() {
               {productData.shortDescription}
             </p>
 
-            <div className="catalog-detail-tags">
-              {productData.featured ? <span>Selección</span> : null}
-              {productData.customizable ? <span>Personalizable</span> : null}
-              {productData.madeToOrder ? <span>Sobre pedido</span> : null}
-            </div>
+            {productData.customizable || productData.madeToOrder ? (
+              <ul className="catalog-detail-attributes">
+                {productData.madeToOrder ? <li>Sobre pedido</li> : null}
+                {productData.customizable ? <li>Personalizable</li> : null}
+              </ul>
+            ) : null}
 
-            <aside className="catalog-detail-contact">
-              <div>
-                <h2>Consulta esta pieza</h2>
+            <section
+              className="catalog-detail-actions"
+              aria-labelledby="catalog-detail-actions-title"
+            >
+              <div className="catalog-detail-actions__introduction">
+                <h2 id="catalog-detail-actions-title">Consulta esta pieza</h2>
                 <p>
                   Agrégala a tu selección o pregunta directamente por WhatsApp.
                 </p>
@@ -326,40 +362,48 @@ export function CatalogProductDetailPage() {
               <button
                 className="catalog-request-add-button"
                 type="button"
+                disabled={cartQuantity >= 99}
                 onClick={handleAddToCart}
               >
-                Agregar a mi solicitud <span aria-hidden="true">+</span>
+                <span>
+                  {cartQuantity >= 99
+                    ? "Máximo de 99 piezas"
+                    : "Agregar a mi solicitud"}
+                </span>
+                <PlusIcon className="catalog-icon" />
               </button>
 
-              {cartQuantity > 0 ? (
-                <p className="catalog-request-message" role="status">
-                  Cantidad seleccionada: <strong>{cartQuantity}</strong>
-                </p>
-              ) : null}
+              <div className="catalog-detail-actions__status" aria-live="polite">
+                {cartQuantity > 0 ? (
+                  <p className="catalog-request-message">
+                    Cantidad seleccionada: <strong>{cartQuantity}</strong>
+                  </p>
+                ) : null}
 
-              {cartMessage ? (
-                <p className="catalog-request-message" role="status">
-                  {cartMessage}
-                </p>
-              ) : null}
+                {cartMessage ? (
+                  <p className="catalog-request-message">{cartMessage}</p>
+                ) : null}
+              </div>
 
-              <div className="catalog-detail-contact__links">
+              <div className="catalog-detail-actions__links">
                 <Link className="catalog-secondary-action" to="/solicitud">
-                  Ver mi solicitud <span aria-hidden="true">→</span>
+                  <span>Ver mi solicitud</span>
+                  <ArrowRightIcon className="catalog-icon" />
                 </Link>
 
                 {whatsappUrl ? (
                   <a
-                    className="catalog-whatsapp-secondary"
+                    className="catalog-detail-whatsapp"
                     href={whatsappUrl}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Consultar solo esta pieza <span aria-hidden="true">↗</span>
+                    <span>Consultar solo esta pieza</span>
+                    <ArrowUpRightIcon className="catalog-icon" />
                   </a>
                 ) : null}
               </div>
-            </aside>
+            </section>
 
             <section className="catalog-detail-description">
               <h2>Sobre la pieza</h2>
@@ -367,11 +411,6 @@ export function CatalogProductDetailPage() {
             </section>
 
             <dl className="catalog-detail-facts">
-              <div>
-                <dt>Disponibilidad</dt>
-                <dd>Disponible</dd>
-              </div>
-
               {productData.moldCode ? (
                 <div>
                   <dt>Código de molde</dt>
