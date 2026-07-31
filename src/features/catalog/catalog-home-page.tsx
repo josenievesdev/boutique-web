@@ -151,6 +151,8 @@ export function CatalogHomePage() {
           aria-labelledby="catalog-opening-title"
         >
           <div className="catalog-container catalog-opening__content">
+            <span className="catalog-opening__accent-line" aria-hidden="true" />
+
             <div className="catalog-opening__meta">
               <p className="catalog-eyebrow">Colección actual</p>
 

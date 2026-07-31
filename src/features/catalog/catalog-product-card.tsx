@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import type { ProductProps } from "../../core/entities/product";
-import { ArrowRightIcon } from "./catalog-icons";
 import { CatalogProductImage } from "./catalog-product-image";
 
 interface CatalogProductCardProps {
@@ -38,6 +37,9 @@ export function CatalogProductCard({
           loading={imageLoading}
           fetchPriority={imageFetchPriority}
         />
+        <div className="catalog-product-card__media-overlay" aria-hidden="true">
+          <span>Ver pieza</span>
+        </div>
       </div>
 
       <div className="catalog-product-card__body">
@@ -54,27 +56,12 @@ export function CatalogProductCard({
           </div>
         </div>
 
-        {product.shortDescription ? (
-          <p className="catalog-product-card__description">
-            {product.shortDescription}
-          </p>
+        {product.madeToOrder || product.customizable ? (
+          <ul className="catalog-product-card__attributes">
+            {product.madeToOrder ? <li>Sobre pedido</li> : null}
+            {product.customizable ? <li>Personalizable</li> : null}
+          </ul>
         ) : null}
-
-        <div className="catalog-product-card__footer">
-          {product.madeToOrder || product.customizable ? (
-            <ul className="catalog-product-card__attributes">
-              {product.madeToOrder ? <li>Sobre pedido</li> : null}
-              {product.customizable ? <li>Personalizable</li> : null}
-            </ul>
-          ) : (
-            <span />
-          )}
-
-          <span className="catalog-product-card__action">
-            Ver pieza
-            <ArrowRightIcon className="catalog-icon" />
-          </span>
-        </div>
       </div>
     </Link>
   );

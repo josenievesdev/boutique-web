@@ -107,31 +107,31 @@
 @layer theme {
   .catalog-site {
     /* Override this neutral family as a unit when configuration is added. */
-    --catalog-accent: #695f57;
-    --catalog-accent-hover: #514a44;
-    --catalog-accent-soft: #e8e2db;
+    --catalog-accent: #6b7c5e;
+    --catalog-accent-hover: #556948;
+    --catalog-accent-soft: #e4e8df;
 
-    /* Color: warm ivory, soft coal, stone and sand. */
-    --catalog-color-canvas: #faf8f3;
-    --catalog-color-canvas-subtle: #f3f1ec;
-    --catalog-color-surface: #efede7;
-    --catalog-color-surface-raised: #fffefa;
-    --catalog-color-surface-muted: #ebe7df;
-    --catalog-color-overlay: rgba(250, 248, 243, 0.96);
-    --catalog-color-ink: #292825;
-    --catalog-color-text-muted: #625f59;
-    --catalog-color-text-inverse: #faf8f3;
-    --catalog-color-action: #292825;
-    --catalog-color-action-hover: #191815;
-    --catalog-color-action-soft: #e2ded6;
+    /* Color: off-white, charcoal, warm greys with editorial contrast. */
+    --catalog-color-canvas: #f7f6f3;
+    --catalog-color-canvas-subtle: #eeecea;
+    --catalog-color-surface: #e8e6e2;
+    --catalog-color-surface-raised: #fdfcfa;
+    --catalog-color-surface-muted: #e3e0dc;
+    --catalog-color-overlay: rgba(247, 246, 243, 0.96);
+    --catalog-color-ink: #1a1a18;
+    --catalog-color-text-muted: #5c5955;
+    --catalog-color-text-inverse: #f7f6f3;
+    --catalog-color-action: #1a1a18;
+    --catalog-color-action-hover: #0d0d0c;
+    --catalog-color-action-soft: #dddbd6;
     --catalog-color-accent: var(--catalog-accent);
     --catalog-color-accent-hover: var(--catalog-accent-hover);
     --catalog-color-accent-soft: var(--catalog-accent-soft);
-    --catalog-color-line: rgba(41, 40, 37, 0.16);
-    --catalog-color-line-strong: #817b73;
-    --catalog-color-focus: #5c534c;
-    --catalog-color-stone: #d9d5ce;
-    --catalog-color-sand: #e9e2d7;
+    --catalog-color-line: rgba(26, 26, 24, 0.12);
+    --catalog-color-line-strong: #7a7772;
+    --catalog-color-focus: #4a4843;
+    --catalog-color-stone: #d4d1cc;
+    --catalog-color-sand: #e0dbd2;
 
     /* Color: semantic states. */
     --catalog-color-success: #3f654e;
@@ -189,19 +189,19 @@
     --catalog-control-height: 48px;
     --catalog-control-height-large: 52px;
 
-    /* Shape and elevation. */
-    --catalog-radius-control: 8px;
-    --catalog-radius-media: 10px;
-    --catalog-radius-panel: 12px;
+    /* Shape and elevation — crisper for editorial. */
+    --catalog-radius-control: 4px;
+    --catalog-radius-media: 3px;
+    --catalog-radius-panel: 6px;
     --catalog-radius-pill: 999px;
     --catalog-radius-circle: 50%;
-    --catalog-shadow-hairline: 0 1px 0 rgba(41, 40, 37, 0.12);
-    --catalog-shadow-sm: 0 1px 2px rgba(41, 40, 37, 0.04);
-    --catalog-shadow-md: 0 4px 10px rgba(41, 40, 37, 0.05);
-    --catalog-shadow-lg: 0 8px 16px rgba(41, 40, 37, 0.06);
+    --catalog-shadow-hairline: 0 1px 0 rgba(26, 26, 24, 0.08);
+    --catalog-shadow-sm: 0 1px 2px rgba(26, 26, 24, 0.04);
+    --catalog-shadow-md: 0 4px 10px rgba(26, 26, 24, 0.06);
+    --catalog-shadow-lg: 0 8px 16px rgba(26, 26, 24, 0.07);
 
     /* Content widths. */
-    --catalog-width-wide: 1240px;
+    --catalog-width-wide: 1280px;
     --catalog-width-standard: 1240px;
     --catalog-width-detail: 1200px;
     --catalog-width-form: 900px;
@@ -209,8 +209,8 @@
     --catalog-width-narrow: 460px;
 
     /* Motion and layers. */
-    --catalog-duration-fast: 140ms;
-    --catalog-duration-base: 180ms;
+    --catalog-duration-fast: 120ms;
+    --catalog-duration-base: 170ms;
     --catalog-duration-slow: 220ms;
     --catalog-ease-standard: ease;
     --catalog-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
