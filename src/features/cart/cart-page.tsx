@@ -143,7 +143,7 @@ export function CartPage() {
             <p className="catalog-eyebrow">
               Mi solicitud · {totalItems} {totalItems === 1 ? "pieza" : "piezas"}
             </p>
-            <h1>Tu selección para consultar.</h1>
+            <h1>Tu selección para consultar</h1>
           </div>
 
           <div className="cart-page__introduction">
@@ -188,7 +188,9 @@ export function CartPage() {
                 <h2 id="cart-items-title" tabIndex={-1}>
                   Piezas seleccionadas
                 </h2>
-                <span>{totalItems} en total</span>
+                <span>
+                  {totalItems} {totalItems === 1 ? "pieza" : "piezas"}
+                </span>
               </header>
 
               <ol className="cart-list">
@@ -235,50 +237,53 @@ export function CartPage() {
                           </div>
 
                           <div className="cart-item__controls">
-                            <div
-                              className="cart-quantity"
-                              role="group"
-                              aria-label={`Cantidad de ${item.name}`}
-                            >
-                              <button
-                                type="button"
-                                aria-label={
-                                  item.quantity <= 1
-                                    ? `Cantidad mínima de ${item.name}: 1`
-                                    : `Reducir cantidad de ${item.name}`
-                                }
-                                disabled={item.quantity <= 1}
-                                onClick={() => {
-                                  updateItemQuantity(
-                                    item.productId,
-                                    item.name,
-                                    item.quantity - 1,
-                                  );
-                                }}
+                            <div className="cart-item__quantity-control">
+                              <span>Cantidad</span>
+                              <div
+                                className="cart-quantity"
+                                role="group"
+                                aria-label={`Cantidad de ${item.name}`}
                               >
-                                <MinusIcon className="catalog-icon" />
-                              </button>
+                                <button
+                                  type="button"
+                                  aria-label={
+                                    item.quantity <= 1
+                                      ? `Cantidad mínima de ${item.name}: 1`
+                                      : `Reducir cantidad de ${item.name}`
+                                  }
+                                  disabled={item.quantity <= 1}
+                                  onClick={() => {
+                                    updateItemQuantity(
+                                      item.productId,
+                                      item.name,
+                                      item.quantity - 1,
+                                    );
+                                  }}
+                                >
+                                  <MinusIcon className="catalog-icon" />
+                                </button>
 
-                              <span>{item.quantity}</span>
+                                <span>{item.quantity}</span>
 
-                              <button
-                                type="button"
-                                aria-label={
-                                  item.quantity >= 99
-                                    ? `Cantidad máxima de ${item.name}: 99`
-                                    : `Aumentar cantidad de ${item.name}`
-                                }
-                                disabled={item.quantity >= 99}
-                                onClick={() => {
-                                  updateItemQuantity(
-                                    item.productId,
-                                    item.name,
-                                    item.quantity + 1,
-                                  );
-                                }}
-                              >
-                                <PlusIcon className="catalog-icon" />
-                              </button>
+                                <button
+                                  type="button"
+                                  aria-label={
+                                    item.quantity >= 99
+                                      ? `Cantidad máxima de ${item.name}: 99`
+                                      : `Aumentar cantidad de ${item.name}`
+                                  }
+                                  disabled={item.quantity >= 99}
+                                  onClick={() => {
+                                    updateItemQuantity(
+                                      item.productId,
+                                      item.name,
+                                      item.quantity + 1,
+                                    );
+                                  }}
+                                >
+                                  <PlusIcon className="catalog-icon" />
+                                </button>
+                              </div>
                             </div>
 
                             <button
@@ -324,10 +329,7 @@ export function CartPage() {
             </section>
 
             <aside className="cart-summary" aria-labelledby="cart-summary-title">
-              <div className="cart-summary__heading">
-                <h2 id="cart-summary-title">Resumen de la solicitud</h2>
-                <span>{totalItems} {totalItems === 1 ? "pieza" : "piezas"}</span>
-              </div>
+              <h2 id="cart-summary-title">Resumen de la solicitud</h2>
 
               <div className="cart-summary__row">
                 <span>Piezas</span>
@@ -350,8 +352,8 @@ export function CartPage() {
                 ) : null}
 
                 {error ? (
-                  <p className="catalog-inline-error" role="alert">
-                    {error}
+                  <p className="catalog-inline-error">
+                    {error} Puedes seguir revisando tu solicitud.
                   </p>
                 ) : null}
 

@@ -185,6 +185,8 @@
     --catalog-space-20: 80px;
     --catalog-space-24: 96px;
     --catalog-gutter-inline: clamp(16px, 4vw, 64px);
+    --catalog-header-min-height: clamp(54px, 6.5vw, 66px);
+    --catalog-header-height: var(--catalog-header-min-height);
     --catalog-control-height-compact: 44px;
     --catalog-control-height: 48px;
     --catalog-control-height-large: 52px;
