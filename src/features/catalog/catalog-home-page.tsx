@@ -139,56 +139,47 @@ export function CatalogHomePage() {
       }}
       skipTargetId="contenido-principal"
     >
-      <main id="contenido-principal">
-        <CatalogCategoryNavigation
-          categories={categories}
-          selectedCategoryId={selectedCategoryId}
-          onSelectCategory={selectCategory}
-        />
-
-        <section
-          className="catalog-opening"
-          aria-labelledby="catalog-opening-title"
-        >
-          <div className="catalog-container catalog-opening__content">
-            <span className="catalog-opening__accent-line" aria-hidden="true" />
-
-            <div className="catalog-opening__meta">
-              <p className="catalog-eyebrow">Colección actual</p>
-
-              <span className="catalog-opening__meta-separator" aria-hidden="true" />
-
-              <p
-                className="catalog-opening__result"
-                aria-live="polite"
-                role="status"
-              >
-                <span aria-hidden="true">{resultSummary}</span>
-                <span className="catalog-visually-hidden">
-                  {resultAnnouncement}
-                </span>
-              </p>
-            </div>
-
-            <h1 id="catalog-opening-title">La colección, a tu manera.</h1>
-
-            <p className="catalog-opening__description">
-              Piezas seleccionadas con atención al detalle.
-            </p>
-          </div>
-        </section>
-
+      <main id="contenido-principal" className="catalog-home">
         <section
           className="catalog-collection"
           id="coleccion"
-          aria-labelledby="catalog-grid-title"
+          aria-labelledby="catalog-opening-title"
           aria-busy={isLoading}
         >
-          <h2 className="catalog-visually-hidden" id="catalog-grid-title">
-            Productos de la colección
-          </h2>
+          <header className="catalog-container catalog-collection__header">
+            <div className="catalog-collection__introduction">
+              <p className="catalog-eyebrow">Colección</p>
+              <h1 id="catalog-opening-title">
+                Diseños para elegir a tu manera
+              </h1>
+              <p className="catalog-collection__description">
+                Piezas seleccionadas con atención al detalle.
+              </p>
+            </div>
 
-          <div className="catalog-results">
+            <p
+              className="catalog-collection__counter"
+              aria-live="polite"
+              role="status"
+            >
+              <span aria-hidden="true">{resultSummary}</span>
+              <span className="catalog-visually-hidden">
+                {resultAnnouncement}
+              </span>
+            </p>
+          </header>
+
+          <CatalogCategoryNavigation
+            categories={categories}
+            selectedCategoryId={selectedCategoryId}
+            onSelectCategory={selectCategory}
+          />
+
+          <div className="catalog-container catalog-results">
+            <h2 className="catalog-visually-hidden" id="catalog-grid-title">
+              Productos de la colección
+            </h2>
+
             {isLoading ? (
               <CatalogPublicState
                 eyebrow="Actualizando"
@@ -246,13 +237,8 @@ export function CatalogHomePage() {
 
             {!isLoading && !error && visibleProducts.length > 0 ? (
               <ul
-                className={`catalog-product-grid${
-                  visibleProducts.length <= 2
-                    ? ` catalog-product-grid--${visibleProducts.length}`
-                    : visibleProducts.length >= 4
-                      ? " catalog-product-grid--4"
-                      : ""
-                }`}
+                className="catalog-product-grid"
+                aria-labelledby="catalog-grid-title"
               >
                 {visibleProducts.map((product, index) => {
                   const productData = product.toObject();

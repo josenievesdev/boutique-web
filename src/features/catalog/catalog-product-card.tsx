@@ -37,9 +37,6 @@ export function CatalogProductCard({
           loading={imageLoading}
           fetchPriority={imageFetchPriority}
         />
-        <div className="catalog-product-card__media-overlay" aria-hidden="true">
-          <span>Ver pieza</span>
-        </div>
       </div>
 
       <div className="catalog-product-card__body">
