@@ -251,15 +251,6 @@ export function CatalogProductDetailPage() {
   return (
     <PublicPageShell businessName={shopSettings?.businessName}>
       <main className="catalog-product-detail" id="contenido-principal">
-        <nav className="catalog-detail-back" aria-label="Ruta de navegación">
-          <Link to="/">
-            <ArrowLeftIcon className="catalog-icon" />
-            <span>Colección</span>
-          </Link>
-          <span aria-hidden="true">/</span>
-          <span>{category?.name ?? "Pieza"}</span>
-        </nav>
-
         <div className="catalog-product-detail__layout">
           <section
             className={`catalog-product-gallery${
@@ -280,14 +271,17 @@ export function CatalogProductDetailPage() {
               />
               {productData.images.length > 1 ? (
                 <figcaption>
-                  {String(selectedImagePosition).padStart(2, "0")} / {" "}
-                  {String(productData.images.length).padStart(2, "0")}
+                  Imagen {selectedImagePosition} de {productData.images.length}
                 </figcaption>
               ) : null}
             </figure>
 
             {productData.images.length > 1 ? (
-              <div className="catalog-product-gallery__thumbnails">
+              <div
+                className="catalog-product-gallery__thumbnails"
+                role="group"
+                aria-label={`Elegir imagen de ${productData.name}`}
+              >
                 {productData.images.map((image, index) => (
                   <button
                     className={
@@ -297,7 +291,9 @@ export function CatalogProductDetailPage() {
                     }
                     key={image.id}
                     type="button"
-                    aria-label={`Mostrar imagen ${index + 1}: ${image.altText}`}
+                    aria-label={`Mostrar imagen ${index + 1} de ${
+                      productData.images.length
+                    }: ${image.altText || productData.name}`}
                     aria-pressed={image.id === selectedImage?.id}
                     onClick={() => {
                       setSelectedImageId(image.id);
@@ -315,12 +311,17 @@ export function CatalogProductDetailPage() {
             ) : null}
           </section>
 
-          <section className="catalog-product-information">
-            <p className="catalog-eyebrow">
-              {category?.name ?? "Diseño de boutique"}
-            </p>
+          <article className="catalog-product-information">
+            <Link className="catalog-detail-back" to="/">
+              <ArrowLeftIcon className="catalog-icon" />
+              <span>Volver a la colección</span>
+            </Link>
 
-            <div className="catalog-product-information__heading">
+            <header className="catalog-product-information__header">
+              {category ? (
+                <p className="catalog-detail-category">{category.name}</p>
+              ) : null}
+
               <h1>{productData.name}</h1>
 
               <div className="catalog-detail-price">
@@ -335,7 +336,7 @@ export function CatalogProductDetailPage() {
                   </del>
                 ) : null}
               </div>
-            </div>
+            </header>
 
             <p className="catalog-detail-summary">
               {productData.shortDescription}
@@ -348,6 +349,32 @@ export function CatalogProductDetailPage() {
               </ul>
             ) : null}
 
+            <section className="catalog-detail-description">
+              <h2>Sobre la pieza</h2>
+              <p>{productData.description}</p>
+            </section>
+
+            {productData.moldCode || productData.preparationDays ? (
+              <dl className="catalog-detail-facts">
+                {productData.moldCode ? (
+                  <div>
+                    <dt>Código de molde</dt>
+                    <dd>{productData.moldCode}</dd>
+                  </div>
+                ) : null}
+
+                {productData.preparationDays ? (
+                  <div>
+                    <dt>Tiempo estimado de elaboración</dt>
+                    <dd>
+                      {productData.preparationDays} {" "}
+                      {productData.preparationDays === 1 ? "día" : "días"}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            ) : null}
+
             <section
               className="catalog-detail-actions"
               aria-labelledby="catalog-detail-actions-title"
@@ -355,7 +382,9 @@ export function CatalogProductDetailPage() {
               <div className="catalog-detail-actions__introduction">
                 <h2 id="catalog-detail-actions-title">Consulta esta pieza</h2>
                 <p>
-                  Agrégala a tu selección o pregunta directamente por WhatsApp.
+                  {whatsappUrl
+                    ? "Agrégala a tu solicitud o consulta esta pieza por WhatsApp."
+                    : "Agrégala a tu solicitud para preparar tu consulta."}
                 </p>
               </div>
 
@@ -386,11 +415,6 @@ export function CatalogProductDetailPage() {
               </div>
 
               <div className="catalog-detail-actions__links">
-                <Link className="catalog-secondary-action" to="/solicitud">
-                  <span>Ver mi solicitud</span>
-                  <ArrowRightIcon className="catalog-icon" />
-                </Link>
-
                 {whatsappUrl ? (
                   <a
                     className="catalog-detail-whatsapp"
@@ -399,41 +423,25 @@ export function CatalogProductDetailPage() {
                     rel="noreferrer"
                   >
                     <span>Consultar solo esta pieza</span>
+                    <span className="catalog-visually-hidden">
+                      {" "}(se abre en una nueva pestaña)
+                    </span>
                     <ArrowUpRightIcon className="catalog-icon" />
                   </a>
-                ) : null}
+                ) : (
+                  <p className="catalog-detail-contact-status">
+                    La consulta individual por WhatsApp no está disponible en
+                    este momento.
+                  </p>
+                )}
+
+                <Link className="catalog-secondary-action" to="/solicitud">
+                  <span>Ver mi solicitud</span>
+                  <ArrowRightIcon className="catalog-icon" />
+                </Link>
               </div>
             </section>
-
-            <section className="catalog-detail-description">
-              <h2>Sobre la pieza</h2>
-              <p>{productData.description}</p>
-            </section>
-
-            <dl className="catalog-detail-facts">
-              {productData.moldCode ? (
-                <div>
-                  <dt>Código de molde</dt>
-                  <dd>{productData.moldCode}</dd>
-                </div>
-              ) : null}
-
-              {productData.preparationDays ? (
-                <div>
-                  <dt>Tiempo estimado de elaboración</dt>
-                  <dd>
-                    {productData.preparationDays} {" "}
-                    {productData.preparationDays === 1 ? "día" : "días"}
-                  </dd>
-                </div>
-              ) : null}
-
-              <div>
-                <dt>Personalización</dt>
-                <dd>{productData.customizable ? "Disponible" : "No disponible"}</dd>
-              </div>
-            </dl>
-          </section>
+          </article>
         </div>
       </main>
     </PublicPageShell>
